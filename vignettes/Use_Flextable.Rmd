@@ -31,6 +31,8 @@ library(flextable)
 library(tables)
 library(palmerpenguins)
 library(magrittr)
+library(glue)
+library(dplyr)
 # (to use |> version 4.1.0 of R is required, for lower versions we recommend %>% from magrittr)
  
 
@@ -69,7 +71,7 @@ header_footer <- read_footer("C:/Users/u066227/Rproj/sample_titles.xls")
 
 ht_list <- select_with_number(df =header_footer,  tnumber = "Table 2.1")
 
-head_list <- ht_list %>% select(starts_with("TTL")) 
+head_list <- ht_list %>% select(starts_with("TTL"), POPULATION) 
 head_list <- Filter(function(x) !is.na(x), head_list)
 foot_list <- ht_list %>% select(starts_with("FOOT")) 
 
@@ -80,8 +82,8 @@ ft <- footnote( ft_pen, i = 1, j = 1:2,
                 ref_symbols = c("a", "b"),
                 part = "header",inline=T) %>% 
   set_caption(caption = {paste(head_list, sep = "\n", collapse = " \n ")},
-              style = "Table Caption", 
-  autonum = run_autonum(seq_id = "tab", bkm = "tab1"))
+              style = "Table Caption")#, 
+  #autonum = run_autonum(seq_id = "tab", bkm = "tab1"))
 # ft <- footnote( ft, i = 1, j = 3:4,
 #                 value = as_paragraph(
 #                   c("This is footnote three",

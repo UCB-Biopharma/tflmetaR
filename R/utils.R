@@ -34,7 +34,7 @@ read_footer <- function(
   colnames(tfile) <- toupper(colnames(tfile))
   required_cols <- c("TYPE", "PGMNAME", "OID", "TTL1", "BYLINE1", "FOOT1")
   if (!all(required_cols %in% colnames(tfile))) stop("Input file has required column(s) missing.\n")
-  else tfile <- tfile %>% select(TYPE, PGMNAME, OID, starts_with("TTL"), starts_with("BYLINE"), starts_with("FOOT"))
+  else tfile <- tfile %>% select(TYPE, PGMNAME, OID, POPULATION, starts_with("TTL"), starts_with("BYLINE"), starts_with("FOOT"))
   #tfile <- tfile[, colSums(is.na(tfile)) != nrow(tfile)]
 
   return(tfile)
@@ -101,7 +101,9 @@ select_with_name <- function(
     filter(PGMNAME == pname & OID == oid)
 
   ## make sure only one unique entry is generated
-  if (nrow(footer_list) != 1) stop("No unique entry generated. Check the title and footnote file and try again.\n")
+  #if (nrow(footer_list) != 1) stop("No unique entry generated. Check the title and footnote file and try again.\n")
+  if (nrow(footer_list) == 0) stop("No entry is generated. Check the title and footnote file and try again.\n")
+  if (nrow(footer_list) > 1) stop("Non unique entry generated. Check the title and footnote file and try again.\n")
 
   return(footer_list)
 }
