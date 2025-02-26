@@ -1,22 +1,20 @@
-#' Read header and footer Excel file
+#' Read the Excel file of header and footer
 #'
-#' This function reads headers and footers from a spreadsheet, either an Excel file or csv file.
+#' This function reads headers and footers from an excel spreadsheet.
 #'
 #'
 #'
-#' @details Table_layout is based upon the complex_layout. However, unlike complex_layout, the table layout consists of eight rows for headers, titles, plot, notes, and footnotes.
-#' The fourth row and sixth row are used to create space above and below the table.\cr
-#' The heights of the rows in table_layout with `"free"` scales are 5%, 5%, 5%, 5%, 60%, 5%, 5%, and 10% of the area respectively.\cr
-#' In `table_layout` with `"fixed"` scales, row heights are specified in inches for annotations, while the remaining space is dedicated to the plot.
-#' This ensures consistent spacing across outputs, with the plot occupying the central area.\cr
-#' Please note that as output space is reduced, annotations retain their space which makes the plot appear smaller.
+#' @details The title and footnotes are to be maintained and managed in the excel spreadsheet. This file should have the following column names in order for the program
+#' to pull appropriate header or footnotes:\cr
+#' \tab "TYPE", "PGMNAME", "OID", "TTL1", "SOURCE", "BYLINE1", "FOOT1" \cr
+#' Filename should have the complete folder path and correct file extension. \cr
 #'
-#' For an example, see `vignette("table_example", package = "plotation")`.
+#' For an example, see `vignette("Use_Flextable", package = "headr")`.
 #'
 #' @rdname read_header
 #' @seealso [read_header]
 #' @examples
-#' table_layout()
+#'
 #'
 #' # (to use |> version 4.1.0 of R is required, for lower versions we recommend %>% from magrittr)
 #' library(magrittr)
@@ -32,13 +30,14 @@ read_footer <- function(
   if (!file.exists(filename)) stop("Input header_footer file does not exist! Check the filename and/or pathname and try again. \n", filename)
   tfile <- readxl::read_excel(filename)
   colnames(tfile) <- toupper(colnames(tfile))
-  required_cols <- c("TYPE", "PGMNAME", "OID", "TTL1", "BYLINE1", "FOOT1")
+  required_cols <- c("TYPE", "PGMNAME", "OID", "TTL1", "SOURCE", "BYLINE1", "FOOT1")
   if (!all(required_cols %in% colnames(tfile))) stop("Input file has required column(s) missing.\n")
-  else tfile <- tfile %>% select(TYPE, PGMNAME, OID, POPULATION, starts_with("TTL"), starts_with("BYLINE"), starts_with("FOOT"))
+  else tfile <- tfile %>% select(TYPE, PGMNAME, SOURCE, OID, POPULATION, starts_with("TTL"), starts_with("BYLINE"), starts_with("FOOT"))
   #tfile <- tfile[, colSums(is.na(tfile)) != nrow(tfile)]
 
   return(tfile)
 }
+
 
 
 #' Select header and footer based on TFL number
@@ -91,8 +90,8 @@ select_with_name <- function(
     df = list(),
     pname = "",
     oid ="" ) {
-  if (is.na(pname) | is.na(oid)) stop("Selection paramters are not valid.\n")
-
+  #if (is.na(pname) | is.na(oid)) stop("Selection paramters are not valid.\n")
+  if (is.na(pname)) stop("Selection paramters are not valid.\n") #allow NA as OID
   ## if type is not NULL, combine type with tfl number
   # if (!is.na(type)) crit <- paste(type, tnumber) %>% gsub("\\b(\\w+)\\s+\\1\\b", "\\1")
   # else crit <- tnumber

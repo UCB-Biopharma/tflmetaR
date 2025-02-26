@@ -66,20 +66,21 @@ ft_pen <- labelizor(
   x = ft_pen, 
   part = "header", 
   labels = stringr::str_to_title)
+fname <- "C:/Users/u066227/Rproj/sample_titles.xls"
+# hfooter_file <- read_footer("C:/Users/u066227/Rproj/sample_titles.xls")
+# hfooter_list <- select_with_number(df =hfooter_file,  tnumber = "Table 2.1")
+# 
+# head_list <- ht_list %>% select(starts_with("TTL"), POPULATION) 
+# head_list <- Filter(function(x) !is.na(x), head_list)
+# foot_list <- ht_list %>% select(starts_with("FOOT")) 
 
-header_footer <- read_footer("C:/Users/u066227/Rproj/sample_titles.xls")
-
-ht_list <- select_with_number(df =header_footer,  tnumber = "Table 2.1")
-
-head_list <- ht_list %>% select(starts_with("TTL"), POPULATION) 
-head_list <- Filter(function(x) !is.na(x), head_list)
-foot_list <- ht_list %>% select(starts_with("FOOT")) 
-
+head_list <- header_for_flextable(filename = fname, tnumber = "Table 2.1")
+foot_list <- footer_for_flextable(filename = fname, tnumber = "Table 2.1")
 ft <- footnote( ft_pen, i = 1, j = 1:2,
                 value = as_paragraph(
                   unlist(foot_list)
                 ),
-                ref_symbols = c("a", "b"),
+                ref_symbols = c(" ", "  "),
                 part = "header",inline=T) %>% 
   set_caption(caption = {paste(head_list, sep = "\n", collapse = " \n ")},
               style = "Table Caption")#, 
