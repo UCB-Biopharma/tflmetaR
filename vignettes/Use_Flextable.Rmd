@@ -11,8 +11,8 @@ vignette: >
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
-  fig.width=7, 
-  fig.height=4
+  fig.width=10, 
+  fig.height=6
 )
 ```
 
@@ -26,7 +26,7 @@ Here's an example of using `headr` with `Flextable` to generate table outputs:
 # Load the necessary libraries
 library(headr)
 library(flextable)
-library(tables)
+#library(tables)
 library(palmerpenguins)
 library(magrittr)
 library(glue)
@@ -65,6 +65,7 @@ ft_pen <- labelizor(
   part = "header", 
   labels = stringr::str_to_title)
 
+## Title and footnote spreadsheet path and filename
 fname <- "C:/Users/u066227/Rproj/sample_titles.xls"
 # hfooter_file <- read_footer("C:/Users/u066227/Rproj/sample_titles.xls")
 # hfooter_list <- select_with_number(df =hfooter_file,  tnumber = "Table 2.1")
@@ -73,16 +74,21 @@ fname <- "C:/Users/u066227/Rproj/sample_titles.xls"
 # head_list <- Filter(function(x) !is.na(x), head_list)
 # foot_list <- ht_list %>% select(starts_with("FOOT")) 
 
+## Obtain header (title, subtitle, population) with one functional call
 head_list <- header_for_flextable(filename = fname, tnumber = "Table 2.1")
+
+## Obtain footnotes and ref notes (including program name, run timestamp, data sources) with one functional call
 foot_list <- footer_for_flextable(filename = fname, tnumber = "Table 2.1")
+
+
 ft <- footnote( ft_pen, i = 1, j = 1:2,
                 value = as_paragraph(
                   unlist(foot_list)
                 ),
-                ref_symbols = c(" ", "  "),
-                part = "header",inline=T) %>% 
-  set_caption(caption = {paste(head_list, sep = "\n", collapse = " \n ")},
-              style = "Table Caption")#, 
+                ref_symbols = c(" ", " "),
+                part = "header",inline=FALSE) %>% 
+                # set_caption(caption = {paste(head_list, sep = "\n", collapse = " \n ")}, 
+                # style = "Table Caption")#, 
   #autonum = run_autonum(seq_id = "tab", bkm = "tab1"))
 # ft <- footnote( ft, i = 1, j = 3:4,
 #                 value = as_paragraph(
@@ -92,16 +98,13 @@ ft <- footnote( ft_pen, i = 1, j = 1:2,
 #                 ref_symbols = c( "c","d"),
 #                 part = "header",inline=T)
 
-ft <- add_header_lines(ft, 
-                       values = {paste(head_list, sep = "\n", collapse = " \n ")})
+  add_header_lines(values = {paste(head_list, sep = "\n", collapse = " \n ")}, top = TRUE)
   # values = c("this is a first line", 
   #    "this is a second line") ) 
 
-ft <- hline_bottom(ft, j = NULL, border = NULL, part = "header")
+#ft <- hline_bottom(ft, j = NULL, border = NULL, part = "header")
 
 ft <- add_footer_lines(ft, values = glue("Generated from {basename(rstudioapi::getSourceEditorContext()$path)} on {Sys.time()} Data Source(s): ADSL\n"))
-ft
-
 ```
 
 ## Examples
