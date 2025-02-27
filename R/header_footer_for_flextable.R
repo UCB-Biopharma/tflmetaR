@@ -9,7 +9,7 @@
 #' @param filename Full filename including folder path and file extension.
 #'
 #'
-#' @export header_for_flextable
+#' @export
 header_for_flextable <- function(
     filename,
     type = NA,
@@ -28,9 +28,9 @@ header_for_flextable <- function(
 
   header_list <- hfooter_list %>%
     select(starts_with("TTL"), POPULATION)
-  head_list <- Filter(function(x) !is.na(x), head_list)
+  head_list <- Filter(function(x) !is.na(x), header_list)
 
-  return(unlist(head_list))
+  return(head_list)
   #foot_list <- ht_list %>% select(starts_with("FOOT"))
 }
 
@@ -66,12 +66,14 @@ footer_for_flextable <- function(
   footer_list <- hfooter_list %>%
     select(starts_with("FOOT"))
 
+  footer_list <- Filter(function(x) !is.na(x), footer_list)
+
   data_src <- hfooter_list %>%
     select(SOURCE)
 
   current_time <- Sys.time()
   runtime_stamp <- format(current_time, "%Y-%m-%d %H:%M:%S")
-  ref_timestamp <- glue("Generated from {basename(rstudioapi::getSourceEditorContext()$path)} on ", runtime_stamp, " Data Source(s): ", unlist(data_src), "\n")
+  ref_timestamp <- glue("\nGenerated from {basename(rstudioapi::getSourceEditorContext()$path)} on ", runtime_stamp, " Data Source(s): ", unlist(data_src), "\n")
   footer_list <- c(footer_list, ref_timestamp)
   return(footer_list)
   #foot_list <- ht_list %>% select(starts_with("FOOT"))

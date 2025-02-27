@@ -9,7 +9,7 @@
 #' @details
 #' Additional details...
 #'
-#' @export select_title
+#' @export select_row
 select_row <- function(
     df,
     type = NA,

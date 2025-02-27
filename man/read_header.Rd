@@ -2,25 +2,23 @@
 % Please edit documentation in R/utils.R
 \name{read_footer}
 \alias{read_footer}
-\title{Read header and footer Excel file}
+\title{Read the Excel file of header and footer}
 \usage{
 read_footer(filename = filename)
 }
 \description{
-This function reads headers and footers from a spreadsheet, either an Excel file or csv file.
+This function reads headers and footers from an excel spreadsheet.
 }
 \details{
-Table_layout is based upon the complex_layout. However, unlike complex_layout, the table layout consists of eight rows for headers, titles, plot, notes, and footnotes.
-The fourth row and sixth row are used to create space above and below the table.\cr
-The heights of the rows in table_layout with \code{"free"} scales are 5\%, 5\%, 5\%, 5\%, 60\%, 5\%, 5\%, and 10\% of the area respectively.\cr
-In \code{table_layout} with \code{"fixed"} scales, row heights are specified in inches for annotations, while the remaining space is dedicated to the plot.
-This ensures consistent spacing across outputs, with the plot occupying the central area.\cr
-Please note that as output space is reduced, annotations retain their space which makes the plot appear smaller.
+The title and footnotes are to be maintained and managed in the excel spreadsheet. This file should have the following column names in order for the program
+to pull appropriate header or footnotes:\cr
+\tab "TYPE", "PGMNAME", "OID", "TTL1", "SOURCE", "BYLINE1", "FOOT1" \cr
+Filename should have the complete folder path and correct file extension. \cr
 
-For an example, see \code{vignette("table_example", package = "plotation")}.
+For an example, see \code{vignette("Use_Flextable", package = "headr")}.
 }
 \examples{
-table_layout()
+
 
 # (to use |> version 4.1.0 of R is required, for lower versions we recommend \%>\% from magrittr)
 library(magrittr)

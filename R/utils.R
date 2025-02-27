@@ -59,8 +59,8 @@ select_with_number <- function(
   if (!(toupper(type) %in% c("LISTING", "TABLE", "FIGURE", "GRAPH", '', NA)) ) stop("TLF type is invalid.\n")
 
   ## if type is not NULL, combine type with tfl number
-  if (!is.na(type)) crit <- paste(type, tnumber) %>% gsub("\\b(\\w+)\\s+\\1\\b", "\\1")
-  else crit <- tnumber
+  # if (!is.na(type)) crit <- paste(type, tnumber) %>% gsub("\\b(\\w+)\\s+\\1\\b", "\\1")
+  # else crit <- tnumber
 
   if (is.na(type))  {
     footer_list <- df %>% filter(TTL1 == tnumber)
@@ -85,7 +85,7 @@ select_with_number <- function(
 #' or combined in TTL1 column. However, if both type and TFL number are already combined in column TTL1, there should be a space to separate them.
 #' Additional details...
 #'
-#' @export select_with_number
+#' @export select_with_name
 select_with_name <- function(
     df = list(),
     pname = "",

@@ -16,11 +16,9 @@ knitr::opts_chunk$set(
 )
 ```
 
-
 ## Introduction
 
-
-This document is designed to provide you with practical examples of how to use `headr` to add headers and footnotes to your TFL outputs. 
+This document is designed to provide you with practical examples of how to use `headr` to add headers and footnotes to your TFL outputs.
 
 Here's an example of using `headr` with `Flextable` to generate table outputs:
 
@@ -66,6 +64,7 @@ ft_pen <- labelizor(
   x = ft_pen, 
   part = "header", 
   labels = stringr::str_to_title)
+
 fname <- "C:/Users/u066227/Rproj/sample_titles.xls"
 # hfooter_file <- read_footer("C:/Users/u066227/Rproj/sample_titles.xls")
 # hfooter_list <- select_with_number(df =hfooter_file,  tnumber = "Table 2.1")
@@ -108,12 +107,9 @@ ft
 ## Examples
 
 ### Simple Examples
+
 #### Simple Layout with margins
 
-In these examples, we're creating a line plot using the `mtcars` dataset and adding a simple layout to it.
-
-Here, we're creating a line plot of `mpg` against `wt` from the `mtcars` dataset. We're then piping this plot into the `plotation()` function, where we specify a simple layout with a `margin` of 2 cm on all sides.
-
-
+In these examples, we're creating a table with 'flextable\` package.
 
 #### `show(layout)` method:
