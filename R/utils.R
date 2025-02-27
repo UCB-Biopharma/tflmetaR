@@ -1,26 +1,22 @@
-#' Read the Excel file of header and footer
+#' Read Titles and Footnotes Excel File
+#'
 #'
 #' This function reads headers and footers from an excel spreadsheet.
 #'
-#'
+#' @param filename a full filename including folder path.
 #'
 #' @details The title and footnotes are to be maintained and managed in the excel spreadsheet. This file should have the following column names in order for the program
 #' to pull appropriate header or footnotes:\cr
-#' \tab "TYPE", "PGMNAME", "OID", "TTL1", "SOURCE", "BYLINE1", "FOOT1" \cr
+#' \cr "TYPE", "PGMNAME", "OID", "TTL1", "SOURCE", "BYLINE1", "FOOT1" \cr
 #' Filename should have the complete folder path and correct file extension. \cr
 #'
-#' For an example, see `vignette("Use_Flextable", package = "headr")`.
+#' For an example, see `vignette("use_flextable", package = "headr")`.
 #'
 #' @rdname read_header
-#' @seealso [read_header]
+#' @seealso [select_row_footer], [select_row_header]
 #' @examples
 #'
-#'
-#' # (to use |> version 4.1.0 of R is required, for lower versions we recommend %>% from magrittr)
-#' library(magrittr)
-#'
-#' library(flextable)
-#'
+#' titles_footnotes <- read_footer("path/to/your/titles.xls")
 #'
 #'
 #' @export read_footer
@@ -43,7 +39,10 @@ read_footer <- function(
 #' Select header and footer based on TFL number
 #'
 #' This function select titles and footnotes based on TFL number
-#'
+#' @param df A dataframe or list of  titles and footnotes
+#' @param tnumber TFL number, used to select proper titles and footnotes. This can be with or without TFL type.If pname parameter is not given, tnumber must not be NA.
+#' @param type optional TFL type
+
 #'
 #' @details Each TFL (table, listing, or figure) should have a type and TFL number in the header_footer Excel spreadsheet. This information can be in two separate columns (TYPE & TTL1)
 #' or combined in TTL1 column. However, if both type and TFL number are already combined in column TTL1, there should be a space to separate them.
@@ -80,6 +79,9 @@ select_with_number <- function(
 #'
 #' This function select titles and footnotes based on TFL number
 #'
+#' @param df A dataframe or list of overall title and footnote
+#' @param pname The program name used to select proper title entry. If this parameter is given (not NA), it has precedence over TFL number for selection.
+#' @param oid Optional parameter
 #'
 #' @details Each TFL (table, listing, or figure) should have a type and TFL number in the header_footer Excel spreadsheet. This information can be in two separate columns (TYPE & TTL1)
 #' or combined in TTL1 column. However, if both type and TFL number are already combined in column TTL1, there should be a space to separate them.

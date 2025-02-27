@@ -6,6 +6,13 @@
 \usage{
 select_with_name(df = list(), pname = "", oid = "")
 }
+\arguments{
+\item{df}{A dataframe or list of overall title and footnote}
+
+\item{pname}{The program name used to select proper title entry. If this parameter is given (not NA), it has precedence over TFL number for selection.}
+
+\item{oid}{Optional parameter}
+}
 \description{
 This function select titles and footnotes based on TFL number
 }

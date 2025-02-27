@@ -2,7 +2,7 @@
 % Please edit documentation in R/select_row.R
 \name{select_row_header}
 \alias{select_row_header}
-\title{Select header and footer based on program name or TFL number}
+\title{Select titles and subtitles based on program name or TFL number}
 \usage{
 select_row_header(
   filename,
@@ -24,8 +24,8 @@ select_row_header(
 \item{df}{A dataframe or list of overall title and footnote}
 }
 \description{
-Select header and footer based on program name or TFL number
+Select titles and subtitles based on program name or TFL number
 }
 \details{
-Additional details...
+Generate a list to contain titles, subtitles and population. The list structure provides flexibility comparing to unlisted string vector as return value.
 }

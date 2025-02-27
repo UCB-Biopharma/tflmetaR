@@ -1,4 +1,4 @@
-#' Select header and footer based on program name or TFL number
+#' Select footnotes based on program name or TFL number
 #'
 #' @param df A dataframe or list of overall title and footnote
 #' @param tnumber TFL number, used to select proper titles and footnotes. This can be with or without TFL type.If pname parameter is not given, tnumber must not be NA.
@@ -7,7 +7,7 @@
 #' @param oid Optional parameter
 #'
 #' @details
-#' Additional details...
+#' Generate footnotes in a list by calling this function. As a custom, one additional line of program name, run timestamp, and data source(s) is added to the list at the end.
 #'
 #' @export select_row_footer
 select_row_footer <- function(
@@ -30,7 +30,7 @@ select_row_footer <- function(
 }
 
 
-#' Select header and footer based on program name or TFL number
+#' Select titles and subtitles based on program name or TFL number
 #'
 #' @param df A dataframe or list of overall title and footnote
 #' @param tnumber TFL number, used to select proper titles and footnotes. This can be with or without TFL type.If pname parameter is not given, tnumber must not be NA.
@@ -39,7 +39,7 @@ select_row_footer <- function(
 #' @param oid Optional parameter
 #'
 #' @details
-#' Additional details...
+#' Generate a list to contain titles, subtitles and population. The list structure provides flexibility comparing to unlisted string vector as return value.
 #'
 #' @export select_row_header
 select_row_header <- function(

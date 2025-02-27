@@ -21,5 +21,5 @@ footer_with_stamp(filename, type = NA, tnumber = NA, pname = NA, oid = NA)
 This function prepares footnotes for tables and listings, or figures.
 }
 \details{
-Calls other utils functions.
+Generate a list of footnotes with an additional line of program name, run timestamp, and data source(s) added to the end.
 }

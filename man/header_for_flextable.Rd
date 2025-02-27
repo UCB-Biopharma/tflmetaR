@@ -18,7 +18,7 @@ header_for_flextable(filename, type = NA, tnumber = NA, pname = NA, oid = NA)
 \item{oid}{Optional parameter}
 }
 \description{
-This function reads headers for tables and listings using {flextable} package.
+This function reads headers for tables and listings which will be generated using {flextable} package.
 }
 \details{
 Calls other utils functions. The header should be unlisted.

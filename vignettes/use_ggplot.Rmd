@@ -1,5 +1,5 @@
 ---
-title: "Add Titles and Footnotes to ggplot Figures"
+title: "Add Titles and Footnotes: ggplot"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{use_ggplot}
@@ -11,49 +11,40 @@ vignette: >
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
-  fig.width=10, 
+  fig.width=8, 
   fig.height=6
 )
 ```
-
+# The `headr` Package <a href="https://github.com/Cassinic/headr/"><img src="../man/figure/logo.png" alt="headr logo" style="border:none" align="right" height="182.25"></a>
 
 ## Introduction
 
 
-This document is designed to provide you with practical examples of how to use `headr` to add headers and footnotes to your figure outputs. 
+The `headr` is a very flexible toolbox to interact with other table or figure packages. This document is to provide you with an examples of how to use `headr` to add titles and footnotes to the ggplot figures. 
 
-Here's an example of using `headr` with `ggplot` to generate figure outputs:
+First, the filename including the file extension and the full path of the spreadsheet which is used to manage titles and foonotes information must be provided.\cr Here's an example of using `headr` along with `ggplot` to generate figure outputs:
 
 ```{r setup}
 # Load the necessary libraries
 library(headr)
 library(ggplot2)
-#library(tables)
-#library(mtcars)
 library(magrittr)
 library(glue)
-library(dplyr)
+library(dplyr, warn.conflicts = FALSE)
 # (to use |> version 4.1.0 of R is required, for lower versions we recommend %>% from magrittr)
  
 # Title and footnote spreadsheet path and filename
 filename_with_path <- "C:/Users/u066227/Rproj/sample_titles.xls"
-# hfooter_file <- read_footer("C:/Users/u066227/Rproj/sample_titles.xls")
-# hfooter_list <- select_with_number(df =hfooter_file,  tnumber = "Table 2.1")
-# 
-# head_list <- ht_list %>% select(starts_with("TTL"), POPULATION) 
-# head_list <- Filter(function(x) !is.na(x), head_list)
-# foot_list <- ht_list %>% select(starts_with("FOOT")) 
 
 # Obtain header (title, subtitle, population) with one functional call
-#head_list <- header_for_flextable(filename = filename_with_path, tnumber = "Figure 1.1")
 head_list <- select_row_header(filename = filename_with_path, tnumber = "Figure 1.1")
+
 # Obtain footnotes and ref notes (including program name, run timestamp, data sources) with one functional call
-#foot_list <- footer_for_flextable(filename = filename_with_path, tnumber = "Figure 1.1")
 foot_list <- select_row_footer(filename = filename_with_path, tnumber = "Figure 1.1")
 
 fig <- ggplot(mpg, aes(displ, hwy)) + 
   geom_point(aes(colour = class)) + 
-  geom_smooth(method = "lm", se = FALSE) + 
+  geom_smooth(method = "lm", formula = y ~ x, se = FALSE) + 
   theme(legend.position = "right") +
     labs(
     title = {paste(head_list, sep = "\n", collapse = "\n ")},
@@ -63,16 +54,17 @@ fig <- ggplot(mpg, aes(displ, hwy)) +
   )
 
 fig
-
 ```
 
 ## Examples
 
 ### Simple Examples
-#### Simple Layout with margins
 
-In these examples, we're creating a simple plot using the `mtcars` dataset and adding headers and footnotes to it.
 
-Here, we're creating a line plot of `mpg` against `displ` from the `mtcars` dataset. 
+In these examples, we're creating a simple plot using the `mtcars` dataset and adding titles and footnotes to it.
+
+### Additional Note:
+
+As is the custom to print the program name, run time stamp and data source at the very bottom of the graph.
 
 

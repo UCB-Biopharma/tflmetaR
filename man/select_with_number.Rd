@@ -6,6 +6,13 @@
 \usage{
 select_with_number(df = list(), type = NULL, tnumber = NULL)
 }
+\arguments{
+\item{df}{A dataframe or list of  titles and footnotes}
+
+\item{type}{optional TFL type}
+
+\item{tnumber}{TFL number, used to select proper titles and footnotes. This can be with or without TFL type.If pname parameter is not given, tnumber must not be NA.}
+}
 \description{
 This function select titles and footnotes based on TFL number
 }

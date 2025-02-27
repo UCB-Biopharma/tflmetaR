@@ -2,7 +2,7 @@
 % Please edit documentation in R/select_row.R
 \name{select_row_footer}
 \alias{select_row_footer}
-\title{Select header and footer based on program name or TFL number}
+\title{Select footnotes based on program name or TFL number}
 \usage{
 select_row_footer(
   filename,
@@ -24,8 +24,8 @@ select_row_footer(
 \item{df}{A dataframe or list of overall title and footnote}
 }
 \description{
-Select header and footer based on program name or TFL number
+Select footnotes based on program name or TFL number
 }
 \details{
-Additional details...
+Generate footnotes in a list by calling this function. As a custom, one additional line of program name, run timestamp, and data source(s) is added to the list at the end.
 }

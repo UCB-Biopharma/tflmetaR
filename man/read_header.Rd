@@ -2,9 +2,12 @@
 % Please edit documentation in R/utils.R
 \name{read_footer}
 \alias{read_footer}
-\title{Read the Excel file of header and footer}
+\title{Read Titles and Footnotes Excel File}
 \usage{
 read_footer(filename = filename)
+}
+\arguments{
+\item{filename}{a full filename including folder path.}
 }
 \description{
 This function reads headers and footers from an excel spreadsheet.
@@ -12,22 +15,17 @@ This function reads headers and footers from an excel spreadsheet.
 \details{
 The title and footnotes are to be maintained and managed in the excel spreadsheet. This file should have the following column names in order for the program
 to pull appropriate header or footnotes:\cr
-\tab "TYPE", "PGMNAME", "OID", "TTL1", "SOURCE", "BYLINE1", "FOOT1" \cr
+\cr "TYPE", "PGMNAME", "OID", "TTL1", "SOURCE", "BYLINE1", "FOOT1" \cr
 Filename should have the complete folder path and correct file extension. \cr
 
-For an example, see \code{vignette("Use_Flextable", package = "headr")}.
+For an example, see \code{vignette("use_flextable", package = "headr")}.
 }
 \examples{
 
-
-# (to use |> version 4.1.0 of R is required, for lower versions we recommend \%>\% from magrittr)
-library(magrittr)
-
-library(flextable)
-
+titles_footnotes <- read_footer("path/to/your/titles.xls")
 
 
 }
 \seealso{
-\link{read_header}
+\link{select_row_footer}, \link{select_row_header}
 }

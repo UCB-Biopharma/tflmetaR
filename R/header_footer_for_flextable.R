@@ -1,6 +1,6 @@
 #' Generate headers - titles and population
 #'
-#' This function reads headers for tables and listings using {flextable} package.
+#' This function reads headers for tables and listings which will be generated using {flextable} package.
 #'
 #'
 #'
@@ -13,7 +13,7 @@
 #' @param oid Optional parameter
 #'
 #'
-#' @export
+#' @export header_for_flextable
 header_for_flextable <- function(
     filename,
     type = NA,
@@ -93,7 +93,7 @@ footer_for_flextable <- function(
 #'
 #'
 #'
-#' @details Calls other utils functions.
+#' @details Generate a list of footnotes with an additional line of program name, run timestamp, and data source(s) added to the end.
 #'
 #' @param df A dataframe or list of titles and footnotes.
 #' @param tnumber TFL number, used to select proper titles and footnotes. This can be with or without TFL type.If pname parameter is not given, tnumber must not be NULL.
