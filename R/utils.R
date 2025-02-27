@@ -33,7 +33,7 @@ read_footer <- function(
   required_cols <- c("TYPE", "PGMNAME", "OID", "TTL1", "SOURCE", "BYLINE1", "FOOT1")
   if (!all(required_cols %in% colnames(tfile))) stop("Input file has required column(s) missing.\n")
   else tfile <- tfile %>% select(TYPE, PGMNAME, SOURCE, OID, POPULATION, starts_with("TTL"), starts_with("BYLINE"), starts_with("FOOT"))
-  #tfile <- tfile[, colSums(is.na(tfile)) != nrow(tfile)]
+  #tfile <- tfile[, colSums(is.null(tfile)) != nrow(tfile)]
 
   return(tfile)
 }
@@ -52,17 +52,17 @@ read_footer <- function(
 #' @export select_with_number
 select_with_number <- function(
     df = list(),
-    type = NA,
-    tnumber ="" ) {
-  if (is.na(type) & is.na(tnumber)) stop("Selection paramters can not be NULL.\n")
+    type = NULL,
+    tnumber = NULL ) {
+  if (is.null(type) & is.null(tnumber)) stop("Selection paramters can not be NULL.\n")
 
-  if (!(toupper(type) %in% c("LISTING", "TABLE", "FIGURE", "GRAPH", '', NA)) ) stop("TLF type is invalid.\n")
+  #if (!(toupper(type) %in% c("LISTING", "TABLE", "FIGURE", "GRAPH")) & !is.null(type) ) stop("TLF type is invalid.\n")
 
   ## if type is not NULL, combine type with tfl number
-  # if (!is.na(type)) crit <- paste(type, tnumber) %>% gsub("\\b(\\w+)\\s+\\1\\b", "\\1")
+  # if (!is.null(type)) crit <- paste(type, tnumber) %>% gsub("\\b(\\w+)\\s+\\1\\b", "\\1")
   # else crit <- tnumber
 
-  if (is.na(type))  {
+  if (is.null(type))  {
     footer_list <- df %>% filter(TTL1 == tnumber)
   } else {
     footer_list <- df %>% filter(TYPE == type & TTL1 == tnumber)
@@ -90,10 +90,10 @@ select_with_name <- function(
     df = list(),
     pname = "",
     oid ="" ) {
-  #if (is.na(pname) | is.na(oid)) stop("Selection paramters are not valid.\n")
-  if (is.na(pname)) stop("Selection paramters are not valid.\n") #allow NA as OID
+  #if (is.null(pname) | is.null(oid)) stop("Selection paramters are not valid.\n")
+  if (is.null(pname)) stop("Selection paramters are not valid.\n") #allow NA as OID
   ## if type is not NULL, combine type with tfl number
-  # if (!is.na(type)) crit <- paste(type, tnumber) %>% gsub("\\b(\\w+)\\s+\\1\\b", "\\1")
+  # if (!is.null(type)) crit <- paste(type, tnumber) %>% gsub("\\b(\\w+)\\s+\\1\\b", "\\1")
   # else crit <- tnumber
 
   footer_list <- df %>%

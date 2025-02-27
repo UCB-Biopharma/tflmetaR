@@ -1,5 +1,5 @@
 ---
-title: "use_ggplot"
+title: "Add Titles and Footnotes to ggplot Figures"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{use_ggplot}
@@ -35,8 +35,8 @@ library(glue)
 library(dplyr)
 # (to use |> version 4.1.0 of R is required, for lower versions we recommend %>% from magrittr)
  
-
-fname <- "C:/Users/u066227/Rproj/sample_titles.xls"
+# Title and footnote spreadsheet path and filename
+filename_with_path <- "C:/Users/u066227/Rproj/sample_titles.xls"
 # hfooter_file <- read_footer("C:/Users/u066227/Rproj/sample_titles.xls")
 # hfooter_list <- select_with_number(df =hfooter_file,  tnumber = "Table 2.1")
 # 
@@ -44,8 +44,12 @@ fname <- "C:/Users/u066227/Rproj/sample_titles.xls"
 # head_list <- Filter(function(x) !is.na(x), head_list)
 # foot_list <- ht_list %>% select(starts_with("FOOT")) 
 
-head_list <- header_for_flextable(filename = fname, tnumber = "Figure 1.1")
-foot_list <- footer_for_flextable(filename = fname, tnumber = "Figure 1.1")
+# Obtain header (title, subtitle, population) with one functional call
+#head_list <- header_for_flextable(filename = filename_with_path, tnumber = "Figure 1.1")
+head_list <- select_row_header(filename = filename_with_path, tnumber = "Figure 1.1")
+# Obtain footnotes and ref notes (including program name, run timestamp, data sources) with one functional call
+#foot_list <- footer_for_flextable(filename = filename_with_path, tnumber = "Figure 1.1")
+foot_list <- select_row_footer(filename = filename_with_path, tnumber = "Figure 1.1")
 
 fig <- ggplot(mpg, aes(displ, hwy)) + 
   geom_point(aes(colour = class)) + 
@@ -53,7 +57,7 @@ fig <- ggplot(mpg, aes(displ, hwy)) +
   theme(legend.position = "right") +
     labs(
     title = {paste(head_list, sep = "\n", collapse = "\n ")},
-    caption = {paste(foot_list, sep = "\t", collapse = "\n ")}) +
+    caption = {paste(foot_list, sep = "\t", collapse = "\n")}) +
       theme(plot.caption = element_text(hjust = 0, size = 11)) +
   theme(plot.title = element_text(hjust = 0.5, face = "bold")
   )
@@ -72,5 +76,3 @@ In these examples, we're creating a simple plot using the `mtcars` dataset and a
 Here, we're creating a line plot of `mpg` against `displ` from the `mtcars` dataset. 
 
 
-
-#### `show(layout)` method:

@@ -8,6 +8,14 @@ footer_for_flextable(filename, type = NA, tnumber = NA, pname = NA, oid = NA)
 }
 \arguments{
 \item{filename}{Full filename including folder path and file extension.}
+
+\item{type}{optional TFL type}
+
+\item{tnumber}{TFL number, used to select proper titles and footnotes. This can be with or without TFL type.If pname parameter is not given, tnumber must not be NULL.}
+
+\item{pname}{The program name used to select proper title entry. If this parameter is given (not NULL), it has precedence over TFL number for selection.}
+
+\item{oid}{Optional parameter}
 }
 \description{
 This function prepares footnotes for tables and listings using {flextable} package.

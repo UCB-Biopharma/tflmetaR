@@ -4,7 +4,7 @@
 \alias{select_with_number}
 \title{Select header and footer based on TFL number}
 \usage{
-select_with_number(df = list(), type = NA, tnumber = "")
+select_with_number(df = list(), type = NULL, tnumber = NULL)
 }
 \description{
 This function select titles and footnotes based on TFL number
