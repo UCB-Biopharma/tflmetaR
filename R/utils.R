@@ -4,7 +4,7 @@
 #' This function reads headers and footers from an excel spreadsheet.
 #'
 #' @param filename a full filename including folder path.
-#'
+#' @param sheetname optional sheetname
 #' @details The title and footnotes are to be maintained and managed in the excel spreadsheet. This file should have the following column names in order for the program
 #' to pull appropriate header or footnotes:\cr
 #' \cr "TYPE", "PGMNAME", "OID", "TTL1", "SOURCE", "BYLINE1", "FOOT1" \cr
@@ -21,10 +21,22 @@
 #'
 #' @export read_footer
 read_footer <- function(
-    filename = filename
+    filename = filename,
+    sheetname = NULL
     ) {
   if (!file.exists(filename)) stop("Input header_footer file does not exist! Check the filename and/or pathname and try again. \n", filename)
-  tfile <- readxl::read_excel(filename)
+  #tfile <- readxl::read_excel(filename_with_path, sheet=sheetname)
+  tfile <- tryCatch({
+    readxl::read_excel(filename, sheet = sheetname)
+  }, error = function(e) {
+    message("An error occurred: ", e$message)
+  })
+
+  if (is.null(tfile)) {
+    stop("Failed to read the sheet. Please check the file and sheet name.")
+  } else {
+
+
   colnames(tfile) <- toupper(colnames(tfile))
   required_cols <- c("TYPE", "PGMNAME", "OID", "TTL1", "SOURCE", "BYLINE1", "FOOT1")
   if (!all(required_cols %in% colnames(tfile))) stop("Input file has required column(s) missing.\n")
@@ -32,6 +44,7 @@ read_footer <- function(
   #tfile <- tfile[, colSums(is.null(tfile)) != nrow(tfile)]
 
   return(tfile)
+  }
 }
 
 

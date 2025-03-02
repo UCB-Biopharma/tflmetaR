@@ -25,7 +25,7 @@ select_row_footer <- function(
   else {
     row_list <- select_with_number(df = hfooter_file, tnumber = tnumber)
 
-    return(footer_with_stamp(filename = row_list, tnumber = "Figure 1.1"))
+    return(footer_with_stamp(filename = row_list, tnumber = tnumber)) #"Figure 1.1"))
   }
 }
 

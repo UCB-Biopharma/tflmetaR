@@ -4,10 +4,12 @@
 \alias{read_footer}
 \title{Read Titles and Footnotes Excel File}
 \usage{
-read_footer(filename = filename)
+read_footer(filename = filename, sheetname = NULL)
 }
 \arguments{
 \item{filename}{a full filename including folder path.}
+
+\item{sheetname}{optional sheetname}
 }
 \description{
 This function reads headers and footers from an excel spreadsheet.

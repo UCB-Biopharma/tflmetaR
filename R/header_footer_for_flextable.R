@@ -129,6 +129,7 @@ footer_with_stamp <- function(
   runtime_stamp <- format(current_time, "%Y-%m-%d %H:%M:%S")
   ref_timestamp <- glue("\nGenerated from {basename(rstudioapi::getSourceEditorContext()$path)} on ", runtime_stamp, " Data Source(s): ", unlist(data_src), "\n")
   footer_list <- c(footer_list, ref_timestamp)
+  names(footer_list)[length(footer_list)] <- "SRC" #give last part a name in case end user want to refer to it.
   return(footer_list)
-  #foot_list <- ht_list %>% select(starts_with("FOOT"))
+
 }
