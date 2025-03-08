@@ -39,9 +39,9 @@ library(dplyr, warn.conflicts = FALSE)
 # (to use |> version 4.1.0 of R is required, for lower versions we recommend %>% from magrittr)
  
 
-ft_pen <- penguins |> 
-  select(species, island, ends_with("mm")) |> 
-  group_by(species, island) |> 
+ft_pen <- penguins %>% 
+  select(species, island, ends_with("mm")) %>% 
+  group_by(species, island) %>% 
   summarise(
     across(
       where(is.numeric), 
@@ -50,14 +50,14 @@ ft_pen <- penguins |>
         sd = ~ sd(.x, na.rm = TRUE)
       )
     ),
-    .groups = "drop") |> 
-  rename_with(~ tolower(gsub("_mm_", "_", .x, fixed = TRUE))) |> 
-  flextable() |> 
-  colformat_double() |>
-  separate_header() |> 
-  theme_vanilla() |> 
-  align(align = "center", part = "all") |>
-  valign(valign = "center", part = "header") |> 
+    .groups = "drop") %>% 
+  rename_with(~ tolower(gsub("_mm_", "_", .x, fixed = TRUE))) %>% 
+  flextable() %>% 
+  colformat_double() %>%
+  separate_header() %>% 
+  theme_vanilla() %>% 
+  align(align = "center", part = "all") %>%
+  valign(valign = "center", part = "header") %>% 
   autofit()
 
 ft_pen <- labelizor(
