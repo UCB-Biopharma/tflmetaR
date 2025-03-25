@@ -1,11 +1,11 @@
-Package: headr
+Package: TFootr
 Title: Process Titles & Footnotes Table for Annotating TFLs/TLGs
 Version: 0.0.0.9000
 Authors@R: c(
     person("Gary", "Cao", , "Gary.Cao@UCB.com", role = c("aut", "cre")),
     person("Amber", "Wu", , "amber.wu2@UCB.com", role = "aut"),
     person("Yao", "Lu", ,"Yao.Lu@UCB.com", role = "aut"))
-Description: The appropriately placed titles and footnotes are essential parts for the clinical study reports (CSR). This `headr` package enables these metadata to be maintained in a separately located Excel spreadsheet for better handling. One can select the right titles or footnotes either based on output numbers, or the program names along with oid.
+Description: The appropriately placed titles and footnotes are essential parts for the clinical study reports (CSR). This `TFootr` package enables these metadata to be maintained in a separately located Excel spreadsheet for better handling. One can select the right titles or footnotes either based on output numbers, or the program names along with oid.
 License: `use_mit_license()`, `use_gpl3_license()` or friends to pick a
     license
 Encoding: UTF-8

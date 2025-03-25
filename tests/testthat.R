@@ -7,6 +7,6 @@
 # * https://testthat.r-lib.org/articles/special-files.html
 
 library(testthat)
-library(headr)
+library(TFootr)
 
-test_check("headr")
+test_check("TFootr")

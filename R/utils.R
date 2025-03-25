@@ -10,7 +10,7 @@
 #' \cr "TYPE", "PGMNAME", "OID", "TTL1", "SOURCE", "BYLINE1", "FOOT1" \cr
 #' Filename should have the complete folder path and correct file extension. \cr
 #'
-#' For an example, see `vignette("use_flextable", package = "headr")`.
+#' For an example, see `vignette("use_flextable", package = "TFootr")`.
 #'
 #' @rdname read_header
 #' @seealso [select_row_footer], [select_row_header]

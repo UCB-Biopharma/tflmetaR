@@ -15,18 +15,18 @@ knitr::opts_chunk$set(
   fig.height=6
 )
 ```
-# The `headr` Package <a href="https://github.com/Cassinic/headr/"><img src="../man/figure/logo.png" alt="headr logo" style="border:none" align="right" height="182.25"></a>
+# The `TFootr` Package <a href="https://github.com/Cassinic/TFootr/"><img src="../man/figure/logo.png" alt="TFootr logo" style="border:none" align="right" height="182.25"></a>
 
 ## Introduction
 
 
-The `headr` is a very flexible toolbox to interact with other table or figure packages. This document is to provide you with an examples of how to use `headr` to add titles and footnotes to the ggplot figures. 
+The `TFootr` is a very flexible toolbox to interact with other table or figure packages. This document is to provide you with an examples of how to use `TFootr` to add titles and footnotes to the ggplot figures. 
 
-First, the filename including the file extension and the full path of the spreadsheet which is used to manage titles and foonotes information must be provided.\cr Here's an example of using `headr` along with `ggplot` to generate figure outputs:
+First, the filename including the file extension and the full path of the spreadsheet which is used to manage titles and foonotes information must be provided.\cr Here's an example of using `TFootr` along with `ggplot` to generate figure outputs:
 
 ```{r setup}
 # Load the necessary libraries
-library(headr)
+library(TFootr)
 library(ggplot2)
 library(magrittr)
 library(glue)
