@@ -1,20 +1,47 @@
-# Introduction 
-TODO: Give a short introduction of your project. Let this section explain the objectives or the motivation behind this project. 
+---
+title: TFootr / README.md
+---
+# The TFootr Package <a href="https://github.com/Cassinic/TFootr/"><img src="man/figure/logo.png" alt="TFootr logo" style="float:right;height:182.25px" align="right" height="232.25"></a>
 
-# Getting Started
-TODO: Guide users through getting your code up and running on their own system. In this section you can talk about:
-1.	Installation process
-2.	Software dependencies
-3.	Latest releases
-4.	API references
+<!-- badges: start -->
+[![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/TFootr)](https://CRAN.R-project.org/package=TFootr)
+[![Total Downloads](http://cranlogs.r-pkg.org/badges/grand-total/TFootr)](https://CRAN.R-project.org/package=TFootr)
+[![Downloads](http://cranlogs.r-pkg.org/badges/TFootr)](https://CRAN.R-project.org/package=TFootr)
+[![R-CMD-check](https://github.com/mayoverse/TFootr/workflows/R-CMD-check/badge.svg)](https://github.com/mayoverse/TFootr/actions)
+<!-- badges: end -->
 
-# Build and Test
-TODO: Describe and show how to build your code and run the tests. 
+## Purpose
 
-# Contribute
-TODO: Explain how other users and developers can contribute to make your code better. 
 
-If you want to learn more about creating good readme files then refer the following [guidelines](https://docs.microsoft.com/en-us/azure/devops/repos/git/create-a-readme?view=azure-devops). You can also seek inspiration from the below readme files:
-- [ASP.NET Core](https://github.com/aspnet/Home)
-- [Visual Studio Code](https://github.com/Microsoft/vscode)
-- [Chakra Core](https://github.com/Microsoft/ChakraCore)
+The main object of the `TFootr` package is to process titles (headers) and footnotes file and to offer an interface with commonly used table packages (e.g., `flextable`) or figure packages (e.g., `ggplot2`) to add titles and footers to clinical study reports (CSR) deliverables.
+
+
+## Introduction
+
+The "Separation of data from code" practice in programming paradigm allows for better organization, easier maintenance, and improved security by limiting how data can be accessed and modified within a system. In the pharmaceutical industry, and many other fields, there is often a need to annotate tables and figures with informative headers and footnotes, e.g.,  titles, subtitles, captions, footnotes, and other text elements that provide important context to the reports. However, it is not uncommon to see many R or RMarkdown programs having these embedded within the program code. It is a challenge to update titles or footnotes which are mixed with the program code, at the least.
+
+The `TFootr` package can read in a separately maintained titles & footnotes spreadsheet and select the desired entry of titles and footnotes with either the program name, or TFL (table, figure, or listing) type and number. The titles or footnotes are placed in a list data structure and integrate seamlessly with the end user preferred table package (for example, "Flextable") or visualization program, e.g. ggplot2.
+
+
+
+## Installation
+
+You can install the development version from ...
+
+```         
+# git clone 
+```
+
+
+
+## More Info
+
+
+Additional information...
+
+## Vignettes
+
+For more detailed examples and usage, check out the vignettes.
+
+
+
