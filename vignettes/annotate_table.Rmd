@@ -1,8 +1,8 @@
 ---
-title: "Add Titles and Footnotes: Flextable"
+title: "annotate_table"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{use_flextable}
+  %\VignetteIndexEntry{annotate_table}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -11,7 +11,7 @@ vignette: >
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
-  fig.width=10, 
+  fig.width=7, 
   fig.height=6
 )
 ```
@@ -21,7 +21,7 @@ knitr::opts_chunk$set(
 ## Introduction
 
 
-The `TFootr` is a very flexible toolbox to interact with other table or figure packages. This document is to provide you with an examples of how to use `TFootr` to add titles and footnotes to the `flextable` outputs. 
+The `TFootr` is a very flexible toolbox to interact with other table or figure packages. This document is to provide you with an examples of how to use `TFootr` to add titles and footnotes to the `kable` outputs. 
 
 First, the filename including the file extension and the full path of the spreadsheet which is used to manage titles and foonotes information must be provided.\cr
 The title (including subtitles and population if applicable) information is saved in a list after function call to generate header or footers. 
@@ -31,63 +31,40 @@ The list of titles or footnotes can be converted into a string by `unlist` funct
 ```{r setup}
 # Load the necessary libraries
 library(TFootr)
-library(flextable)
-library(palmerpenguins)
+library(kableExtra)
 library(magrittr)
 library(glue)
 library(dplyr, warn.conflicts = FALSE)
 # (to use |> version 4.1.0 of R is required, for lower versions we recommend %>% from magrittr)
- 
+``` 
 
-ft_pen <- penguins %>% 
-  select(species, island, ends_with("mm")) %>% 
-  group_by(species, island) %>% 
-  summarise(
-    across(
-      where(is.numeric), 
-      .fns = list(
-        avg = ~ mean(.x, na.rm = TRUE),
-        sd = ~ sd(.x, na.rm = TRUE)
-      )
-    ),
-    .groups = "drop") %>% 
-  rename_with(~ tolower(gsub("_mm_", "_", .x, fixed = TRUE))) %>% 
-  flextable() %>% 
-  colformat_double() %>%
-  separate_header() %>% 
-  theme_vanilla() %>% 
-  align(align = "center", part = "all") %>%
-  valign(valign = "center", part = "header") %>% 
-  autofit()
+# A Table Without Annotation
 
-ft_pen <- labelizor(
-  x = ft_pen, 
-  part = "header", 
-  labels = c("avg" = "Mean", "sd" = "Standard Deviation"))
-
-ft_pen <- labelizor(
-  x = ft_pen, 
-  part = "header", 
-  labels = stringr::str_to_title)
+```{r}
+if(!require('knitr')) {
+  install.packages('knitr')
+  library('knitr')
+}
+iris2 <- head(iris)
+p <- knitr::kable(iris2, "simple", col.names = gsub("[.]", "_", names(iris)))
+p
+```
+```{r}
 
 # Title and footnote spreadsheet path and filename
-filename_with_path <- "C:/Users/u066227/Rproj/sample_titles.xls"
+filename_with_path <- "~/TFootr/inst/extdata/sample_titles.xls"
 
 # Obtain header (title, subtitle, population) with one functional call
 head_list <- header_for_flextable(filename = filename_with_path, tnumber = "Table 2.1")
 
 # Obtain footnotes and ref notes (including program name, run timestamp, data sources) with one functional call
-foot_list <- footer_for_flextable(filename = filename_with_path, tnumber = "Table 2.1")
+#foot_list <- footer_for_flextable(filename = filename_with_path, tnumber = "Table 2.1")
+```
 
+# Add Title to Table
 
-ft <- footnote( ft_pen, i = 1, j = 1:2,
-                value = as_paragraph(
-                  unlist(foot_list)
-                ),
-                ref_symbols = c(" ", " "),
-                part = "header",inline=FALSE) %>% 
-                add_header_lines(values = {paste(head_list, sep = "\n", collapse = " \n ")}, top = TRUE)
-
+```{r}
+ft <- knitr::kable(iris2, "simple", caption =  {paste(head_list, sep = "\n", collapse = " \n ")}, col.names = gsub("[.]", " ", names(iris)))
 ft
 
 ```
@@ -96,7 +73,7 @@ ft
 
 ### Simple Examples
 
-The above example of using `TFootr` with `Flextable` to generate table outputs.
+The above example of using `TFootr` with `Knitr::kable` to generate table outputs.
 
 ### Additional Note:
 

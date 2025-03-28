@@ -1,4 +1,4 @@
-#' Select footnotes based on program name or TFL number
+#' Get footnotes based on program name or TFL number
 #'
 #' @param df A dataframe or list of overall title and footnote
 #' @param tnumber TFL number, used to select proper titles and footnotes. This can be with or without TFL type.If pname parameter is not given, tnumber must not be NA.
@@ -9,8 +9,8 @@
 #' @details
 #' Generate footnotes in a list by calling this function. As a custom, one additional line of program name, run timestamp, and data source(s) is added to the list at the end.
 #'
-#' @export select_row_footer
-select_row_footer <- function(
+#' @export get_footnote
+get_footnote <- function(
     filename,
     type = NULL,
     tnumber = NULL,
@@ -24,8 +24,9 @@ select_row_footer <- function(
   if (!is.null(pname)) return(select_with_name(df = hfooter_file, pname = pname, oid = oid))
   else {
     row_list <- select_with_number(df = hfooter_file, tnumber = tnumber)
-
-    return(footer_with_stamp(filename = row_list, tnumber = tnumber)) #"Figure 1.1"))
+    row_list <- Filter(function(x) !is.na(x), row_list)
+    return (row_list %>% select(starts_with("FOOT")))
+    #return(add_stamp(filename = row_list, tnumber = tnumber)) #"Figure 1.1"))
   }
 }
 
