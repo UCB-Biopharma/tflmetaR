@@ -51,7 +51,7 @@ ggplot(mpg, aes(displ, hwy)) +
 Get titles:
 
 ```{r}
-file_name <- "~/TFootr/inst/extdata/sample_titles.xls"
+file_name <- file.path("../inst/extdata", "sample_titles.xls")
 title_list <- select_row_header(filename = file_name, tnumber = "Figure 1.1")
 ```
 

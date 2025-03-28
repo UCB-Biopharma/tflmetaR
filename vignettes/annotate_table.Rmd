@@ -52,7 +52,7 @@ p
 ```{r}
 
 # Title and footnote spreadsheet path and filename
-filename_with_path <- "~/TFootr/inst/extdata/sample_titles.xls"
+filename_with_path <- file.path("../inst/extdata", "sample_titles.xls")
 
 # Obtain header (title, subtitle, population) with one functional call
 head_list <- header_for_flextable(filename = filename_with_path, tnumber = "Table 2.1")
