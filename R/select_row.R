@@ -24,7 +24,8 @@ get_footnote <- function(
   if (!is.null(pname)) return(select_with_name(df = hfooter_file, pname = pname, oid = oid))
   else {
     row_list <- select_with_number(df = hfooter_file, tnumber = tnumber)
-    return (row_list)
+    row_list <- Filter(function(x) !is.na(x), row_list)
+    return (row_list %>% select(starts_with("FOOT")))
     #return(add_stamp(filename = row_list, tnumber = tnumber)) #"Figure 1.1"))
   }
 }

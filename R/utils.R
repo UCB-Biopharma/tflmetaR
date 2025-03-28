@@ -190,7 +190,7 @@ select_with_name <- function(
 #'
 #' @export add_stamp
 add_stamp <- function(
-  fnote_list,
+  fnote_list = footnote_list,
   ...) {
 
   # select either on program nmae of TFL number
@@ -202,11 +202,11 @@ add_stamp <- function(
   #
   # footer_list <- hfooter_list %>%
   #   select(starts_with("FOOT"))
-
+  #fnote_list <- fnote_list %>% as.data.frame()
   footer_list <- Filter(function(x) !is.na(x), fnote_list)
 
   data_src <- footer_list %>%
-    select(SOURCE)
+    select(starts_with("FOOT"),SOURCE)
 
   current_time <- Sys.time()
   runtime_stamp <- format(current_time, "%Y-%m-%d %H:%M:%S")
@@ -214,6 +214,5 @@ add_stamp <- function(
   footer_list <- c(footer_list, ref_timestamp)
   names(footer_list)[length(footer_list)] <- "SRC" #give last part a name in case end user want to refer to it.
   return(footer_list)
-
 }
 

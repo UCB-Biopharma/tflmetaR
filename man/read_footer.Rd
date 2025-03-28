@@ -29,5 +29,5 @@ titles_footnotes <- read_footer("path/to/your/titles.xls")
 
 }
 \seealso{
-\link{select_row_footer}, \link{select_row_header}
+\link{get_footnote}, \link{select_row_header}
 }
