@@ -4,10 +4,10 @@ title: TFootr / README.md
 # The TFootr Package <a href="https://github.com/Cassinic/TFootr/"><img src="man/figure/logo.png" alt="TFootr logo" style="float:right;height:182.25px" align="right" height="232.25"></a>
 
 <!-- badges: start -->
-[![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/TFootr)](https://CRAN.R-project.org/package=TFootr)
-[![Total Downloads](http://cranlogs.r-pkg.org/badges/grand-total/TFootr)](https://CRAN.R-project.org/package=TFootr)
-[![Downloads](http://cranlogs.r-pkg.org/badges/TFootr)](https://CRAN.R-project.org/package=TFootr)
-[![R-CMD-check](https://github.com/mayoverse/TFootr/workflows/R-CMD-check/badge.svg)](https://github.com/mayoverse/TFootr/actions)
+# [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/TFootr)](https://CRAN.R-project.org/package=TFootr)
+# [![Total Downloads](http://cranlogs.r-pkg.org/badges/grand-total/TFootr)](https://CRAN.R-project.org/package=TFootr)
+# [![Downloads](http://cranlogs.r-pkg.org/badges/TFootr)](https://CRAN.R-project.org/package=TFootr)
+# [![R-CMD-check](https://github.com/mayoverse/TFootr/workflows/R-CMD-check/badge.svg)](https://github.com/mayoverse/TFootr/actions)
 <!-- badges: end -->
 
 ## Purpose

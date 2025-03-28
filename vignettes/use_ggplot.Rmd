@@ -7,13 +7,18 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
+
 ```{r, include = FALSE}
-knitr::opts_chunk$set(
-  collapse = TRUE,
-  comment = "#>",
-  fig.width=8, 
-  fig.height=6
-)
+# knitr::opts_chunk$set(
+#   collapse = TRUE,
+#   comment = "#>",
+#   fig.width=10, 
+#   fig.height=6
+# )
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
+knitr::opts_chunk$set(fig.width=10, fig.height=5.6) 
+Sys.setenv(PATH='/opt/software/texlive/2019/bin/x86_64-linux:/usr/lib/jvm/java-1.8.0-openjdk/bin:/opt/rh/devtoolset-3/root/usr/bin:/opt/rh/devtoolset-7/root/usr/bin:/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin')
+Sys.setenv(PATH='/opt/software/texlive/2019/bin/x86_64-linux:/usr/lib/jvm/java-1.8.0-openjdk/bin:/opt/rh/devtoolset-3/root/usr/bin:/opt/rh/devtoolset-7/root/usr/bin:/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin')
 ```
 # The `TFootr` Package <a href="https://github.com/Cassinic/TFootr/"><img src="../man/figure/logo.png" alt="TFootr logo" style="border:none" align="right" height="182.25"></a>
 
@@ -25,16 +30,15 @@ The `TFootr` is a very flexible toolbox to interact with other table or figure p
 First, the filename including the file extension and the full path of the spreadsheet which is used to manage titles and foonotes information must be provided.\cr Here's an example of using `TFootr` along with `ggplot` to generate figure outputs:
 
 ```{r setup}
-# Load the necessary libraries
 library(TFootr)
 library(ggplot2)
 library(magrittr)
 library(glue)
 library(dplyr, warn.conflicts = FALSE)
-# (to use |> version 4.1.0 of R is required, for lower versions we recommend %>% from magrittr)
+#> (to use |> version 4.1.0 of R is required, for lower versions we recommend %>% from magrittr)
  
 # Title and footnote spreadsheet path and filename
-filename_with_path <- "C:/Users/u066227/Rproj/sample_titles.xls"
+filename_with_path <- "~/TFootr/inst/extdata/sample_titles.xls"
 
 # Obtain header (title, subtitle, population) with one functional call
 head_list <- select_row_header(filename = filename_with_path, tnumber = "Figure 1.1")
@@ -67,4 +71,20 @@ In these examples, we're creating a simple plot using the `mtcars` dataset and a
 
 As is the custom to print the program name, run time stamp and data source at the very bottom of the graph.
 
+```{r}
+# Title and footnote spreadsheet filepath and filename
+filename <- "~/TFootr/inst/extdata/sample_titles.xls"
+
+# Get header (title, subtitle, population) with one functional call
+title_list <- select_row_header(filename = filename, tnumber = "Figure 1.1")
+
+# Get footnotes and ref notes (including program name, run timestamp, data sources) with one functional call
+foot_list <- select_row_footer(filename = filename, tnumber = "Figure 1.1")
+
+# Get upper left headers
+#ul_headers <- get_ulheader(filename = filename)
+
+# Get upper right headers
+#ur_headers <- get_urheader(filename = filename)
+```
 

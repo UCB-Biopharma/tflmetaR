@@ -71,7 +71,7 @@ ft_pen <- labelizor(
   labels = stringr::str_to_title)
 
 # Title and footnote spreadsheet path and filename
-filename_with_path <- "C:/Users/u066227/Rproj/sample_titles.xls"
+filename_with_path <- "~/TFootr/inst/extdata/sample_titles.xls"
 
 # Obtain header (title, subtitle, population) with one functional call
 head_list <- header_for_flextable(filename = filename_with_path, tnumber = "Table 2.1")
