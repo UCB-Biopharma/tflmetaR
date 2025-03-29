@@ -17,11 +17,11 @@ get_ulheader <- function(
   # Read header spreadsheet
   ulheader <- read_header(filename = filename, sheetname = {{sheetname}}) %>%
     select(starts_with("UL"))
+  ulheader <- Filter(function(x) !is.na(x), ulheader)
 
   if (by_list) return(ulheader) # return a list by default
   else {
-    ulheader <- Filter(function(x) !is.na(x), ulheader)
-    return(paste(ulheader, sep = "\n", collapse = " \n"))
+        return(paste(ulheader, sep = "\n", collapse = " \n"))
   }
 }
 
@@ -45,10 +45,11 @@ get_urheader <- function(
   # Read header spreadsheet
   urheader <- read_header(filename = filename, sheetname = {{sheetname}}) %>%
     select(starts_with("UR"))
+  urheader <- Filter(function(x) !is.na(x), urheader)
 
   if (by_list) return(urheader) # return a list by default
   else {
-    urheader <- Filter(function(x) !is.na(x), urheader)
+
     return(paste(urheader, sep = "\n", collapse = " \n"))
   }
 }
