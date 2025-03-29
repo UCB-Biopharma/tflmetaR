@@ -30,6 +30,7 @@ First, the filename including the file extension and the full path of the spread
 library(TFootr)
 library(ggplot2)
 library(gridExtra)
+library(grid)
 library(magrittr)
 library(glue)
 library(dplyr, warn.conflicts = FALSE)
@@ -53,6 +54,9 @@ Get titles:
 ```{r}
 file_name <- file.path("../inst/extdata", "sample_titles.xls")
 title_list <- select_row_header(filename = file_name, tnumber = "Figure 1.1")
+
+ul_hdr <- get_ulheader(file_name) 
+ur_hdr <- get_urheader(file_name)
 ```
 
 Get footnotes:
@@ -74,7 +78,16 @@ p <- ggplot(mpg, aes(displ, hwy)) +
     title = {paste(title_list, sep = "\n", collapse = "\n ")},
     caption = {paste(footnote_list, sep = "\t", collapse = "\n")}) +
       theme(plot.caption = element_text(hjust = 0, size = 11)) +
-  theme(plot.title = element_text(hjust = 0.5, face = "bold")
-  )
+  theme(plot.title = element_text(hjust = 0.5, face = "bold"))
 p
+grid.text(paste(ul_hdr, sep = "\n", collapse = " \n "), x = 0.04, y = 0.95, just = "left",gp = gpar(fontsize = 9, col = "black"))
+
+grid.text(paste(ur_hdr, sep = "\n", collapse = " \n "), x = 0.9, y = 0.95, just = "right",gp = gpar(fontsize = 9, col = "black"))
+
+#   grid.text(x = 0.5, y = 0.5, ul_hdr[[1]], gp = gpar(fontsize = 9, fontfamily = "Courier New"))
+#   grid.text(x = unit(0.5, "inches"), y = unit(8, "inches") - unit( 1, "line"),
+#             just = "left", ul_hdr[[2]], gp = gpar(fontsize = 9, fontfamily = "Courier New"))
+#   grid.text(x = unit(0.5, "inches"), y = unit(8, "inches") - unit(2, "line"),
+#             just = "left", ul_hdr[[3]], gp = gpar(fontsize = 9, fontfamily = "Courier New"))
+# p
 ```
