@@ -42,7 +42,7 @@ get_title <- function(
 
 #' Generate footnotes - including program name, timestamp, and data source attached.
 #'
-#' This function prepares footnotes for tables and listings using {flextable} package.
+#' This function prepares footnotes for tables and listings
 #'
 #'
 #'
