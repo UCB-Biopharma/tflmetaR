@@ -11,10 +11,11 @@
 #' @param type optional TFL type
 #' @param pname The program name used to select proper title entry. If this parameter is given (not NULL), it has precedence over TFL number for selection.
 #' @param oid Optional parameter
+#' @rdname get_title
 #'
 #'
-#' @export header_for_flextable
-header_for_flextable <- function(
+#' @export get_title
+get_title <- function(
     filename,
     type = NA,
     tnumber = NA,
@@ -52,10 +53,11 @@ header_for_flextable <- function(
 #' @param type optional TFL type
 #' @param pname The program name used to select proper title entry. If this parameter is given (not NULL), it has precedence over TFL number for selection.
 #' @param oid Optional parameter
+#' @rdname get_footer
 #'
 #'
-#' @export footer_for_flextable
-footer_for_flextable <- function(
+#' @export get_footer
+get_footer <- function(
     filename,
     type = NA,
     tnumber = NA,

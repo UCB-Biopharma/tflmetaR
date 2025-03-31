@@ -55,16 +55,16 @@ p
 filename_with_path <- file.path("../inst/extdata", "sample_titles.xls")
 
 # Obtain header (title, subtitle, population) with one functional call
-head_list <- header_for_flextable(filename = filename_with_path, tnumber = "Table 2.1")
+title_list <- get_title(filename = filename_with_path, tnumber = "Table 2.1")
 
 # Obtain footnotes and ref notes (including program name, run timestamp, data sources) with one functional call
-#foot_list <- footer_for_flextable(filename = filename_with_path, tnumber = "Table 2.1")
+#footer_list <- get_footer(filename = filename_with_path, tnumber = "Table 2.1")
 ```
 
 # Add Title to Table
 
 ```{r}
-ft <- knitr::kable(iris2, "simple", caption =  {paste(head_list, sep = "\n", collapse = " \n ")}, col.names = gsub("[.]", " ", names(iris)))
+ft <- knitr::kable(iris2, "simple", caption =  {paste(title_list, sep = "\n", collapse = " \n ")}, col.names = gsub("[.]", " ", names(iris)))
 ft
 
 ```
