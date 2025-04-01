@@ -2,8 +2,10 @@
 % Please edit documentation in R/utils2.R
 \name{get_source}
 \alias{get_source}
-\title{Return data source}
+\title{Return TFL title as a list}
 \usage{
+get_source(filename, type = NULL, tnumber = NULL, pname = NULL, oid = NULL)
+
 get_source(filename, type = NULL, tnumber = NULL, pname = NULL, oid = NULL)
 }
 \arguments{
@@ -18,8 +20,12 @@ get_source(filename, type = NULL, tnumber = NULL, pname = NULL, oid = NULL)
 \item{oid}{Optional parameter}
 }
 \description{
+This function assumes that the titles and footnotes are stored in a spreadsheet
+
 This function returns data source(s) for printing at the bottom of TFLs
 }
 \details{
+Calls other utils functions.
+
 Calls other utils functions.
 }
