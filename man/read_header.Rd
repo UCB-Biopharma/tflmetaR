@@ -30,7 +30,6 @@ For an example, see \code{vignette("use_flextable", package = "TFootr")}.
 
 headers <- read_header("path/to/your/titles.xls")
 
-
 }
 \seealso{
 \link{read_footer}

@@ -26,7 +26,6 @@ For an example, see \code{vignette("use_flextable", package = "TFootr")}.
 
 titles_footnotes <- read_footer("path/to/your/titles.xls")
 
-
 }
 \seealso{
 \link{get_footnote}, \link{select_row_header}
