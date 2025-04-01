@@ -44,7 +44,7 @@ for example:
 ```{r, echo=FALSE}
 ggplot(mpg, aes(displ, hwy)) + 
   geom_point(aes(colour = class)) + 
-  geom_smooth(method = "lm", se = FALSE) + 
+  geom_smooth(method = "lm", formula = 'y ~ x', se = FALSE) + 
   theme(legend.position = "right")
 ```
 
