@@ -18,32 +18,33 @@
 #'
 #' titles_footnotes <- read_footer("path/to/your/titles.xls")
 #'
-#'
 #' @export read_footer
-read_footer <- function(
-    filename = filename,
-    sheetname = NULL
-    ) {
+read_footer <- function(filename = filename,
+                        sheetname = NULL) {
   if (!file.exists(filename)) stop("Input header_footer file does not exist! Check the filename and/or pathname and try again. \n", filename)
-  #tfile <- readxl::read_excel(filename_with_path, sheet=sheetname)
-  tfile <- tryCatch({
-    readxl::read_excel(filename, sheet = sheetname)
-  }, error = function(e) {
-    message("An error occurred: ", e$message)
-  })
+  # tfile <- readxl::read_excel(filename_with_path, sheet=sheetname)
+  tfile <- tryCatch(
+    {
+      readxl::read_excel(filename, sheet = sheetname)
+    },
+    error = function(e) {
+      message("An error occurred: ", e$message)
+    }
+  )
 
   if (is.null(tfile)) {
     stop("Failed to read the sheet. Please check the file and sheet name.")
   } else {
+    colnames(tfile) <- toupper(colnames(tfile))
+    required_cols <- c("TYPE", "PGMNAME", "OID", "TTL1", "SOURCE", "BYLINE1", "FOOT1")
+    if (!all(required_cols %in% colnames(tfile))) {
+      stop("Input file has required column(s) missing.\n")
+    } else {
+      tfile <- tfile %>% select(TYPE, PGMNAME, SOURCE, OID, POPULATION, starts_with("TTL"), starts_with("BYLINE"), starts_with("FOOT"))
+    }
+    # tfile <- tfile[, colSums(is.null(tfile)) != nrow(tfile)]
 
-
-  colnames(tfile) <- toupper(colnames(tfile))
-  required_cols <- c("TYPE", "PGMNAME", "OID", "TTL1", "SOURCE", "BYLINE1", "FOOT1")
-  if (!all(required_cols %in% colnames(tfile))) stop("Input file has required column(s) missing.\n")
-  else tfile <- tfile %>% select(TYPE, PGMNAME, SOURCE, OID, POPULATION, starts_with("TTL"), starts_with("BYLINE"), starts_with("FOOT"))
-  #tfile <- tfile[, colSums(is.null(tfile)) != nrow(tfile)]
-
-  return(tfile)
+    return(tfile)
   }
 }
 
@@ -71,30 +72,32 @@ read_footer <- function(
 #'
 #' headers <- read_header("path/to/your/titles.xls")
 #'
-#'
 #' @export read_header
-read_header <- function(
-  filename = filename,
-  sheetname = "header"
-) {
+read_header <- function(filename = filename,
+                        sheetname = "header") {
   if (!file.exists(filename)) stop("Input file does not exist! Check the filename and/or pathname and try again. \n", filename)
-  #if (is.null(sheetname)) sheetname = "header" #set to default
-  #tfile <- readxl::read_excel(filename_with_path, sheet=sheetname)
-  head_file <- tryCatch({
-    readxl::read_excel(filename, sheet = sheetname, n_max = 1)
-  }, error = function(e) {
-    message("An error occurred: ", e$message)
-  })
+  # if (is.null(sheetname)) sheetname = "header" #set to default
+  # tfile <- readxl::read_excel(filename_with_path, sheet=sheetname)
+  head_file <- tryCatch(
+    {
+      readxl::read_excel(filename, sheet = sheetname, n_max = 1)
+    },
+    error = function(e) {
+      message("An error occurred: ", e$message)
+    }
+  )
 
   if (is.null(head_file)) {
     stop("Failed to read the sheet. Please check the file and sheet name.")
   } else {
-
     colnames(head_file) <- toupper(colnames(head_file))
     required_cols <- c("UL1", "UL2", "UL3", "UR1", "UR2", "UR3")
-    if (!all(required_cols %in% colnames(head_file))) stop("Input file has required column(s) missing.\n")
-    else head_file <- head_file %>% select(UL1, UL2, UL3, UR1, UR2, UR3)
-    #head_file <- head_file[, colSums(is.null(head_file)) != nrow(head_file)]
+    if (!all(required_cols %in% colnames(head_file))) {
+      stop("Input file has required column(s) missing.\n")
+    } else {
+      head_file <- head_file %>% select(UL1, UL2, UL3, UR1, UR2, UR3)
+    }
+    # head_file <- head_file[, colSums(is.null(head_file)) != nrow(head_file)]
 
     return(head_file)
   }
@@ -113,19 +116,18 @@ read_header <- function(
 #' Additional details...
 #'
 #' @export select_with_number
-select_with_number <- function(
-    df = list(),
-    type = NULL,
-    tnumber = NULL ) {
+select_with_number <- function(df = list(),
+                               type = NULL,
+                               tnumber = NULL) {
   if (is.null(type) & is.null(tnumber)) stop("Selection paramters can not be NULL.\n")
 
-  #if (!(toupper(type) %in% c("LISTING", "TABLE", "FIGURE", "GRAPH")) & !is.null(type) ) stop("TLF type is invalid.\n")
+  # if (!(toupper(type) %in% c("LISTING", "TABLE", "FIGURE", "GRAPH")) & !is.null(type) ) stop("TLF type is invalid.\n")
 
   ## if type is not NULL, combine type with tfl number
   # if (!is.null(type)) crit <- paste(type, tnumber) %>% gsub("\\b(\\w+)\\s+\\1\\b", "\\1")
   # else crit <- tnumber
 
-  if (is.null(type))  {
+  if (is.null(type)) {
     footer_list <- df %>% filter(TTL1 == tnumber)
   } else {
     footer_list <- df %>% filter(TYPE == type & TTL1 == tnumber)
@@ -152,12 +154,11 @@ select_with_number <- function(
 #' Additional details...
 #'
 #' @export select_with_name
-select_with_name <- function(
-    df = list(),
-    pname = "",
-    oid ="" ) {
-  #if (is.null(pname) | is.null(oid)) stop("Selection paramters are not valid.\n")
-  if (is.null(pname)) stop("Selection paramters are not valid.\n") #allow NA as OID
+select_with_name <- function(df = list(),
+                             pname = "",
+                             oid = "") {
+  # if (is.null(pname) | is.null(oid)) stop("Selection paramters are not valid.\n")
+  if (is.null(pname)) stop("Selection paramters are not valid.\n") # allow NA as OID
   ## if type is not NULL, combine type with tfl number
   # if (!is.null(type)) crit <- paste(type, tnumber) %>% gsub("\\b(\\w+)\\s+\\1\\b", "\\1")
   # else crit <- tnumber
@@ -166,7 +167,7 @@ select_with_name <- function(
     filter(PGMNAME == pname & OID == oid)
 
   ## make sure only one unique entry is generated
-  #if (nrow(footer_list) != 1) stop("No unique entry generated. Check the title and footnote file and try again.\n")
+  # if (nrow(footer_list) != 1) stop("No unique entry generated. Check the title and footnote file and try again.\n")
   if (nrow(footer_list) == 0) stop("No entry is generated. Check the title and footnote file and try again.\n")
   if (nrow(footer_list) > 1) stop("Non unique entry generated. Check the title and footnote file and try again.\n")
 
@@ -189,9 +190,8 @@ select_with_name <- function(
 #'
 #'
 #' @export add_stamp
-add_stamp <- function(
-  fnote_list = footnote_list,
-  ...) {
+add_stamp <- function(fnote_list = footnote_list,
+                      ...) {
 
   # select either on program nmae of TFL number
   # if (!is.na(pname)) hfooter_list <- select_with_name(df =filename, pname = pname, oid = oid)
@@ -202,17 +202,16 @@ add_stamp <- function(
   #
   # footer_list <- hfooter_list %>%
   #   select(starts_with("FOOT"))
-  #fnote_list <- fnote_list %>% as.data.frame()
+  # fnote_list <- fnote_list %>% as.data.frame()
   footer_list <- Filter(function(x) !is.na(x), fnote_list)
 
   data_src <- footer_list %>%
-    select(starts_with("FOOT"),SOURCE)
+    select(starts_with("FOOT"), SOURCE)
 
   current_time <- Sys.time()
   runtime_stamp <- format(current_time, "%Y-%m-%d %H:%M:%S")
   ref_timestamp <- glue("\nGenerated from {basename(rstudioapi::getSourceEditorContext()$path)} on ", runtime_stamp, " Data Source(s): ", unlist(data_src), "\n")
   footer_list <- c(footer_list, ref_timestamp)
-  names(footer_list)[length(footer_list)] <- "SRC" #give last part a name in case end user want to refer to it.
+  names(footer_list)[length(footer_list)] <- "SRC" # give last part a name in case end user want to refer to it.
   return(footer_list)
 }
-

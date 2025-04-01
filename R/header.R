@@ -10,18 +10,19 @@
 #' @rdname get_ulheader
 #'
 #' @export get_ulheader
-get_ulheader <- function(
-    filename,
-    sheetname = "header",
-    by_list = TRUE) {
+get_ulheader <- function(filename,
+                         sheetname = "header",
+                         by_list = TRUE) {
   # Read header spreadsheet
-  ulheader <- read_header(filename = filename, sheetname = {{sheetname}}) %>%
+  ulheader <- read_header(filename = filename, sheetname = {{ sheetname }}) %>%
     select(starts_with("UL"))
   ulheader <- Filter(function(x) !is.na(x), ulheader)
 
-  if (by_list) return(ulheader) # return a list by default
+  if (by_list) {
+    return(ulheader)
+  } # return a list by default
   else {
-        return(paste(ulheader, sep = "\n", collapse = " \n"))
+    return(paste(ulheader, sep = "\n", collapse = " \n"))
   }
 }
 
@@ -38,18 +39,18 @@ get_ulheader <- function(
 #' @rdname get_urheader
 #'
 #' @export get_urheader
-get_urheader <- function(
-  filename,
-  sheetname = "header",
-  by_list = TRUE) {
+get_urheader <- function(filename,
+                         sheetname = "header",
+                         by_list = TRUE) {
   # Read header spreadsheet
-  urheader <- read_header(filename = filename, sheetname = {{sheetname}}) %>%
+  urheader <- read_header(filename = filename, sheetname = {{ sheetname }}) %>%
     select(starts_with("UR"))
   urheader <- Filter(function(x) !is.na(x), urheader)
 
-  if (by_list) return(urheader) # return a list by default
+  if (by_list) {
+    return(urheader)
+  } # return a list by default
   else {
-
     return(paste(urheader, sep = "\n", collapse = " \n"))
   }
 }

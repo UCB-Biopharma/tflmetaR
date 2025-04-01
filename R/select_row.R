@@ -10,23 +10,23 @@
 #' Generate footnotes in a list by calling this function. As a custom, one additional line of program name, run timestamp, and data source(s) is added to the list at the end.
 #'
 #' @export get_footnote
-get_footnote <- function(
-    filename,
-    type = NULL,
-    tnumber = NULL,
-    pname = NULL,
-    oid = NULL) {
+get_footnote <- function(filename,
+                         type = NULL,
+                         tnumber = NULL,
+                         pname = NULL,
+                         oid = NULL) {
   if (is.null(pname) & is.null(tnumber)) stop("Either program name (pname) or TFL number (tnumber) must be provided.\n")
 
   if (!file.exists(filename)) stop("Input file does not exist! Check the filename and/or pathname and try again. \n", filename)
   hfooter_file <- read_footer(filename)
 
-  if (!is.null(pname)) return(select_with_name(df = hfooter_file, pname = pname, oid = oid))
-  else {
+  if (!is.null(pname)) {
+    return(select_with_name(df = hfooter_file, pname = pname, oid = oid))
+  } else {
     row_list <- select_with_number(df = hfooter_file, tnumber = tnumber)
     row_list <- Filter(function(x) !is.na(x), row_list)
-    return (row_list %>% select(starts_with("FOOT")))
-    #return(add_stamp(filename = row_list, tnumber = tnumber)) #"Figure 1.1"))
+    return(row_list %>% select(starts_with("FOOT"), SOURCE))
+    # return(add_stamp(filename = row_list, tnumber = tnumber)) #"Figure 1.1"))
   }
 }
 
@@ -43,20 +43,20 @@ get_footnote <- function(
 #' Generate a list to contain titles, subtitles and population. The list structure provides flexibility comparing to unlisted string vector as return value.
 #'
 #' @export select_row_header
-select_row_header <- function(
-    filename,
-    type = NULL,
-    tnumber = NULL,
-    pname = NULL,
-    oid = NULL) {
+select_row_header <- function(filename,
+                              type = NULL,
+                              tnumber = NULL,
+                              pname = NULL,
+                              oid = NULL) {
   if (is.null(pname) & is.null(tnumber)) stop("Either program name (pname) or TFL number (tnumber) must be provided.\n")
 
   if (!file.exists(filename)) stop("Input file does not exist! Check the filename and/or pathname and try again. \n", filename)
   hfooter_file <- read_footer(filename)
 
-  if (!is.null(pname)) return(select_with_name(df = hfooter_file, pname = pname, oid = oid))
-  else {
-    hfooter_list <- select_with_number(df =hfooter_file,  tnumber = tnumber)
+  if (!is.null(pname)) {
+    return(select_with_name(df = hfooter_file, pname = pname, oid = oid))
+  } else {
+    hfooter_list <- select_with_number(df = hfooter_file, tnumber = tnumber)
 
     header_list <- hfooter_list %>%
       select(starts_with("TTL"), POPULATION)

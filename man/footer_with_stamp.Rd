@@ -4,7 +4,13 @@
 \alias{footer_with_stamp}
 \title{Generate footnotes - including program name, timestamp, and data source attached.}
 \usage{
-footer_with_stamp(filename, type = NA, tnumber = NA, pname = NA, oid = NA)
+footer_with_stamp(
+  filename,
+  type = NULL,
+  tnumber = NULL,
+  pname = NULL,
+  oid = NULL
+)
 }
 \arguments{
 \item{type}{optional TFL type}
