@@ -4,7 +4,7 @@
 \alias{get_footer}
 \title{Generate footnotes - including program name, timestamp, and data source attached.}
 \usage{
-get_footer(filename, type = NA, tnumber = NA, pname = NA, oid = NA)
+get_footer(filename, type = NULL, tnumber = NULL, pname = NULL, oid = NULL)
 }
 \arguments{
 \item{filename}{Full filename including folder path and file extension.}

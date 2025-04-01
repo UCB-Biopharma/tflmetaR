@@ -59,15 +59,15 @@ get_title <- function(
 #' @export get_footer
 get_footer <- function(
     filename,
-    type = NA,
-    tnumber = NA,
-    pname = NA,
-    oid = NA) {
+    type = NULL,
+    tnumber = NULL,
+    pname = NULL,
+    oid = NULL) {
   if (!file.exists(filename)) stop("Input file does not exist! Check the filename and/or pathname and try again. \n", filename)
   hfooter_file <- read_footer(filename)
 
   # select either on program nmae of TFL number
-  if (!is.na(pname)) hfooter_list <- select_with_name(df =hfooter_file, pname = pname, oid = oid)
+  if (!is.null(pname)) hfooter_list <- select_with_name(df =hfooter_file, pname = pname, oid = oid)
   else hfooter_list <- select_with_number(df =hfooter_file,  tnumber = tnumber)
 
   #hfooter_list <- select_row(filename = hfooter_file, type = type, pname = pname, oid = oid)
@@ -107,13 +107,13 @@ get_footer <- function(
 #' @export footer_with_stamp
 footer_with_stamp <- function(
     filename,
-    type = NA,
-    tnumber = NA,
-    pname = NA,
-    oid = NA) {
+    type = NULL,
+    tnumber = NULL,
+    pname = NULL,
+    oid = NULL) {
 
   # select either on program nmae of TFL number
-  if (!is.na(pname)) hfooter_list <- select_with_name(df =filename, pname = pname, oid = oid)
+  if (!is.NULL(pname)) hfooter_list <- select_with_name(df =filename, pname = pname, oid = oid)
   else hfooter_list <- select_with_number(df =filename,  tnumber = tnumber)
 
   #hfooter_list <- select_row(filename = hfooter_file, type = type, pname = pname, oid = oid)

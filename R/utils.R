@@ -34,9 +34,8 @@ read_footer <- function(
 
   if (is.null(tfile)) {
     stop("Failed to read the sheet. Please check the file and sheet name.")
-  } else {
-
-
+  }
+  else {
   colnames(tfile) <- toupper(colnames(tfile))
   required_cols <- c("TYPE", "PGMNAME", "OID", "TTL1", "SOURCE", "BYLINE1", "FOOT1")
   if (!all(required_cols %in% colnames(tfile))) stop("Input file has required column(s) missing.\n")

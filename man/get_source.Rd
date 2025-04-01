@@ -4,7 +4,7 @@
 \alias{get_source}
 \title{Return data source}
 \usage{
-get_source(filename, type = NA, tnumber = NA, pname = NA, oid = NA)
+get_source(filename, type = NULL, tnumber = NULL, pname = NULL, oid = NULL)
 }
 \arguments{
 \item{filename}{Full filename including folder path and file extension.}

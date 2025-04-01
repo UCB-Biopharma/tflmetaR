@@ -16,16 +16,21 @@
 #' @export get_source
 get_source <- function(
   filename,
-  type = NA,
-  tnumber = NA,
-  pname = NA,
-  oid = NA) {
+  type = NULL,
+  tnumber = NULL,
+  pname = NULL,
+  oid = NULL) {
   if (!file.exists(filename)) stop("Input file does not exist! Check the filename and/or pathname and try again. \n", filename)
   hfooter_file <- read_footer(filename)
 
   # select either on program nmae of TFL number
-  if (!is.na(pname)) hfooter_list <- select_with_name(df =hfooter_file, pname = pname, oid = oid)
+  if (!is.null(pname)) hfooter_list <- select_with_name(df =hfooter_file, pname = pname, oid = oid)
   else hfooter_list <- select_with_number(df =hfooter_file,  tnumber = tnumber)
+  #hfooter_file <- get_footer(filename, type = type, tnumber = tnumber, pname = pname, oid = oid) #read_footer(filename)
+
+  # select either on program nmae of TFL number
+  # if (!is.na(pname)) hfooter_list <- select_with_name(df =hfooter_file, pname = pname, oid = oid)
+  # else hfooter_list <- select_with_number(df =hfooter_file,  tnumber = tnumber)
 
   data_src <- hfooter_list %>%
     select(SOURCE)
@@ -44,6 +49,6 @@ get_source <- function(
 get_timestamp <- function(pname = NULL) {
   current_time <- Sys.time()
   runtime_stamp <- format(current_time, "%Y-%m-%d %H:%M:%S")
-  ref_timestamp <- glue("Generated from {basename(rstudioapi::getSourceEditorContext()$path)} on ", runtime_stamp)
+  ref_timestamp <- glue("Generated from {basename(rstudioapi::getSourceEditorContext()$path)} on ", runtime_stamp, "\n")
   return(ref_timestamp)
 }
