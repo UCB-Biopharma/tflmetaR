@@ -102,7 +102,6 @@ read_header <- function(filename = filename,
 }
 
 
-
 #' Generate footnotes - including program name, timestamp, and data source attached.
 #'
 #' This function prepares footnotes for tables and listings, or figures.
