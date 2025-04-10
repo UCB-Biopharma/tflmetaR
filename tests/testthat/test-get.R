@@ -1,6 +1,7 @@
 library(testthat)
 library(dplyr)
 library(mockery)
+library(glue)
 
 
 test_that("multiplication works", {

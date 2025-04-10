@@ -2,22 +2,20 @@
 % Please edit documentation in R/select_row.R
 \name{select_with_name}
 \alias{select_with_name}
-\title{Select header and footer based on program name and oid}
+\title{Select a Metadata Entry by Program Name and Optional OID}
 \usage{
 select_with_name(df = list(), pname = "", oid = "")
 }
 \arguments{
-\item{df}{A dataframe or list of overall title and footnote}
+\item{df}{A data frame containing the metadata.}
 
-\item{pname}{The program name used to select proper title entry. If this parameter is given (not NA), it has precedence over TFL number for selection.}
+\item{pname}{A character string specifying the program name.}
 
-\item{oid}{Optional parameter}
+\item{oid}{Optional. A character string specifying the object ID.}
+}
+\value{
+A single-row data frame (list) with matching metadata.
 }
 \description{
-This function select titles and footnotes based on TFL number
-}
-\details{
-Each TFL (table, listing, or figure) should have a type and TFL number in the header_footer Excel spreadsheet. This information can be in two separate columns (TYPE & TTL1)
-or combined in TTL1 column. However, if both type and TFL number are already combined in column TTL1, there should be a space to separate them.
-Additional details...
+Filters the metadata for a unique match based on program name and optional object ID (OID).
 }

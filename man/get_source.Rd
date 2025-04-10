@@ -2,24 +2,24 @@
 % Please edit documentation in R/get.R
 \name{get_source}
 \alias{get_source}
-\title{Return data source(s)}
+\title{Extract Source Metadata}
 \usage{
 get_source(df = NULL, type = NULL, tnumber = NULL, pname = NULL, oid = NULL)
 }
 \arguments{
-\item{df}{Full filename including folder path and file extension.}
+\item{df}{A data frame of title and footnote metadata.}
 
-\item{type}{optional TFL type}
+\item{type}{Optional. A character string indicating the TFL type.}
 
-\item{tnumber}{TFL number, used to select proper titles and footnotes. This can be with or without TFL type.If pname parameter is not given, tnumber must not be NULL.}
+\item{tnumber}{Optional. TFL number.}
 
-\item{pname}{The program name used to select proper title entry. If this parameter is given (not NULL), it has precedence over TFL number for selection.}
+\item{pname}{Optional. Program name.}
 
-\item{oid}{Optional parameter}
+\item{oid}{Optional. Object ID.}
+}
+\value{
+A named list of non-missing source fields.
 }
 \description{
-This function assumes that the data source(s) along with the titles and footnotes are stored in a spreadsheet
-}
-\details{
-Calls other utils functions.
+Retrieves source fields (e.g., SOURCE1) from the metadata.
 }

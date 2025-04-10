@@ -2,25 +2,20 @@
 % Please edit documentation in R/select_row.R
 \name{select_with_number}
 \alias{select_with_number}
-\title{Select header and footer based on TFL number}
+\title{Select a Metadata Entry by Type and TFL Number}
 \usage{
 select_with_number(df = list(), type = NULL, tnumber = NULL)
 }
 \arguments{
-\item{df}{A dataframe or list of  titles and footnotes}
+\item{df}{A data frame containing the metadata.}
 
-\item{type}{optional TFL type}
+\item{type}{Optional. A character string specifying the type (e.g., "table", "figure").}
 
-\item{tnumber}{TFL number, used to select proper titles and footnotes. This can be with or without TFL type.If pname parameter is not given, tnumber must not be NA.}
+\item{tnumber}{A character or numeric TFL number.}
 }
 \value{
-A list or dataframe with one obs containing titles and footnotes.
+A single-row data frame (list) with matching metadata.
 }
 \description{
-This function select titles and footnotes based on TFL number
-}
-\details{
-Each TFL (table, listing, or figure) should have a type and TFL number in the header_footer Excel spreadsheet. This information can be in two separate columns (TYPE & TTL1)
-or combined in TTL1 column. However, if both type and TFL number are already combined in column TTL1, there should be a space to separate them.
-Additional details...
+Filters the metadata for a unique match based on type and TFL number.
 }

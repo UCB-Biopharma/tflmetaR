@@ -1,16 +1,14 @@
-#' Select header and footer based on TFL number
+#' Select a Metadata Entry by Type and TFL Number
 #'
-#' This function select titles and footnotes based on TFL number
-#' @param df A dataframe or list of  titles and footnotes
-#' @param tnumber TFL number, used to select proper titles and footnotes. This can be with or without TFL type.If pname parameter is not given, tnumber must not be NA.
-#' @param type optional TFL type
-#' @return A list or dataframe with one obs containing titles and footnotes.
+#' Filters the metadata for a unique match based on type and TFL number.
 #'
-#' @details Each TFL (table, listing, or figure) should have a type and TFL number in the header_footer Excel spreadsheet. This information can be in two separate columns (TYPE & TTL1)
-#' or combined in TTL1 column. However, if both type and TFL number are already combined in column TTL1, there should be a space to separate them.
-#' Additional details...
+#' @param df A data frame containing the metadata.
+#' @param type Optional. A character string specifying the type (e.g., "table", "figure").
+#' @param tnumber A character or numeric TFL number.
 #'
-#' @export select_with_number
+#' @return A single-row data frame (list) with matching metadata.
+#'
+#' @export
 select_with_number <- function(df = list(),
                                type = NULL,
                                tnumber = NULL) {
@@ -30,19 +28,17 @@ select_with_number <- function(df = list(),
 }
 
 
-#' Select header and footer based on program name and oid
+#' Select a Metadata Entry by Program Name and Optional OID
 #'
-#' This function select titles and footnotes based on TFL number
+#' Filters the metadata for a unique match based on program name and optional object ID (OID).
 #'
-#' @param df A dataframe or list of overall title and footnote
-#' @param pname The program name used to select proper title entry. If this parameter is given (not NA), it has precedence over TFL number for selection.
-#' @param oid Optional parameter
+#' @param df A data frame containing the metadata.
+#' @param pname A character string specifying the program name.
+#' @param oid Optional. A character string specifying the object ID.
 #'
-#' @details Each TFL (table, listing, or figure) should have a type and TFL number in the header_footer Excel spreadsheet. This information can be in two separate columns (TYPE & TTL1)
-#' or combined in TTL1 column. However, if both type and TFL number are already combined in column TTL1, there should be a space to separate them.
-#' Additional details...
+#' @return A single-row data frame (list) with matching metadata.
 #'
-#' @export select_with_name
+#' @export
 select_with_name <- function(df = list(),
                              pname = "",
                              oid = "") {

@@ -2,30 +2,24 @@
 % Please edit documentation in R/get.R
 \name{get_footnote}
 \alias{get_footnote}
-\title{Get footnotes}
+\title{Extract Footnote Metadata}
 \usage{
 get_footnote(df = NULL, type = NULL, tnumber = NULL, pname = NULL, oid = NULL)
 }
 \arguments{
-\item{df}{A dataframe which is returned from calling read_excel() or other to read title & footnote file.}
+\item{df}{A data frame of title and footnote metadata.}
 
-\item{type}{optional TFL type}
+\item{type}{Optional. A character string indicating the TFL type.}
 
-\item{tnumber}{TFL number, used to select proper titles and footnotes. This can be with or without TFL type.If pname parameter is not given, tnumber must not be NULL.}
+\item{tnumber}{Optional. TFL number.}
 
-\item{pname}{The program name used to select proper title entry. If this parameter is given (not NULL), it has precedence over TFL number for selection.}
+\item{pname}{Optional. Program name.}
 
-\item{oid}{Optional parameter}
+\item{oid}{Optional. Object ID.}
 }
 \value{
-a list
+A named list of non-missing footnote fields.
 }
 \description{
-When annotating table/listing/figure, use this function to get footnotes as a list
-Each element of the list can be individually processed, e.g., assign fontsize, fontface, etc.
-or the whole list can be unlisted into a string separated by, for example, '\n" for proper wrapping.
-}
-\details{
-Titles & footnotes are centrally managed in an Excel spreadhsheet. The footnotes are placed in columns
-FOOT1 to Foot(n).
+Retrieves footnote fields (FOOT1, FOOT2, etc.) from the metadata.
 }

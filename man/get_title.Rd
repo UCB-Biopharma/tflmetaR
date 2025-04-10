@@ -2,30 +2,24 @@
 % Please edit documentation in R/get.R
 \name{get_title}
 \alias{get_title}
-\title{Get title, subtitles and population}
+\title{Extract Titles and Subtitle Metadata}
 \usage{
 get_title(df = NULL, type = NULL, tnumber = NULL, pname = NULL, oid = NULL)
 }
 \arguments{
-\item{df}{A dataframe which is returned from calling read_excel() or other to read title & footnote file.}
+\item{df}{A data frame of title and footnote metadata.}
 
-\item{type}{optional TFL type}
+\item{type}{Optional. A character string indicating the TFL type.}
 
-\item{tnumber}{TFL number, used to select proper titles and footnotes. This can be with or without TFL type.If pname parameter is not given, tnumber must not be NULL.}
+\item{tnumber}{Optional. TFL number.}
 
-\item{pname}{The program name used to select proper title entry. If this parameter is given (not NULL), it has precedence over TFL number for selection.}
+\item{pname}{Optional. Program name.}
 
-\item{oid}{Optional parameter}
+\item{oid}{Optional. Object ID.}
 }
 \value{
-a list
+A named list of non-missing title fields.
 }
 \description{
-When annotating table/listing/figure, use this function to get title(s) as a list
-Each element of the list can be individually processed, e.g., assign fontsize, fontface, etc.
-or the whole list can be unlisted into a string separated by, for example, '\n" for proper wrapping.
-}
-\details{
-Titles & footnotes are centrally managed in an Excel spreadhsheet. The title and subtitles are placed in columns
-TTL1 to TTL(n).
+Retrieves title-related fields (TTL1, TTL2, etc.) and population from the metadata.
 }

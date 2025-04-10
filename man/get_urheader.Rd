@@ -2,20 +2,19 @@
 % Please edit documentation in R/get.R
 \name{get_urheader}
 \alias{get_urheader}
-\title{Get upper right headers}
+\title{Extract Upper-Right Header Text}
 \usage{
 get_urheader(df, by_list = TRUE)
 }
 \arguments{
-\item{df}{a full filename including folder path.}
+\item{df}{A data frame of metadata.}
 
-\item{by_list}{optional return type. Default is a list.}
-
-\item{sheetname}{optional sheetname. Default is "header"}
+\item{by_list}{Logical. If \code{TRUE}, returns a list of non-missing values.
+If \code{FALSE}, returns a collapsed string.}
+}
+\value{
+A character vector or a list depending on \code{by_list}.
 }
 \description{
-Get upper right headers
-}
-\details{
-Generate a list of upper right header. If by_list = FALSE, the function will return a string vector.
+Retrieves upper-right (UR*) header fields from the metadata.
 }

@@ -2,20 +2,19 @@
 % Please edit documentation in R/get.R
 \name{get_ulheader}
 \alias{get_ulheader}
-\title{Get upper left headers}
+\title{Extract Upper-Left Header Text}
 \usage{
 get_ulheader(df, by_list = TRUE)
 }
 \arguments{
-\item{df}{a full filename including folder path.}
+\item{df}{A data frame of metadata.}
 
-\item{by_list}{optional return type. Default is a list.}
-
-\item{sheetname}{optional sheetname. Default is "header"}
+\item{by_list}{Logical. If \code{TRUE}, returns a list of non-missing values.
+If \code{FALSE}, returns a collapsed string.}
+}
+\value{
+A character vector or a list depending on \code{by_list}.
 }
 \description{
-Get upper left headers
-}
-\details{
-Generate a list of upper left header. If by_list = FALSE, the function will return a string vector.
+Retrieves upper-left (UL*) header fields from the metadata.
 }

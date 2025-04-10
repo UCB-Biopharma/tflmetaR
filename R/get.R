@@ -1,23 +1,16 @@
-#' Get title, subtitles and population
+#' Extract Titles and Subtitle Metadata
 #'
-#' When annotating table/listing/figure, use this function to get title(s) as a list
-#' Each element of the list can be individually processed, e.g., assign fontsize, fontface, etc.
-#' or the whole list can be unlisted into a string separated by, for example, '\n" for proper wrapping.
+#' Retrieves title-related fields (TTL1, TTL2, etc.) and population from the metadata.
 #'
-#' @return a list
+#' @param df A data frame of title and footnote metadata.
+#' @param type Optional. A character string indicating the TFL type.
+#' @param tnumber Optional. TFL number.
+#' @param pname Optional. Program name.
+#' @param oid Optional. Object ID.
 #'
-#' @details Titles & footnotes are centrally managed in an Excel spreadhsheet. The title and subtitles are placed in columns
-#'   TTL1 to TTL(n).
+#' @return A named list of non-missing title fields.
 #'
-#' @param df A dataframe which is returned from calling read_excel() or other to read title & footnote file.
-#' @param tnumber TFL number, used to select proper titles and footnotes. This can be with or without TFL type.If pname parameter is not given, tnumber must not be NULL.
-#' @param type optional TFL type
-#' @param pname The program name used to select proper title entry. If this parameter is given (not NULL), it has precedence over TFL number for selection.
-#' @param oid Optional parameter
-#' @rdname get_title
-#'
-#'
-#' @export get_title
+#' @export
 get_title <- function(df = NULL,
                       type = NULL,
                       tnumber = NULL,
@@ -41,26 +34,15 @@ get_title <- function(df = NULL,
   return(t_list)
 }
 
-#' Get footnotes
+#' Extract Footnote Metadata
 #'
-#' When annotating table/listing/figure, use this function to get footnotes as a list
-#' Each element of the list can be individually processed, e.g., assign fontsize, fontface, etc.
-#' or the whole list can be unlisted into a string separated by, for example, '\n" for proper wrapping.
+#' Retrieves footnote fields (FOOT1, FOOT2, etc.) from the metadata.
 #'
-#' @return a list
+#' @inheritParams get_title
 #'
-#' @details Titles & footnotes are centrally managed in an Excel spreadhsheet. The footnotes are placed in columns
-#'   FOOT1 to Foot(n).
+#' @return A named list of non-missing footnote fields.
 #'
-#' @param df A dataframe which is returned from calling read_excel() or other to read title & footnote file.
-#' @param tnumber TFL number, used to select proper titles and footnotes. This can be with or without TFL type.If pname parameter is not given, tnumber must not be NULL.
-#' @param type optional TFL type
-#' @param pname The program name used to select proper title entry. If this parameter is given (not NULL), it has precedence over TFL number for selection.
-#' @param oid Optional parameter
-#' @rdname get_footnote
-#'
-#'
-#' @export get_footnote
+#' @export
 get_footnote <- function(df = NULL,
                       type = NULL,
                       tnumber = NULL,
@@ -84,18 +66,17 @@ get_footnote <- function(df = NULL,
   return(f_list)
 }
 
-#' Get upper left headers
+#' Extract Upper-Left Header Text
 #'
-#' @param df a full filename including folder path.
-#' @param sheetname optional sheetname. Default is "header"
-#' @param by_list optional return type. Default is a list.
+#' Retrieves upper-left (UL*) header fields from the metadata.
 #'
-#' @details
-#' Generate a list of upper left header. If by_list = FALSE, the function will return a string vector.
+#' @param df A data frame of metadata.
+#' @param by_list Logical. If `TRUE`, returns a list of non-missing values.
+#' If `FALSE`, returns a collapsed string.
 #'
-#' @rdname get_ulheader
+#' @return A character vector or a list depending on `by_list`.
 #'
-#' @export get_ulheader
+#' @export
 get_ulheader <- function(df,
                          by_list = TRUE) {
   # Read header spreadsheet
@@ -111,18 +92,15 @@ get_ulheader <- function(df,
 }
 
 
-#' Get upper right headers
+#' Extract Upper-Right Header Text
 #'
-#' @param df a full filename including folder path.
-#' @param sheetname optional sheetname. Default is "header"
-#' @param by_list optional return type. Default is a list.
+#' Retrieves upper-right (UR*) header fields from the metadata.
 #'
-#' @details
-#' Generate a list of upper right header. If by_list = FALSE, the function will return a string vector.
+#' @inheritParams get_ulheader
 #'
-#' @rdname get_urheader
+#' @return A character vector or a list depending on `by_list`.
 #'
-#' @export get_urheader
+#' @export
 get_urheader <- function(df,
                          by_list = TRUE) {
   # Read header spreadsheet
@@ -138,22 +116,15 @@ get_urheader <- function(df,
 }
 
 
-#' Return data source(s)
+#' Extract Source Metadata
 #'
-#' This function assumes that the data source(s) along with the titles and footnotes are stored in a spreadsheet
+#' Retrieves source fields (e.g., SOURCE1) from the metadata.
 #'
+#' @inheritParams get_title
 #'
-#' @details Calls other utils functions.
+#' @return A named list of non-missing source fields.
 #'
-#' @param df Full filename including folder path and file extension.
-#' @param tnumber TFL number, used to select proper titles and footnotes. This can be with or without TFL type.If pname parameter is not given, tnumber must not be NULL.
-#' @param type optional TFL type
-#' @param pname The program name used to select proper title entry. If this parameter is given (not NULL), it has precedence over TFL number for selection.
-#' @param oid Optional parameter
-#' @rdname get_source
-#'
-#'
-#' @export get_source
+#' @export
 get_source <- function(df = NULL,
                        type = NULL,
                        tnumber = NULL,
@@ -178,14 +149,17 @@ get_source <- function(df = NULL,
 }
 
 
-#' This function returns program name and timestamp for printing at the bottom of TFLs
+#' Generate Runtime Timestamp Reference
 #'
+#' Generates a string indicating the time and source file from which the report was generated.
 #'
-#' @details Calls other utils functions.
-#' @rdname get_timestamp
+#' @param pname Optional. A program name to include in the timestamp message.
 #'
+#' @return A character string with the timestamp and source filename.
 #'
-#' @export get_timestamp
+#' @importFrom rstudioapi getSourceEditorContext
+#' @importFrom glue glue
+#' @export
 get_timestamp <- function(pname = NULL) {
   current_time <- Sys.time()
   runtime_stamp <- format(current_time, "%Y-%m-%d %H:%M:%S")

@@ -2,13 +2,16 @@
 % Please edit documentation in R/get.R
 \name{get_timestamp}
 \alias{get_timestamp}
-\title{This function returns program name and timestamp for printing at the bottom of TFLs}
+\title{Generate Runtime Timestamp Reference}
 \usage{
 get_timestamp(pname = NULL)
 }
-\description{
-This function returns program name and timestamp for printing at the bottom of TFLs
+\arguments{
+\item{pname}{Optional. A program name to include in the timestamp message.}
 }
-\details{
-Calls other utils functions.
+\value{
+A character string with the timestamp and source filename.
+}
+\description{
+Generates a string indicating the time and source file from which the report was generated.
 }

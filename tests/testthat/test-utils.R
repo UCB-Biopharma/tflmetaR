@@ -55,3 +55,43 @@ test_that("read_tfile returns an error for missing sheet", {
 
   unlink(temp_file)
 })
+
+# test read_tfile_csv
+test_that("read_tfile_csv reads a valid file and returns data frame with uppercase column names", {
+  temp_file <- tempfile(fileext = ".csv")
+  df <- data.frame(
+    pgmname = "prog",
+    ttl1 = "Title 1",
+    source = "Study ABC",
+    foot1 = "Some footnote"
+  )
+  write_csv(df, temp_file)
+
+  result <- read_tfile_csv(temp_file)
+
+  expect_s3_class(result, "data.frame")
+  expect_equal(nrow(result), 1)
+  expect_true(all(c("PGMNAME", "TTL1", "SOURCE", "FOOT1") %in% colnames(result)))
+
+  unlink(temp_file)
+})
+
+test_that("read_tfile_csv throws error for missing file", {
+  fake_file <- tempfile(fileext = ".csv")
+  expect_error(read_tfile_csv(fake_file), "does not exist")
+})
+
+test_that("read_tfile_csv still runs if some required columns are missing (no check enforced)", {
+  # Since required_cols isn't enforced anymore, test that it doesn't error
+  temp_file <- tempfile(fileext = ".csv")
+  df <- data.frame(PGMNAME = "prog")
+  write_csv(df, temp_file)
+
+  result <- read_tfile_csv(temp_file)
+
+  expect_s3_class(result, "data.frame")
+  expect_true("PGMNAME" %in% colnames(result))
+  unlink(temp_file)
+})
+
+
