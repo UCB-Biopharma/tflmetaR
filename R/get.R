@@ -163,6 +163,6 @@ get_source <- function(df = NULL,
 get_timestamp <- function(pname = NULL) {
   current_time <- Sys.time()
   runtime_stamp <- format(current_time, "%Y-%m-%d %H:%M:%S")
-  ref_timestamp <- glue("Generated from {basename(rstudioapi::getSourceEditorContext()$path)} on ", runtime_stamp, "\n")
+  ref_timestamp <- glue("Generated from {basename(rstudioapi::getSourceEditorContext()$path)} on ", "\n")
   return(ref_timestamp)
 }

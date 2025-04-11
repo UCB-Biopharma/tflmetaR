@@ -6,13 +6,13 @@ test_that("multiplication works", {
 
 # test non-exist file
 test_that("readxl throws an error if the file does not exist", {
-  expect_error(TFootr::read_tfile("non_existent_file.xls"), "Input header_footer file does not exist! Check the filename and/or pathname and try again. \n")
+  expect_error(tfootr::read_tfile("non_existent_file.xls"), "Input header_footer file does not exist! Check the filename and/or pathname and try again. \n")
 })
 
 # test incorrect sheetname
 test_that("read_footer throws an error if incorrect sheetname given", {
   file_name <- file.path("../../inst/extdata", "sample_titles.xls")
-  expect_error(TFootr::read_tfile(file_name, sheetname = "foot"), "Failed to read the sheet. Please check the file and sheet name.")
+  expect_error(tfootr::read_tfile(file_name, sheetname = "foot"), "Failed to read the sheet. Please check the file and sheet name.")
 })
 
 test_that("read_tfile handles missing file correctly", {

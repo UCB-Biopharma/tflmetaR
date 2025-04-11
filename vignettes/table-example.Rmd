@@ -21,7 +21,7 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
-library(TFootr)
+library(tfootr)
 library(kableExtra)
 library(dplyr)
 ```
@@ -38,7 +38,7 @@ You can load a title/footnote spreadsheet from CSV or Excel format.
 
 ```{r load-data}
 # Example CSV file from the package
-#meta <- read_tfile_csv(system.file("../inst/extdata", "sample_titles_in_csv.csv", package = "TFootr"))
+#meta <- read_tfile_csv(system.file("../inst/extdata", "sample_titles_in_csv.csv", package = "tftr"))
 
 # You could also use:
 file_name <- file.path("../inst/extdata", "sample_titles2.xlsx")
