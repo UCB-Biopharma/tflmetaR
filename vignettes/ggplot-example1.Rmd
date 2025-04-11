@@ -7,22 +7,31 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
+
+---
+title: "Using tfootr with ggplot"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Using tfootr with ggplot}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
 ```{r setup, include = FALSE}
 knitr::opts_chunk$set(
-  fig.width=8, fig.height=6,
   collapse = TRUE,
   comment = "#>"
 )
 library(TFootr)
 library(ggplot2)
 library(readxl)
-library(patchwork)  # for layout
+library(patchwork) 
 library(gridExtra)
 library(grid)
 library(magrittr)
 library(glue)
 library(rstudioapi)
-library(dplyr, warn.conflicts = FALSE)
+library(dplyr)
 ```
 
 ## 📆 Overview
