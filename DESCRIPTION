@@ -1,5 +1,5 @@
-Package: TFootr
-Title: Process Titles & Footnotes Table for Annotating TFLs/TLGs
+Package: tfootr
+Title: Process Headers /Titles /Footnotes File for Annotating TFLs/TLGs
 Version: 0.0.0.9000
 Authors@R: c(
     person("Gary", "Cao", , "Gary.Cao@UCB.com", role = c("aut", "cre")),
