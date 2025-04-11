@@ -1,0 +1,108 @@
+---
+title: "ggplot-example1"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{ggplot-example1}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+library(TFootr)
+library(ggplot2)
+library(readxl)
+library(patchwork)  # for layout
+library(gridExtra)
+library(grid)
+library(magrittr)
+library(glue)
+library(rstudioapi)
+library(dplyr, warn.conflicts = FALSE)
+```
+
+## 📆 Overview
+
+This vignette demonstrates how to annotate `ggplot2` figures using title and footnote metadata managed via the `tfootr` package.
+
+The workflow separates metadata from code by reading header/footer content from an external file, selecting the appropriate entry, and layering it onto a ggplot-based figure.
+
+
+## Load Metadata
+
+You can load a title/footnote spreadsheet in either CSV or Excel format.
+
+```{r load-data}
+# Example: Read from a CSV file
+#meta <- read_tfile_csv(system.file("../inst/extdata", "sample_titles_in_csv.csv", package = "tfootr"))
+
+# You could also use:
+file_name <- file.path("../inst/extdata", "sample_titles2.xlsx")
+meta <- read_tfile(filename = file_name, sheetname = "footer")
+```
+
+
+## Select Metadata for a Specific Plot
+
+```{r select-entry}
+# Assume this plot corresponds to TFL number "Figure 1.1"
+title_list <- get_title(meta, tnumber = "Figure 1.1")
+footnotes <- get_footnote(meta, tnumber = "Figure 1.1")
+source_note <- get_source(meta, tnumber = "Figure 1.1")
+```
+
+
+
+## Create the ggplot
+
+```{r basic-plot}
+p <- ggplot(mtcars, aes(mpg, wt)) +
+  geom_point() +
+  theme_minimal()
+p
+```
+
+
+
+## Add Title, Footnotes, and Source Using patchwork
+
+```{r final-plot}
+# Combine metadata elements
+title_text <- paste(title_list, collapse = "\n")
+footnote_text <- paste(unlist(footnotes), collapse = "\n")
+source_text <- paste(unlist(source_note), collapse = "\n")
+
+# Construct enhanced figure layout
+full_plot <- (
+  wrap_elements(grid::textGrob(title_text, gp = grid::gpar(fontsize = 14, fontface = "bold"))) /
+  p /
+  wrap_elements(grid::textGrob(footnote_text, gp = grid::gpar(fontsize = 9))) /
+  wrap_elements(grid::textGrob(source_text, gp = grid::gpar(fontsize = 8, fontface = "italic")))
+) +
+  plot_layout(heights = c(0.1, 0.8, 0.05, 0.05))
+
+full_plot
+```
+
+
+## Summary
+
+The `tfootr` package allows you to:
+
+- Keep titles/footnotes separate from code
+- Easily update metadata in one place
+- Apply consistent annotations across reports and plots
+
+This approach is ideal for regulatory and clinical settings where version control, traceability, and auditability are essential.
+
+
+
+## 🔗 See Also
+
+- [`flextable`](https://davidgohel.github.io/flextable/)
+- [`patchwork`](https://patchwork.data-imaginist.com/)
+- `tfootr::get_ulheader()`, `get_urheader()`, `get_timestamp()`
+

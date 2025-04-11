@@ -1,67 +1,58 @@
-#' Get footnotes based on program name or TFL number
+#' Select a Metadata Entry by Type and TFL Number
 #'
-#' @param df A dataframe or list of overall title and footnote
-#' @param tnumber TFL number, used to select proper titles and footnotes. This can be with or without TFL type.If pname parameter is not given, tnumber must not be NA.
-#' @param type optional TFL type
-#' @param pname The program name used to select proper title entry. If this parameter is given (not NA), it has precedence over TFL number for selection.
-#' @param oid Optional parameter
+#' Filters the metadata for a unique match based on type and TFL number.
 #'
-#' @details
-#' Generate footnotes in a list by calling this function. As a custom, one additional line of program name, run timestamp, and data source(s) is added to the list at the end.
+#' @param df A data frame containing the metadata.
+#' @param type Optional. A character string specifying the type (e.g., "table", "figure").
+#' @param tnumber A character or numeric TFL number.
 #'
-#' @export get_footnote
-get_footnote <- function(filename,
-                         type = NULL,
-                         tnumber = NULL,
-                         pname = NULL,
-                         oid = NULL) {
-  if (is.null(pname) & is.null(tnumber)) stop("Either program name (pname) or TFL number (tnumber) must be provided.\n")
+#' @return A single-row data frame (list) with matching metadata.
+#'
+#' @export
+select_with_number <- function(df = list(),
+                               type = NULL,
+                               tnumber = NULL) {
+  if (is.null(type) & is.null(tnumber)) stop("Selection paramters can not be NULL.\n")
 
-  if (!file.exists(filename)) stop("Input file does not exist! Check the filename and/or pathname and try again. \n", filename)
-  hfooter_file <- read_footer(filename)
-
-  if (!is.null(pname)) {
-    return(select_with_name(df = hfooter_file, pname = pname, oid = oid))
+  if (is.null(type)) {
+    footer_list <- df %>% filter(TTL1 == tnumber)
   } else {
-    row_list <- select_with_number(df = hfooter_file, tnumber = tnumber)
-    row_list <- Filter(function(x) !is.na(x), row_list)
-    return(row_list %>% select(starts_with("FOOT"), SOURCE))
-    # return(add_stamp(filename = row_list, tnumber = tnumber)) #"Figure 1.1"))
+    footer_list <- df %>% filter(TYPE == type & TTL1 == tnumber)
   }
+
+  ## make sure only one unique entry is generated
+  if (nrow(footer_list) == 0) stop("No entry is generated. Check the title and footnote file and try again.\n")
+  if (nrow(footer_list) > 1) stop("Non unique entry generated. Check the title and footnote file and try again.\n")
+
+  return(footer_list)
 }
 
 
-#' Select titles and subtitles based on program name or TFL number
+#' Select a Metadata Entry by Program Name and Optional OID
 #'
-#' @param df A dataframe or list of overall title and footnote
-#' @param tnumber TFL number, used to select proper titles and footnotes. This can be with or without TFL type.If pname parameter is not given, tnumber must not be NA.
-#' @param type optional TFL type
-#' @param pname The program name used to select proper title entry. If this parameter is given (not NA), it has precedence over TFL number for selection.
-#' @param oid Optional parameter
+#' Filters the metadata for a unique match based on program name and optional object ID (OID).
 #'
-#' @details
-#' Generate a list to contain titles, subtitles and population. The list structure provides flexibility comparing to unlisted string vector as return value.
+#' @param df A data frame containing the metadata.
+#' @param pname A character string specifying the program name.
+#' @param oid Optional. A character string specifying the object ID.
 #'
-#' @export select_row_header
-select_row_header <- function(filename,
-                              type = NULL,
-                              tnumber = NULL,
-                              pname = NULL,
-                              oid = NULL) {
-  if (is.null(pname) & is.null(tnumber)) stop("Either program name (pname) or TFL number (tnumber) must be provided.\n")
+#' @return A single-row data frame (list) with matching metadata.
+#'
+#' @export
+select_with_name <- function(df = list(),
+                             pname = "",
+                             oid = "") {
 
-  if (!file.exists(filename)) stop("Input file does not exist! Check the filename and/or pathname and try again. \n", filename)
-  hfooter_file <- read_footer(filename)
+  if (is.null(pname)) stop("Selection paramters are not valid.\n") # allow NA as OID
 
-  if (!is.null(pname)) {
-    return(select_with_name(df = hfooter_file, pname = pname, oid = oid))
-  } else {
-    hfooter_list <- select_with_number(df = hfooter_file, tnumber = tnumber)
+  footer_list <- df %>%
+    filter(PGMNAME == pname & OID == oid)
 
-    header_list <- hfooter_list %>%
-      select(starts_with("TTL"), POPULATION)
-    head_list <- Filter(function(x) !is.na(x), header_list)
+  ## make sure only one unique entry is generated
+  if (nrow(footer_list) == 0) stop("No entry is generated. Check the title and footnote file and try again.\n")
+  if (nrow(footer_list) > 1) stop("Non unique entry generated. Check the title and footnote file and try again.\n")
 
-    return(head_list)
-  }
+  return(footer_list)
 }
+
+

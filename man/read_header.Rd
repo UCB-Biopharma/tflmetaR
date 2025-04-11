@@ -32,5 +32,5 @@ headers <- read_header("path/to/your/titles.xls")
 
 }
 \seealso{
-\link{read_footer}
+\link{read_tfile}
 }

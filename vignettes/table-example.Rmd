@@ -1,0 +1,101 @@
+---
+title: "table-example"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{table-example}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+---
+title: "Using tfootr with kableExtra"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Using tfootr with kableExtra}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+library(TFootr)
+library(kableExtra)
+library(dplyr)
+```
+
+## 📆 Overview
+
+This vignette demonstrates how to annotate tables created with `knitr::kable()` and styled using `kableExtra`, using title and footnote metadata managed via the `tfootr` package.
+
+---
+
+## 📂 Load Metadata
+
+You can load a title/footnote spreadsheet from CSV or Excel format.
+
+```{r load-data}
+# Example CSV file from the package
+#meta <- read_tfile_csv(system.file("../inst/extdata", "sample_titles_in_csv.csv", package = "TFootr"))
+
+# You could also use:
+file_name <- file.path("../inst/extdata", "sample_titles2.xlsx")
+meta <- read_tfile(filename = file_name, sheetname = "footer")
+```
+
+---
+
+## 🎯 Select Entry for a Specific Table
+
+```{r select-entry}
+# Select the metadata entry for a table
+title_list <- get_title(meta, tnumber = "Table 2.1")
+footnotes <- get_footnote(meta, tnumber = "Table 2.1")
+source_note <- get_source(meta, tnumber = "Table 2.1")
+```
+
+---
+
+## 📄 Create and Annotate a Table
+
+```{r basic-table}
+# Create a simple table
+data <- head(mtcars, 5)
+
+# Build title text and footnote text
+title_text <- paste(title_list, collapse = "\n")
+footnote_text <- paste(unlist(footnotes), collapse = "\n")
+source_text <- paste(unlist(source_note), collapse = "\n")
+
+# Render kable table with annotations
+kable(data, format = "html", caption = title_text) %>%
+  kable_styling(bootstrap_options = c("striped", "hover"), full_width = FALSE) %>%
+  add_footnote(label = footnote_text, notation = "symbol") %>%
+  add_footnote(label = source_text, notation = "none")
+```
+
+---
+
+## ✅ Summary
+
+With the `tfootr` package, you can:
+
+- Manage annotation metadata externally
+- Easily reuse footnotes and titles
+- Apply consistent formatting to `kable` tables across reports
+
+This is especially valuable for clinical and regulatory reports that must adhere to strict documentation standards.
+
+---
+
+## 🔗 Related Packages
+
+- [`kableExtra`](https://haozhu233.github.io/kableExtra/)
+- [`flextable`](https://davidgohel.github.io/flextable/)
+- `tfootr::get_title()`, `get_footnote()`, `get_source()`
+
+---
+
+
