@@ -9,6 +9,7 @@ vignette: >
 
 ```{r setup, include = FALSE}
 knitr::opts_chunk$set(
+  fig.width=8, fig.height=6,
   collapse = TRUE,
   comment = "#>"
 )
@@ -28,7 +29,7 @@ library(dplyr, warn.conflicts = FALSE)
 
 This vignette demonstrates how to annotate `ggplot2` figures using title and footnote metadata managed via the `tfootr` package.
 
-The workflow separates metadata from code by reading header/footer content from an external file, selecting the appropriate entry, and layering it onto a ggplot-based figure.
+The workflow separates metadata from code by reading headers/titles/footnotes content from an external file, selecting the appropriate entry, and layering it onto a ggplot-based figure.
 
 
 ## Load Metadata
@@ -48,15 +49,19 @@ meta <- read_tfile(filename = file_name, sheetname = "footer")
 ## Select Metadata for a Specific Plot
 
 ```{r select-entry}
-# Assume this plot corresponds to TFL number "Figure 1.1"
-title_list <- get_title(meta, tnumber = "Figure 1.1")
-footnotes <- get_footnote(meta, tnumber = "Figure 1.1")
-source_note <- get_source(meta, tnumber = "Figure 1.1")
+# Assume this plot corresponds to TFL number "Figure 1.2"
+title_list <- get_title(meta, tnumber = "Figure 1.2")
+footnotes <- get_footnote(meta, tnumber = "Figure 1.2")
+ulheader <- get_ulheader(meta, tnumber = "Figure 1.2")
+urheader <- get_urheader(meta, tnumber = "Figure 1.2")
+source_note <- get_source(meta, tnumber = "Figure 1.2")
 ```
 
 
 
 ## Create the ggplot
+
+A basic ggplot figure without annotations, as shown here:
 
 ```{r basic-plot}
 p <- ggplot(mtcars, aes(mpg, wt)) +
@@ -73,6 +78,8 @@ p
 # Combine metadata elements
 title_text <- paste(title_list, collapse = "\n")
 footnote_text <- paste(unlist(footnotes), collapse = "\n")
+ulheader_text <- paste(unlist(ulheader), collapse = "\n")
+urheader_text <- paste(unlist(urheader), collapse = "\n")
 source_text <- paste(unlist(source_note), collapse = "\n")
 
 # Construct enhanced figure layout
