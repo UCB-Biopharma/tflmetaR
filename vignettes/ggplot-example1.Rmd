@@ -7,28 +7,38 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
+
+---
+title: "Using tfootr with ggplot"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Using tfootr with ggplot}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
 ```{r setup, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
-library(TFootr)
+library(tfootr)
 library(ggplot2)
 library(readxl)
-library(patchwork)  # for layout
+library(patchwork) 
 library(gridExtra)
 library(grid)
 library(magrittr)
 library(glue)
 library(rstudioapi)
-library(dplyr, warn.conflicts = FALSE)
+library(dplyr)
 ```
 
 ## 📆 Overview
 
 This vignette demonstrates how to annotate `ggplot2` figures using title and footnote metadata managed via the `tfootr` package.
 
-The workflow separates metadata from code by reading header/footer content from an external file, selecting the appropriate entry, and layering it onto a ggplot-based figure.
+The workflow separates metadata from code by reading headers/titles/footnotes content from an external file, selecting the appropriate entry, and layering it onto a ggplot-based figure.
 
 
 ## Load Metadata
@@ -37,10 +47,11 @@ You can load a title/footnote spreadsheet in either CSV or Excel format.
 
 ```{r load-data}
 # Example: Read from a CSV file
-#meta <- read_tfile_csv(system.file("../inst/extdata", "sample_titles_in_csv.csv", package = "tfootr"))
+#m eta <- read_tfile_csv(system.file("../inst/extdata", "sample_titles_in_csv.csv", package = "tfootr"))
 
 # You could also use:
 file_name <- file.path("../inst/extdata", "sample_titles2.xlsx")
+header_file <- read_tfile(filename = file_name, sheetname = "header")
 meta <- read_tfile(filename = file_name, sheetname = "footer")
 ```
 
@@ -48,20 +59,29 @@ meta <- read_tfile(filename = file_name, sheetname = "footer")
 ## Select Metadata for a Specific Plot
 
 ```{r select-entry}
-# Assume this plot corresponds to TFL number "Figure 1.1"
-title_list <- get_title(meta, tnumber = "Figure 1.1")
-footnotes <- get_footnote(meta, tnumber = "Figure 1.1")
-source_note <- get_source(meta, tnumber = "Figure 1.1")
+# Assume this plot corresponds to TFL number "Figure 1.2"
+title_list <- get_title(meta, tnumber = "Figure 1.2")
+footnotes <- get_footnote(meta, tnumber = "Figure 1.2")
+ulheader <- get_ulheader(header_file)
+urheader <- get_urheader(header_file)
+source_note <- get_source(meta, tnumber = "Figure 1.2")
+pgname <- glue("Generated from get.R on ", "\n") #get_refstamp(pname = NULL)
+curr_time <- Sys.time()
+run_time <- format(curr_time, "%Y-%m-%d %H:%M:%S")
 ```
 
 
 
 ## Create the ggplot
 
-```{r basic-plot}
-p <- ggplot(mtcars, aes(mpg, wt)) +
-  geom_point() +
-  theme_minimal()
+A basic ggplot figure without annotations, as shown here:
+
+```{r basic-plot, fig.width= 7, fig.height= 5}
+# p <- ggplot(mtcars, aes(mpg, wt)) +
+#   geom_point() +
+#   theme_minimal()
+p <- ggplot(mpg) +
+  geom_point(aes(x = displ, y = hwy, color = class))
 p
 ```
 
@@ -69,11 +89,14 @@ p
 
 ## Add Title, Footnotes, and Source Using patchwork
 
-```{r final-plot}
+```{r final-plot, fig.width= 7, fig.height= 5}
 # Combine metadata elements
 title_text <- paste(title_list, collapse = "\n")
 footnote_text <- paste(unlist(footnotes), collapse = "\n")
+ulheader_text <- paste(unlist(ulheader), collapse = "\n")
+urheader_text <- paste(unlist(urheader), collapse = "\n")
 source_text <- paste(unlist(source_note), collapse = "\n")
+#runtime_text <- paste(run_time, collapse = "\n")
 
 # Construct enhanced figure layout
 full_plot <- (
@@ -87,6 +110,21 @@ full_plot <- (
 full_plot
 ```
 
+```{r second-example, fig.width= 7, fig.height= 5}
+p <- ggplot(mpg, aes(displ, hwy)) + 
+  geom_point(aes(colour = class)) + 
+  geom_smooth(method = "lm", formula = y ~ x, se = FALSE) + 
+  theme(legend.position = "right") +
+    labs(
+    title = {paste(title_list, sep = "\n", collapse = "\n")},
+    caption = {paste({paste(footnotes, sep = "\t", collapse = "\n")}, "\n", pgname, run_time, "   Data Source(s): ", source_text)}) +
+  theme(plot.caption = element_text(hjust = 0, size = 11)) +
+  theme(plot.title = element_text(hjust = 0.5, face = "bold"))
+p
+grid.text(paste(ulheader_text, sep = "\n", collapse = " \n "), x = 0.04, y = 0.95, just = "left",gp = gpar(fontsize = 9, col = "black"))
+
+grid.text(paste(urheader_text, sep = "\n", collapse = " \n "), x = 0.9, y = 0.95, just = "right",gp = gpar(fontsize = 9, col = "black"))
+```
 
 ## Summary
 
