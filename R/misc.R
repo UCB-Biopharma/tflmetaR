@@ -12,7 +12,7 @@ read_xlfile <- function(filename, sheetname) {
   df
 }
 
-
+#' @export
 select_row <- function(data, by_column, by_value, oid=NULL) {
   df <- data %>% filter(!!sym(by_column) == by_value)
 
@@ -25,7 +25,7 @@ select_row <- function(data, by_column, by_value, oid=NULL) {
   }
   df
 }
-
+#' @export
 select_cols <- function(data, select_type, add_footr_tstamp=TRUE) {
   type <- toupper(select_type);
   cols <- NULL;
@@ -49,7 +49,7 @@ select_cols <- function(data, select_type, add_footr_tstamp=TRUE) {
   out
 }
 
-
+#' @export
 add_footr_tstamp <- function(data, col_src) {
   runtime_stamp <- format(Sys.time(), "%Y-%m-%d %H:%M:%S")
   ref_timestamp <- glue("\nGenerated from {basename(rstudioapi::getSourceEditorContext()$path)} on ",

@@ -209,7 +209,8 @@ test_that("get_timestamp returns a string with correct format", {
   fake_context <- list(path = "/Users/tester/Documents/script.R")
   mock_get_context <- mock(fake_context)
   #stub(get_timestamp, "rstudioapi::getSourceEditorContext", mock_get_context)
-
+  # Skip this test if not running in RStudio, or if rstudioapi isn't available
+  skip_if_not(rstudioapi::isAvailable(), "rstudioapi is not available or not running in RStudio")
   # Run the function
   ts <- get_refstamp()
 
@@ -224,6 +225,8 @@ test_that("get_refstamp works correctly", {
   # Test when pname is NULL
   context <- list(path = "path/to/file.R")
   assign("getSourceEditorContext", function() context, envir = .GlobalEnv)
+  # Skip this test if not running in RStudio, or if rstudioapi isn't available
+  skip_if_not(rstudioapi::isAvailable(), "rstudioapi is not available or not running in RStudio")
   result <- get_refstamp()
   #expect_match(result, "Generated from file.R on ")
 
@@ -234,6 +237,8 @@ test_that("get_refstamp works correctly", {
 })
 
 test_that("get_refstamp returns correct message with pname", {
+  # Skip this test if not running in RStudio, or if rstudioapi isn't available
+  skip_if_not(rstudioapi::isAvailable(), "rstudioapi is not available or not running in RStudio")
   result <- get_refstamp("my_program.R")
   expect_true(startsWith(result, "Generated from my_program.R on "))
 })
