@@ -1,4 +1,4 @@
-
+#' @export
 read_xlfile <- function(filename, sheetname) {
   df <- readxl::read_excel(filename, sheet = sheetname)
 
