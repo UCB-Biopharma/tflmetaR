@@ -47,7 +47,7 @@ You can load a title/footnote spreadsheet in either CSV or Excel format.
 
 ```{r load-data}
 # Example: Read from a CSV file
-#meta <- read_tfile_csv(system.file("../inst/extdata", "sample_titles_in_csv.csv", package = "tfootr"))
+#m eta <- read_tfile_csv(system.file("../inst/extdata", "sample_titles_in_csv.csv", package = "tfootr"))
 
 # You could also use:
 file_name <- file.path("../inst/extdata", "sample_titles2.xlsx")
@@ -65,7 +65,9 @@ footnotes <- get_footnote(meta, tnumber = "Figure 1.2")
 ulheader <- get_ulheader(header_file)
 urheader <- get_urheader(header_file)
 source_note <- get_source(meta, tnumber = "Figure 1.2")
-#run_time <- get_timestamp(pname = NULL)
+pgname <- glue("Generated from get.R on ", "\n") #get_refstamp(pname = NULL)
+curr_time <- Sys.time()
+run_time <- format(curr_time, "%Y-%m-%d %H:%M:%S")
 ```
 
 
@@ -114,8 +116,8 @@ p <- ggplot(mpg, aes(displ, hwy)) +
   geom_smooth(method = "lm", formula = y ~ x, se = FALSE) + 
   theme(legend.position = "right") +
     labs(
-    title = {paste(title_list, sep = "\n", collapse = "\n ")},
-    caption = {paste({paste(footnotes, sep = "\t", collapse = "\n")}, " ", "   Data Source(s): ", source_text)}) +
+    title = {paste(title_list, sep = "\n", collapse = "\n")},
+    caption = {paste({paste(footnotes, sep = "\t", collapse = "\n")}, "\n", pgname, run_time, "   Data Source(s): ", source_text)}) +
   theme(plot.caption = element_text(hjust = 0, size = 11)) +
   theme(plot.title = element_text(hjust = 0.5, face = "bold"))
 p

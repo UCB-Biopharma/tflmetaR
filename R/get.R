@@ -149,20 +149,23 @@ get_source <- function(df = NULL,
 }
 
 
-#' Generate Runtime Timestamp Reference
+#' Generate Runtime Program Name Reference
 #'
-#' Generates a string indicating the time and source file from which the report was generated.
+#' Generates a string indicating the program name from which the report was generated.
 #'
 #' @param pname Optional. A program name to include in the timestamp message.
 #'
-#' @return A character string with the timestamp and source filename.
+#' @return A character string with the reference program name.
 #'
 #' @importFrom rstudioapi getSourceEditorContext
 #' @importFrom glue glue
 #' @export
-get_timestamp <- function(pname = NULL) {
-  current_time <- Sys.time()
-  runtime_stamp <- format(current_time, "%Y-%m-%d %H:%M:%S")
-  ref_timestamp <- glue("Generated from {basename(rstudioapi::getSourceEditorContext()$path)} on ", "\n")
-  return(ref_timestamp)
+get_refstamp <- function(pname = NULL) {
+  #runtime_stamp <- format(time, "%Y-%m-%d %H:%M:%S")
+  if (is.null(pname)) {
+    ref_stamp <- glue("Generated from {basename(rstudioapi::getSourceEditorContext()$path)} on ", "\n")
+  } else {
+    ref_stamp <- glue("Generated from ", pname, " on ")
+  }
+  return(ref_stamp)
 }
