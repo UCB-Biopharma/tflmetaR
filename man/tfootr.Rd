@@ -43,10 +43,11 @@ Returns a data frame
 Get title and footnotes from an Excel file
 }
 \examples{
+\dontrun{
 (1) To get titles:  tfootr(filename, "Sheet1", by_value="t_dm", select_type="title")
 (2) To get footers: tfootr(filename, "Sheet1", by_value="t_dm", select_type="footr")
 (3) To get a specific cell value, i.e., SOURCE:
       tfootr(filename, "Sheet1", by_value="t_dm", select_type="source")
 (4) To get the whole row: tfootr(filename, "Sheet1", by_value="t_dm")
-
+}
 }
