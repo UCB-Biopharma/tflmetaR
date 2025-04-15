@@ -1,3 +1,4 @@
+utils::globalVariables(c("POPULATION", "OID", "SOURCE", "PGMNAMEW", "TTL1", "TYPE"))
 #' Extract Titles and Subtitle Metadata
 #'
 #' Retrieves title-related fields (TTL1, TTL2, etc.) and population from the metadata.
@@ -28,7 +29,7 @@ get_title <- function(df = NULL,
   }
   # select only title, subtitle(s) and population.
   filtered_list <- title_list %>%
-    select(starts_with("TTL"), POPULATION)
+    dplyr::dplyr::select(starts_with("TTL"), POPULATION)
   t_list <- Filter(function(x) !is.na(x), filtered_list)
 
   return(t_list)
@@ -60,7 +61,7 @@ get_footnote <- function(df = NULL,
   }
   # select only footnotes
   filtered_list <- footnote_list %>%
-    select(starts_with("FOOT"))
+    dplyr::select(starts_with("FOOT"))
   f_list <- Filter(function(x) !is.na(x), filtered_list)
 
   return(f_list)
@@ -80,7 +81,7 @@ get_footnote <- function(df = NULL,
 get_ulheader <- function(df,
                          by_list = TRUE) {
   # Read header spreadsheet
-  ulheader <- df %>% select(starts_with("UL"))
+  ulheader <- df %>% dplyr::select(starts_with("UL"))
   ulheader <- Filter(function(x) !is.na(x), ulheader)
 
   if (by_list) {
@@ -104,7 +105,7 @@ get_ulheader <- function(df,
 get_urheader <- function(df,
                          by_list = TRUE) {
   # Read header spreadsheet
-  urheader <- df %>% select(starts_with("UR"))
+  urheader <- df %>% dplyr::select(starts_with("UR"))
   urheader <- Filter(function(x) !is.na(x), urheader)
 
   if (by_list) {
@@ -142,7 +143,7 @@ get_source <- function(df = NULL,
   }
   # select only footnotes
   filtered_list <- source_list %>%
-    select(starts_with("SOURCE"))
+    dplyr::select(starts_with("SOURCE"))
   f_list <- Filter(function(x) !is.na(x), filtered_list)
 
   return(f_list)
