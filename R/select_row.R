@@ -28,7 +28,7 @@ select_with_number <- function(df = list(),
   return(footer_list)
 }
 
-
+utils::globalVariables("PGMNAME")
 #' Select a Metadata Entry by Program Name and Optional OID
 #'
 #' Filters the metadata for a unique match based on program name and optional object ID (OID).

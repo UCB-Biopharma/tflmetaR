@@ -29,7 +29,7 @@ get_title <- function(df = NULL,
   }
   # select only title, subtitle(s) and population.
   filtered_list <- title_list %>%
-    dplyr::dplyr::select(starts_with("TTL"), POPULATION)
+    dplyr::select(starts_with("TTL"), POPULATION)
   t_list <- Filter(function(x) !is.na(x), filtered_list)
 
   return(t_list)
