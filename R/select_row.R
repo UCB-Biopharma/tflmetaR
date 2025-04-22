@@ -8,6 +8,7 @@
 #'
 #' @return A single-row data frame (list) with matching metadata.
 #'
+#' @import magrittr
 #' @export
 select_with_number <- function(df = list(),
                                type = NULL,
@@ -15,9 +16,9 @@ select_with_number <- function(df = list(),
   if (is.null(type) & is.null(tnumber)) stop("Selection paramters can not be NULL.\n")
 
   if (is.null(type)) {
-    footer_list <- df %>% filter(TTL1 == tnumber)
+    footer_list <- df %>% dplyr::filter(TTL1 == tnumber)
   } else {
-    footer_list <- df %>% filter(TYPE == type & TTL1 == tnumber)
+    footer_list <- df %>% dplyr::filter(TYPE == type & TTL1 == tnumber)
   }
 
   ## make sure only one unique entry is generated
@@ -27,7 +28,7 @@ select_with_number <- function(df = list(),
   return(footer_list)
 }
 
-
+utils::globalVariables("PGMNAME")
 #' Select a Metadata Entry by Program Name and Optional OID
 #'
 #' Filters the metadata for a unique match based on program name and optional object ID (OID).
@@ -46,7 +47,7 @@ select_with_name <- function(df = list(),
   if (is.null(pname)) stop("Selection paramters are not valid.\n") # allow NA as OID
 
   footer_list <- df %>%
-    filter(PGMNAME == pname & OID == oid)
+    dplyr::filter(PGMNAME == pname & OID == oid)
 
   ## make sure only one unique entry is generated
   if (nrow(footer_list) == 0) stop("No entry is generated. Check the title and footnote file and try again.\n")

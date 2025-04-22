@@ -1,21 +1,34 @@
 Package: tfootr
-Title: Process Headers /Titles /Footnotes File for Annotating TFLs/TLGs
+Title: Read And Extract Headers/Titles/Footnotes File for Annotating TFLs/TLGs
 Version: 0.0.0.9000
 Authors@R: c(
     person("Gary", "Cao", , "Gary.Cao@UCB.com", role = c("aut", "cre")),
     person("Amber", "Wu", , "amber.wu2@UCB.com", role = "aut"),
     person("Yao", "Lu", ,"Yao.Lu@UCB.com", role = "aut"))
-Description: The appropriately placed titles and footnotes are essential parts for the clinical study reports (CSR). This `TFootr` package enables these metadata to be maintained in a separately located Excel spreadsheet for better handling. One can select the right titles or footnotes either based on output numbers, or the program names along with oid.
+Description: Putting titles, headers, or footnotes in R programs violates **separation of data and code** practice. 
+    This package offers convenience to read and process titles etc. from a spreadsheet for annotating the clinical study reports (CSR).
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.1.2
+RoxygenNote: 7.3.2
 Suggests: 
-    dplyr,
-    glue,
+    ggplot2,
+    gridExtra,
+    kableExtra,
     knitr,
+    mockery (>= 0.3.0),
+    patchwork,
     rmarkdown,
-    testthat (>= 3.0.0)
+    testthat (>= 3.0.0),
+    writexl
 VignetteBuilder: knitr
 Maintainer: Gary Cao <Gary.Cao@ucb.com>
 Config/testthat/edition: 3
+Imports: 
+    dplyr,
+    glue,
+    magrittr,
+    readr,
+    readxl,
+    rlang,
+    rstudioapi

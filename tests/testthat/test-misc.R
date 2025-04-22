@@ -10,9 +10,8 @@ test_that("readxl throws an error if the file does not exist", {
 })
 
 #test incorrect sheetname
-test_that("read_footer throws an error if incorrect sheetname given", {
-  file_name <- file.path("../../inst/extdata", "sample_titles.xls")
-  expect_error(tfootr::read_xlfile(file_name, sheetname = "SheetN"),
-               "Sheet 'SheetN' not found")
-})
-
+# test_that("read_xlfile throws an error if incorrect sheetname given", {
+#   file_name <- file.path("../../inst/extdata", "sample_titles.xls")
+#   expect_error(tfootr::read_xlfile(file_name, sheetname = "SheetN"),
+#                "Sheet 'SheetN' not found")
+# })

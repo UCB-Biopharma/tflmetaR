@@ -56,7 +56,6 @@ read_tfile <- function(filename = NULL,
     if (is.null(sheetname) & !all(required_cols %in% colnames(tfile))) {
       stop("Input file misses required column(s).\n")
     }
-
   return(tfile)
   }
 }
