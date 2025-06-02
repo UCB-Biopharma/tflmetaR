@@ -48,7 +48,8 @@ get_footnote <- function(df = NULL,
                       type = NULL,
                       tnumber = NULL,
                       pname = NULL,
-                      oid = NULL) {
+                      oid = NULL,
+                      add_footr_tstamp=TRUE) {
   if (is.null(df)) stop("Input dataframe error! Check the input data and try again. \n")
 
   if (is.null(pname) & is.null(tnumber)) stop("Need to provide either a program name or TFL number to select row.\n")
@@ -62,9 +63,22 @@ get_footnote <- function(df = NULL,
   # select only footnotes
   filtered_list <- footnote_list %>%
     dplyr::select(starts_with("FOOT"))
+
+  if (!is.null(add_footr_tstamp) && add_footr_tstamp) {
+    src <- footnote_list %>% select(SOURCE)
+    pgmname <- footnote_list %>% select(SOURCE)
+
+    filtered_list$source <- get_footr_tstamp(unlist(pgmname), unlist(src))
+  }
+
   f_list <- Filter(function(x) !is.na(x), filtered_list)
 
   return(f_list)
+}
+
+get_footr_tstamp <- function(pgmname_str, src_str) {
+  runtime_stamp <- format(Sys.time(), "%Y-%m-%d %H:%M:%S")
+  glue::glue("Generated from {pgmname_str} on {runtime_stamp} Data Source(s): {src_str}")
 }
 
 #' Extract Upper-Left Header Text

@@ -4,7 +4,14 @@
 \alias{get_footnote}
 \title{Extract Footnote Metadata}
 \usage{
-get_footnote(df = NULL, type = NULL, tnumber = NULL, pname = NULL, oid = NULL)
+get_footnote(
+  df = NULL,
+  type = NULL,
+  tnumber = NULL,
+  pname = NULL,
+  oid = NULL,
+  add_footr_tstamp = TRUE
+)
 }
 \arguments{
 \item{df}{A data frame of title and footnote metadata.}

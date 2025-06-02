@@ -46,8 +46,10 @@ select_with_name <- function(df = list(),
 
   if (is.null(pname)) stop("Selection paramters are not valid.\n") # allow NA as OID
 
-  footer_list <- df %>%
-    dplyr::filter(PGMNAME == pname & OID == oid)
+  footer_list <- df %>% dplyr::filter(PGMNAME == pname)
+  if (!is.null(oid)) {
+    footer_list <- dplyr::filter(footer_list, OID == oid)
+  }
 
   ## make sure only one unique entry is generated
   if (nrow(footer_list) == 0) stop("No entry is generated. Check the title and footnote file and try again.\n")
