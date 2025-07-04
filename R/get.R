@@ -66,7 +66,7 @@ get_footnote <- function(df = NULL,
 
   if (!is.null(add_footr_tstamp) && add_footr_tstamp) {
     src <- footnote_list %>% select(SOURCE)
-    pgmname <- footnote_list %>% select(SOURCE)
+    pgmname <- footnote_list %>% select(PGMNAME)
 
     filtered_list$source <- get_footr_tstamp(unlist(pgmname), unlist(src))
   }
