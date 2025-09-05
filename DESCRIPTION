@@ -1,6 +1,6 @@
 Package: tfootr
 Title: Read And Extract Headers/Titles/Footnotes File for Annotating TFLs/TLGs
-Version: 0.0.0.9000
+Version: 0.1.0
 Authors@R: c(
     person("Gary", "Cao", , "Gary.Cao@UCB.com", role = c("aut", "cre")),
     person("Amber", "Wu", , "amber.wu2@UCB.com", role = "aut"),

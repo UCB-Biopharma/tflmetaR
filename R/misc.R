@@ -112,10 +112,12 @@ select_cols <- function(data, select_type, add_footr_tstamp=TRUE) {
     cols <- data %>% select(starts_with("TTL"), POPULATION)
   } else if (type=="FOOTR") {
     cols <- data %>% select(starts_with("FOOT"))
-    col_src <- data %>% select(SOURCE)
 
     if (!is.null(add_footr_tstamp) && add_footr_tstamp) {
-      cols <- add_footr_tstamp(cols, col_src)
+      src <- data %>% select(SOURCE)
+      pgmname <- data %>% select(SOURCE)
+
+      cols$source <- get_footr_tstamp(unlist(pgmname), unlist(src))
     }
   } else {
     cols <- data %>% select(type)
@@ -125,38 +127,8 @@ select_cols <- function(data, select_type, add_footr_tstamp=TRUE) {
   out
 }
 
-#' Append Runtime Timestamp and Source Info to Footnotes
-#'
-#' Adds a formatted timestamp and source reference to footnote data for traceability.
-#'
-#' @param data A data frame containing footnote text.
-#' @param col_src A data frame or vector containing source information, typically from a `SOURCE` column.
-#'
-#' @return A data frame combining the original footnotes with an additional row containing
-#' the runtime timestamp and source reference. The added row is named `"SOURCE"`.
-#'
-#' @details
-#' The function captures the current system time and the active script's filename (from RStudio),
-#' then combines this metadata with the provided source information. It is useful for
-#' documenting when and from where a set of footnotes was generated.
-#'
-#' Requires RStudio for retrieving the source editor context.
-#'
-#' @examples
-#' \dontrun{
-#' add_footr_tstamp(data = footnote_df, col_src = metadata_df$SOURCE)
-#' }
-#'
-#' @importFrom glue glue
-#' @importFrom rstudioapi getSourceEditorContext
-#' @export
-add_footr_tstamp <- function(data, col_src) {
+
+get_footr_tstamp <- function(pgmname_str, src_str) {
   runtime_stamp <- format(Sys.time(), "%Y-%m-%d %H:%M:%S")
-  ref_timestamp <- glue("\nGenerated from {basename(rstudioapi::getSourceEditorContext()$path)} on ",
-                        runtime_stamp, " Data Source(s): ", unlist(col_src), "\n")
-
-  out <- c(data, ref_timestamp)
-  names(out)[length(out)] <- "SOURCE" #give last part a name in case end user want to refer to it.
-
-  return(as.data.frame(out))
+  glue::glue("Generated from {pgmname_str} on {runtime_stamp} Data Source(s): {src_str}")
 }

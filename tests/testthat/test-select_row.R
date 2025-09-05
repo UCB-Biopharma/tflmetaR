@@ -44,13 +44,13 @@ test_that("select_with_number returns error for non-unique match", {
 test_that("select_with_name throws error when pname is NULL", {
   df <- data.frame(PGMNAME = "A", OID = "001")
   expect_error(select_with_name(df, pname = NULL, oid = "001"),
-               regexp = "Selection paramters are not valid")
+               regexp = "'pname' is NULL")
 })
 
 test_that("select_with_name throws error when no matching entry is found", {
   df <- data.frame(PGMNAME = "A", OID = "001")
   expect_error(select_with_name(df, pname = "B", oid = "001"),
-               regexp = "No entry is generated")
+               regexp = "No matching entry")
 })
 
 test_that("select_with_name throws error when multiple matching entries are found", {

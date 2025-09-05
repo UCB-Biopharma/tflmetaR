@@ -66,7 +66,7 @@ test_that("get_footnote uses select_with_name when pname is provided", {
   mock_select_with_name <- mock(df)
   stub(get_footnote, "select_with_name", mock_select_with_name)
 
-  result <- get_footnote(df = df, pname = "A", oid = NULL)
+  result <- get_footnote(df = df, pname = "A", oid = NULL, add_footr_tstamp=FALSE)
   expect_true(is.data.frame(result))
   expect_named(result, "FOOT1")
   #expect_equal(result$FOOT1, "Footnote")
@@ -77,7 +77,7 @@ test_that("get_footnote uses select_with_number when pname is NULL", {
   mock_select_with_number <- mock(df)
   stub(get_footnote, "select_with_number", mock_select_with_number)
 
-  result <- get_footnote(df = df, tnumber = "001")
+  result <- get_footnote(df = df, tnumber = "001", add_footr_tstamp=FALSE)
   expect_true(is.data.frame(result))
   expect_named(result, c("FOOT1", "FOOT2"))
 })
@@ -87,7 +87,7 @@ test_that("get_footnote filters out NA footnote columns", {
   mock_select_with_number <- mock(df)
   stub(get_footnote, "select_with_number", mock_select_with_number)
 
-  result <- get_footnote(df = df, tnumber = "X")
+  result <- get_footnote(df = df, tnumber = "X", add_footr_tstamp=FALSE)
   expect_true("FOOT1" %in% names(result))
   expect_false("FOOT2" %in% names(result))
 })
