@@ -23,6 +23,9 @@ get_footnote(
 \item{pname}{Optional. Program name.}
 
 \item{oid}{Optional. Object ID.}
+
+\item{add_footr_tstamp}{If TRUE, add timestamp and source information as the
+last line of the footnotes. Default is TRUE.}
 }
 \value{
 A named list of non-missing footnote fields.
