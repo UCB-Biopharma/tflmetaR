@@ -8,10 +8,10 @@ vignette: >
 ---
 
 ---
-title: "Using tfootr with kableExtra"
+title: "Using tflmetaR with kableExtra"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Using tfootr with kableExtra}
+  %\VignetteIndexEntry{Using tflmetaR with kableExtra}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -21,14 +21,14 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
-library(tfootr)
+library(tflmetaR)
 library(kableExtra)
 library(dplyr)
 ```
 
 ## 📆 Overview
 
-This vignette demonstrates how to annotate tables created with `knitr::kable()` and styled using `kableExtra`, using title and footnote metadata managed via the `tfootr` package.
+This vignette demonstrates how to annotate tables created with `knitr::kable()` and styled using `kableExtra`, using title and footnote metadata managed via the `tflmetaR` package.
 
 ---
 
@@ -80,7 +80,7 @@ kable(data, format = "html", caption = title_text) %>%
 
 ## ✅ Summary
 
-With the `tfootr` package, you can:
+With the `tflmetaR` package, you can:
 
 - Manage annotation metadata externally
 - Easily reuse footnotes and titles
@@ -94,7 +94,7 @@ This is especially valuable for clinical and regulatory reports that must adhere
 
 - [`kableExtra`](https://haozhu233.github.io/kableExtra/)
 - [`flextable`](https://davidgohel.github.io/flextable/)
-- `tfootr::get_title()`, `get_footnote()`, `get_source()`
+- `tflmetaR::get_title()`, `get_footnote()`, `get_source()`
 
 ---
 

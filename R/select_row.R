@@ -44,7 +44,7 @@ select_with_name <- function(df = list(),
                              pname = "",
                              oid = "") {
 
-  if (is.null(pname)) stop("tfootr::select_with_name: 'pname' is NULL")
+  if (is.null(pname)) stop("tflmetaR::select_with_name: 'pname' is NULL")
 
   footer_list <- df %>% dplyr::filter(PGMNAME == pname)
   if (!is.null(oid)) {
@@ -54,10 +54,10 @@ select_with_name <- function(df = list(),
   ## make sure only one unique entry is generated
   oid_msg <- if (!is.null(oid)) paste0(" and OID = '", oid, "'") else ""
   if (nrow(footer_list) == 0)
-    stop(sprintf("tfootr::select_with_name: No matching entry found in the Excel file for PGMNAME = '%s'%s.",
+    stop(sprintf("tflmetaR::select_with_name: No matching entry found in the Excel file for PGMNAME = '%s'%s.",
                  pname, oid_msg))
   if (nrow(footer_list) > 1)
-    stop(sprintf("tfootr::select_with_name: Non unique entry generated from the Excel file for PGMNAME = '%s'%s.",
+    stop(sprintf("tflmetaR::select_with_name: Non unique entry generated from the Excel file for PGMNAME = '%s'%s.",
                  pname, oid_msg))
 
   return(footer_list)
