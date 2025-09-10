@@ -1,8 +1,8 @@
 ---
-title: "Using tfootr with ggplot2"
+title: "Using tflmetaR with ggplot2"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Using tfootr with ggplot2}
+  %\VignetteIndexEntry{Using tflmetaR with ggplot2}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -12,7 +12,7 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
-library(tfootr)
+library(tflmetaR)
 library(ggplot2)
 library(readxl)
 library(patchwork) 
@@ -26,7 +26,7 @@ library(dplyr)
 
 ## 📆 Overview
 
-This vignette demonstrates how to annotate `ggplot2` figures using title and footnote metadata managed via the `tfootr` package.
+This vignette demonstrates how to annotate `ggplot2` figures using title and footnote metadata managed via the `tflmetaR` package.
 
 The workflow separates metadata from code by reading header/footer content from an external file, selecting the appropriate entry, and layering it onto a ggplot-based figure.
 
@@ -93,7 +93,7 @@ full_plot
 
 ## ✅ Summary
 
-The `tfootr` package allows you to:
+The `tflmetaR` package allows you to:
 
 - Keep titles/footnotes separate from code
 - Easily update metadata in one place
@@ -107,5 +107,5 @@ This approach is ideal for regulatory and clinical settings where version contro
 
 - [`flextable`](https://davidgohel.github.io/flextable/)
 - [`patchwork`](https://patchwork.data-imaginist.com/)
-- `tfootr::get_ulheader()`, `get_urheader()`, `get_timestamp()`
+- `tflmetaR::get_ulheader()`, `get_urheader()`, `get_timestamp()`
 
