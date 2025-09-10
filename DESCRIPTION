@@ -4,7 +4,8 @@ Version: 0.1.0
 Authors@R: c(
     person("Gary", "Cao", , "Gary.Cao@UCB.com", role = c("aut", "cre")),
     person("Amber", "Wu", , "amber.wu2@UCB.com", role = "aut"),
-    person("Yao", "Lu", ,"Yao.Lu@UCB.com", role = "aut"))
+    person("Yao", "Lu", ,"Yao.Lu@UCB.com", role = "aut"),
+    person("Lan", "Cheng", , "lan.cheng@ucb.com", role = "aut"))
 Description: Putting titles, headers, or footnotes in R programs violates **separation of data and code** practice. 
     This package offers convenience to read and process titles etc. from a spreadsheet for annotating the clinical study reports (CSR).
 License: MIT + file LICENSE
