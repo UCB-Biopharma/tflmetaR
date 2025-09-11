@@ -38,7 +38,7 @@ You can load a title/footnote spreadsheet in either CSV or Excel format.
 
 ```{r load-data}
 # Example: Read from a CSV file
-#meta <- read_tfile_csv(system.file("extdata", "demo_titles.csv", package = "tfootr"))
+#meta <- read_tfile_csv(system.file("extdata", "demo_titles.csv", package = "tflmetaR"))
 
 # You could also use:
 file_name <- file.path("../inst/extdata", "sample_titles2.xlsx")
