@@ -40,6 +40,8 @@ get_title <- function(df = NULL,
 #' Retrieves footnote fields (FOOT1, FOOT2, etc.) from the metadata.
 #'
 #' @inheritParams get_title
+#' @param add_footr_tstamp If TRUE, add timestamp and source information as the
+#'   last line of the footnotes. Default is TRUE.
 #'
 #' @return A named list of non-missing footnote fields.
 #'
