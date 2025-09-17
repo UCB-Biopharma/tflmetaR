@@ -53,8 +53,9 @@ meta <- read_tfile_csv("metadata/titles_footnotes.csv")
 or
 meta <- read_tfile("metadata/titles_footnotes.xls")
 
-# Extract title and footnote for a specific table
+# Extract title, population, and footnote for a specific table
 title <- get_title(meta, tnumber = "Table 1.1")
+population <- get_pop(meta, tnumber = "Table 1.1")
 footnotes <- get_footnote(meta, tnumber = "Table 1.1")
 
 # Use with flextable (example)

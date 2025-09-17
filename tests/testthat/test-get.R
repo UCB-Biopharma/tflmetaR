@@ -160,6 +160,59 @@ test_that("get_urheader handles no UR columns gracefully", {
   expect_equal(ncol(result), 0)
 })
 
+# test get_pop
+test_that("get_pop throws error on NULL df", {
+  expect_error(get_pop(df = NULL),
+               regexp = "Input dataframe error")
+})
+
+test_that("get_pop throws error when neither pname nor tnumber is provided", {
+  df <- data.frame(PGMNAME = "A", POPULATION = "Test Population")
+  expect_error(get_pop(df = df),
+               regexp = "Need to provide either a program name or TFL number")
+})
+
+test_that("get_pop uses select_with_name when pname is provided", {
+  df <- data.frame(PGMNAME = "A", POPULATION = "Test Population", TTL1 = "Title")
+  mock_select_with_name <- mock(df)
+  stub(get_pop, "select_with_name", mock_select_with_name)
+
+  result <- get_pop(df = df, pname = "A", oid = NULL)
+  expect_true(is.data.frame(result))
+  expect_named(result, "POPULATION")
+})
+
+test_that("get_pop uses select_with_number when pname is NULL", {
+  df <- data.frame(TTL1 = "Title", POPULATION = "Test Population")
+  mock_select_with_number <- mock(df)
+  stub(get_pop, "select_with_number", mock_select_with_number)
+
+  result <- get_pop(df = df, tnumber = "Title")
+  expect_true(is.data.frame(result))
+  expect_named(result, "POPULATION")
+})
+
+test_that("get_pop returns only POPULATION column", {
+  df <- data.frame(TTL1 = "Title", TTL2 = "Subtitle", POPULATION = "ITT Population", FOOT1 = "Note")
+  mock_select_with_number <- mock(df)
+  stub(get_pop, "select_with_number", mock_select_with_number)
+
+  result <- get_pop(df = df, tnumber = "Title")
+  expect_true("POPULATION" %in% names(result))
+  expect_false("TTL1" %in% names(result))
+  expect_false("TTL2" %in% names(result))
+  expect_false("FOOT1" %in% names(result))
+})
+
+test_that("get_pop filters out NA population", {
+  df <- data.frame(TTL1 = "Title", POPULATION = NA)
+  mock_select_with_number <- mock(df)
+  stub(get_pop, "select_with_number", mock_select_with_number)
+
+  result <- get_pop(df = df, tnumber = "Title")
+  expect_equal(ncol(result), 0)
+})
+
 # test get_source
 test_that("get_source throws error on NULL df", {
   expect_error(get_source(df = NULL),
