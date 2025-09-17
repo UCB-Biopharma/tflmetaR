@@ -38,10 +38,10 @@ You can load a title/footnote spreadsheet from CSV or Excel format.
 
 ```{r load-data}
 # Example CSV file from the package
-#meta <- read_tfile_csv(system.file("../inst/extdata", "sample_titles_in_csv.csv", package = "tftr"))
+# meta <- read_tfile_csv(system.file("../inst/extdata", "sample_titles_in_csv.csv", package = "tftr"))
 
 # You could also use:
-file_name <- file.path("../inst/extdata", "sample_titles2.xlsx")
+file_name <- system.file("extdata", "sample_titles2.xlsx", package = "tflmetaR")
 meta <- read_tfile(filename = file_name, sheetname = "footer")
 ```
 
@@ -52,6 +52,7 @@ meta <- read_tfile(filename = file_name, sheetname = "footer")
 ```{r select-entry}
 # Select the metadata entry for a table
 title_list <- get_title(meta, tnumber = "Table 2.1")
+population <- get_pop(meta, tnumber = "Table 2.1")
 footnotes <- get_footnote(meta, tnumber = "Table 2.1")
 source_note <- get_source(meta, tnumber = "Table 2.1")
 ```
@@ -94,7 +95,7 @@ This is especially valuable for clinical and regulatory reports that must adhere
 
 - [`kableExtra`](https://haozhu233.github.io/kableExtra/)
 - [`flextable`](https://davidgohel.github.io/flextable/)
-- `tflmetaR::get_title()`, `get_footnote()`, `get_source()`
+- `tflmetaR::get_title()`, `get_pop()`, `get_footnote()`, `get_source()`
 
 ---
 
