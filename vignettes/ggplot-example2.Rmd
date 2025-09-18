@@ -52,7 +52,6 @@ meta <- read_tfile(filename = file_name, sheetname = "footer")
 ```{r select-entry}
 # Assume this plot corresponds to TFL number "Figure 1.2"
 title_list <- get_title(meta, tnumber = "Figure 1.2")
-population <- get_pop(meta, tnumber = "Figure 1.2")
 footnotes <- get_footnote(meta, tnumber = "Figure 1.2")
 source_note <- get_source(meta, tnumber = "Figure 1.2")
 ```
@@ -108,5 +107,5 @@ This approach is ideal for regulatory and clinical settings where version contro
 
 - [`flextable`](https://davidgohel.github.io/flextable/)
 - [`patchwork`](https://patchwork.data-imaginist.com/)
-- `tflmetaR::get_title()`, `get_pop()`, `get_ulheader()`, `get_urheader()`, `get_timestamp()`
+- `tflmetaR::get_title()`, `get_ulheader()`, `get_urheader()`, `get_timestamp()`
 

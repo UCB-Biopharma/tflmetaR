@@ -165,6 +165,38 @@ get_pop <- function(df = NULL,
   return(p_list)
 }
 
+#' Extract Byline Metadata
+#'
+#' Retrieves byline fields (BYLINE1, BYLINE2, etc.) from the metadata.
+#'
+#' @inheritParams get_title
+#'
+#' @return A named list of non-missing byline fields.
+#'
+#' @export
+get_byline <- function(df = NULL,
+                       type = NULL,
+                       tnumber = NULL,
+                       pname = NULL,
+                       oid = NULL) {
+  if (is.null(df)) stop("Input dataframe error! Check the input data and try again. \n")
+
+  if (is.null(pname) & is.null(tnumber)) stop("Need to provide either a program name or TFL number to select row.\n")
+
+  # select either on program nmae of TFL number
+  if (!is.null(pname)) {
+    byline_list <- select_with_name(df = df, pname = pname, oid = oid)
+  } else {
+    byline_list <- select_with_number(df = df, tnumber = tnumber)
+  }
+  # select only byline
+  filtered_list <- byline_list %>%
+    dplyr::select(starts_with("BYLINE"))
+  b_list <- Filter(function(x) !is.na(x), filtered_list)
+
+  return(b_list)
+}
+
 #' Extract Source Metadata
 #'
 #' Retrieves source fields (e.g., SOURCE1) from the metadata.
