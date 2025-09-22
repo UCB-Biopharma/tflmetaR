@@ -2,6 +2,7 @@
 
 export(get_byline)
 export(get_footnote)
+export(get_pgmname)
 export(get_pop)
 export(get_refstamp)
 export(get_source)

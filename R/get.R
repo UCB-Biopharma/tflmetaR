@@ -197,6 +197,38 @@ get_byline <- function(df = NULL,
   return(b_list)
 }
 
+#' Extract Program Name Metadata
+#'
+#' Retrieves program name field (PGMNAME) from the metadata.
+#'
+#' @inheritParams get_title
+#'
+#' @return A named list containing the program name field.
+#'
+#' @export
+get_pgmname <- function(df = NULL,
+                        type = NULL,
+                        tnumber = NULL,
+                        pname = NULL,
+                        oid = NULL) {
+  if (is.null(df)) stop("Input dataframe error! Check the input data and try again. \n")
+
+  if (is.null(pname) & is.null(tnumber)) stop("Need to provide either a program name or TFL number to select row.\n")
+
+  # select either on program name or TFL number
+  if (!is.null(pname)) {
+    pgmname_list <- select_with_name(df = df, pname = pname, oid = oid)
+  } else {
+    pgmname_list <- select_with_number(df = df, tnumber = tnumber)
+  }
+  # select only program name
+  filtered_list <- pgmname_list %>%
+    dplyr::select(PGMNAME)
+  p_list <- Filter(function(x) !is.na(x), filtered_list)
+
+  return(p_list)
+}
+
 #' Extract Source Metadata
 #'
 #' Retrieves source fields (e.g., SOURCE1) from the metadata.

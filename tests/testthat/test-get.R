@@ -276,6 +276,59 @@ test_that("get_byline handles no BYLINE columns gracefully", {
   expect_equal(ncol(result), 0)
 })
 
+# test get_pgmname
+test_that("get_pgmname throws error on NULL df", {
+  expect_error(get_pgmname(df = NULL),
+               regexp = "Input dataframe error")
+})
+
+test_that("get_pgmname throws error when neither pname nor tnumber is provided", {
+  df <- data.frame(PGMNAME = "t_dm", TTL1 = "Title")
+  expect_error(get_pgmname(df = df),
+               regexp = "Need to provide either a program name or TFL number")
+})
+
+test_that("get_pgmname uses select_with_name when pname is provided", {
+  df <- data.frame(PGMNAME = "t_dm", TTL1 = "Title", POPULATION = "ITT")
+  mock_select_with_name <- mock(df)
+  stub(get_pgmname, "select_with_name", mock_select_with_name)
+
+  result <- get_pgmname(df = df, pname = "t_dm", oid = NULL)
+  expect_true(is.data.frame(result))
+  expect_named(result, "PGMNAME")
+})
+
+test_that("get_pgmname uses select_with_number when pname is NULL", {
+  df <- data.frame(PGMNAME = "t_dm", TTL1 = "Title")
+  mock_select_with_number <- mock(df)
+  stub(get_pgmname, "select_with_number", mock_select_with_number)
+
+  result <- get_pgmname(df = df, tnumber = "Table 1.1")
+  expect_true(is.data.frame(result))
+  expect_named(result, "PGMNAME")
+})
+
+test_that("get_pgmname returns only PGMNAME column", {
+  df <- data.frame(TTL1 = "Title", PGMNAME = "t_dm", POPULATION = "ITT", FOOT1 = "Note")
+  mock_select_with_number <- mock(df)
+  stub(get_pgmname, "select_with_number", mock_select_with_number)
+
+  result <- get_pgmname(df = df, tnumber = "Table 1.1")
+  expect_true("PGMNAME" %in% names(result))
+  expect_false("TTL1" %in% names(result))
+  expect_false("POPULATION" %in% names(result))
+  expect_false("FOOT1" %in% names(result))
+})
+
+test_that("get_pgmname filters out NA program names", {
+  df <- data.frame(TTL1 = "Title", PGMNAME = NA)
+  mock_select_with_number <- mock(df)
+  stub(get_pgmname, "select_with_number", mock_select_with_number)
+
+  result <- get_pgmname(df = df, tnumber = "Title")
+  expect_equal(ncol(result), 0)
+})
+
 # test get_source
 test_that("get_source throws error on NULL df", {
   expect_error(get_source(df = NULL),
