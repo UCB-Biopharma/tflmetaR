@@ -50,7 +50,7 @@ You can load a title/footnote spreadsheet in either CSV or Excel format.
 #m eta <- read_tfile_csv(system.file("../inst/extdata", "sample_titles_in_csv.csv", package = "tflmetaR"))
 
 # You could also use:
-file_name <- file.path("../inst/extdata", "sample_titles2.xlsx")
+file_name <- system.file("extdata", "sample_titles2.xlsx", package = "tflmetaR")
 header_file <- read_tfile(filename = file_name, sheetname = "header")
 meta <- read_tfile(filename = file_name, sheetname = "footer")
 ```
@@ -142,5 +142,5 @@ This approach is ideal for regulatory and clinical settings where version contro
 
 - [`flextable`](https://davidgohel.github.io/flextable/)
 - [`patchwork`](https://patchwork.data-imaginist.com/)
-- `tflmetaR::get_ulheader()`, `get_urheader()`, `get_timestamp()`
+- `tflmetaR::get_title()`, `get_ulheader()`, `get_urheader()`, `get_timestamp()`
 

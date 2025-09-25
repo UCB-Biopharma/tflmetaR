@@ -160,6 +160,175 @@ test_that("get_urheader handles no UR columns gracefully", {
   expect_equal(ncol(result), 0)
 })
 
+# test get_pop
+test_that("get_pop throws error on NULL df", {
+  expect_error(get_pop(df = NULL),
+               regexp = "Input dataframe error")
+})
+
+test_that("get_pop throws error when neither pname nor tnumber is provided", {
+  df <- data.frame(PGMNAME = "A", POPULATION = "Test Population")
+  expect_error(get_pop(df = df),
+               regexp = "Need to provide either a program name or TFL number")
+})
+
+test_that("get_pop uses select_with_name when pname is provided", {
+  df <- data.frame(PGMNAME = "A", POPULATION = "Test Population", TTL1 = "Title")
+  mock_select_with_name <- mock(df)
+  stub(get_pop, "select_with_name", mock_select_with_name)
+
+  result <- get_pop(df = df, pname = "A", oid = NULL)
+  expect_true(is.data.frame(result))
+  expect_named(result, "POPULATION")
+})
+
+test_that("get_pop uses select_with_number when pname is NULL", {
+  df <- data.frame(TTL1 = "Title", POPULATION = "Test Population")
+  mock_select_with_number <- mock(df)
+  stub(get_pop, "select_with_number", mock_select_with_number)
+
+  result <- get_pop(df = df, tnumber = "Title")
+  expect_true(is.data.frame(result))
+  expect_named(result, "POPULATION")
+})
+
+test_that("get_pop returns only POPULATION column", {
+  df <- data.frame(TTL1 = "Title", TTL2 = "Subtitle", POPULATION = "ITT Population", FOOT1 = "Note")
+  mock_select_with_number <- mock(df)
+  stub(get_pop, "select_with_number", mock_select_with_number)
+
+  result <- get_pop(df = df, tnumber = "Title")
+  expect_true("POPULATION" %in% names(result))
+  expect_false("TTL1" %in% names(result))
+  expect_false("TTL2" %in% names(result))
+  expect_false("FOOT1" %in% names(result))
+})
+
+test_that("get_pop filters out NA population", {
+  df <- data.frame(TTL1 = "Title", POPULATION = NA)
+  mock_select_with_number <- mock(df)
+  stub(get_pop, "select_with_number", mock_select_with_number)
+
+  result <- get_pop(df = df, tnumber = "Title")
+  expect_equal(ncol(result), 0)
+})
+
+# test get_byline
+test_that("get_byline throws error on NULL df", {
+  expect_error(get_byline(df = NULL),
+               regexp = "Input dataframe error")
+})
+
+test_that("get_byline throws error when neither pname nor tnumber is provided", {
+  df <- data.frame(PGMNAME = "A", BYLINE1 = "Author Name")
+  expect_error(get_byline(df = df),
+               regexp = "Need to provide either a program name or TFL number")
+})
+
+test_that("get_byline uses select_with_name when pname is provided", {
+  df <- data.frame(PGMNAME = "A", BYLINE1 = "Author", BYLINE2 = NA)
+  mock_select_with_name <- mock(df)
+  stub(get_byline, "select_with_name", mock_select_with_name)
+
+  result <- get_byline(df = df, pname = "A", oid = NULL)
+  expect_true(is.data.frame(result))
+  expect_named(result, "BYLINE1")
+})
+
+test_that("get_byline uses select_with_number when pname is NULL", {
+  df <- data.frame(BYLINE1 = "Author", BYLINE2 = "Institution")
+  mock_select_with_number <- mock(df)
+  stub(get_byline, "select_with_number", mock_select_with_number)
+
+  result <- get_byline(df = df, tnumber = "001")
+  expect_true(is.data.frame(result))
+  expect_named(result, c("BYLINE1", "BYLINE2"))
+})
+
+test_that("get_byline filters out NA byline columns", {
+  df <- data.frame(BYLINE1 = "Author", BYLINE2 = NA, BYLINE3 = "Institution")
+  mock_select_with_number <- mock(df)
+  stub(get_byline, "select_with_number", mock_select_with_number)
+
+  result <- get_byline(df = df, tnumber = "any")
+  expect_named(result, c("BYLINE1", "BYLINE3"))
+  expect_false("BYLINE2" %in% names(result))
+})
+
+test_that("get_byline returns only BYLINE* columns", {
+  df <- data.frame(TTL1 = "Title", BYLINE1 = "Author", POPULATION = "ITT", FOOT1 = "Note")
+  mock_select_with_number <- mock(df)
+  stub(get_byline, "select_with_number", mock_select_with_number)
+
+  result <- get_byline(df = df, tnumber = "Title")
+  expect_true("BYLINE1" %in% names(result))
+  expect_false("TTL1" %in% names(result))
+  expect_false("POPULATION" %in% names(result))
+  expect_false("FOOT1" %in% names(result))
+})
+
+test_that("get_byline handles no BYLINE columns gracefully", {
+  df <- data.frame(TTL1 = "Title", POPULATION = "ITT")
+  mock_select_with_number <- mock(df)
+  stub(get_byline, "select_with_number", mock_select_with_number)
+
+  result <- get_byline(df = df, tnumber = "Title")
+  expect_equal(ncol(result), 0)
+})
+
+# test get_pgmname
+test_that("get_pgmname throws error on NULL df", {
+  expect_error(get_pgmname(df = NULL),
+               regexp = "Input dataframe error")
+})
+
+test_that("get_pgmname throws error when neither pname nor tnumber is provided", {
+  df <- data.frame(PGMNAME = "t_dm", TTL1 = "Title")
+  expect_error(get_pgmname(df = df),
+               regexp = "Need to provide either a program name or TFL number")
+})
+
+test_that("get_pgmname uses select_with_name when pname is provided", {
+  df <- data.frame(PGMNAME = "t_dm", TTL1 = "Title", POPULATION = "ITT")
+  mock_select_with_name <- mock(df)
+  stub(get_pgmname, "select_with_name", mock_select_with_name)
+
+  result <- get_pgmname(df = df, pname = "t_dm", oid = NULL)
+  expect_true(is.data.frame(result))
+  expect_named(result, "PGMNAME")
+})
+
+test_that("get_pgmname uses select_with_number when pname is NULL", {
+  df <- data.frame(PGMNAME = "t_dm", TTL1 = "Title")
+  mock_select_with_number <- mock(df)
+  stub(get_pgmname, "select_with_number", mock_select_with_number)
+
+  result <- get_pgmname(df = df, tnumber = "Table 1.1")
+  expect_true(is.data.frame(result))
+  expect_named(result, "PGMNAME")
+})
+
+test_that("get_pgmname returns only PGMNAME column", {
+  df <- data.frame(TTL1 = "Title", PGMNAME = "t_dm", POPULATION = "ITT", FOOT1 = "Note")
+  mock_select_with_number <- mock(df)
+  stub(get_pgmname, "select_with_number", mock_select_with_number)
+
+  result <- get_pgmname(df = df, tnumber = "Table 1.1")
+  expect_true("PGMNAME" %in% names(result))
+  expect_false("TTL1" %in% names(result))
+  expect_false("POPULATION" %in% names(result))
+  expect_false("FOOT1" %in% names(result))
+})
+
+test_that("get_pgmname filters out NA program names", {
+  df <- data.frame(TTL1 = "Title", PGMNAME = NA)
+  mock_select_with_number <- mock(df)
+  stub(get_pgmname, "select_with_number", mock_select_with_number)
+
+  result <- get_pgmname(df = df, tnumber = "Title")
+  expect_equal(ncol(result), 0)
+})
+
 # test get_source
 test_that("get_source throws error on NULL df", {
   expect_error(get_source(df = NULL),
