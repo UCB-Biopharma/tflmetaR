@@ -24,7 +24,7 @@ test_that("get_bookm() falls back to get_title() when bookm is missing", {
 
   # Mock get_title() to return known output
   mock_get_title <- function(...) list("Title A", "Title B")
-  assignInNamespace("get_title", mock_get_title, ns = "YOURPACKAGE")
+  assignInNamespace("get_title", mock_get_title, ns = "tflmetaR")
 
   result <- get_bookm(df = df, pname = "prog1")
   expect_equal(result, "Title A_Title B")
@@ -55,7 +55,7 @@ test_that("get_bookm() applies abbreviation lookup if >128 chars", {
   # Create temporary abbrev file
   abbrev_file <- tempfile(fileext = ".xlsx")
   writexl::write_xlsx(
-    data.frame(phrase = "ThisIsAVeryLongPhrase", abbr = "Short", stringsAsFactors = FALSE),
+    data.frame(scope = "bookmark", phrase = "ThisIsAVeryLongPhrase", abbr = "Short", stringsAsFactors = FALSE),
     abbrev_file
   )
 
