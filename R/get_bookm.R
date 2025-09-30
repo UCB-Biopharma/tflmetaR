@@ -42,11 +42,11 @@ get_bookm <- function(df = NULL,
   # Input checks
   if (is.null(df)) stop("`df` must be provided.")
 
-  # Filter logic
+  # select either on program nmae of TFL number
   if (!is.null(pname)) {
-    row <- df[df$pname == pname, , drop = FALSE]
+    row <- select_with_name(df = df, pname = pname, oid = oid)
   } else if (!is.null(tnumber)) {
-    row <- df[df$tnumber == tnumber, , drop = FALSE]
+    row <- select_with_number(df = df, tnumber = tnumber)
   } else {
     stop("Either `pname` or `tnumber` must be provided.")
   }
@@ -55,7 +55,7 @@ get_bookm <- function(df = NULL,
   if (nrow(row) > 1) warning("Multiple rows found; returning the first match.")
 
   # Extract bookm
-  bookm <- row$bookm[1]
+  bookm <- row$BOOKM[1]
 
   # Fallback if bookm is missing
   if (is.null(bookm) || is.na(bookm) || bookm == "") {
@@ -64,12 +64,13 @@ get_bookm <- function(df = NULL,
   }
 
   # Sanitize invalid characters
-  bookm <- gsub('[\\\\/:*?"<>|]', "", bookm)
+  bookm <- gsub('[\\\\/:;()*?"<>|]', "", bookm)
 
   # If too long, apply abbreviation table
-  if (nchar(bookm) > 128) {
+  max_length <- 180
+  if (nchar(bookm) > max_length) {
     if (!file.exists(abbrev_file)) {
-      warning("Bookmark exceeds 128 characters and abbrev file not found; returning long bookmark.")
+      warning("Bookmark exceeds 180 characters and abbrev file not found; returning long bookmark.")
     } else {
       #library(readxl)
       abbrev <- readxl::read_excel(abbrev_file, col_names = TRUE)
@@ -82,9 +83,19 @@ get_bookm <- function(df = NULL,
   }
 
   # Enforce maximum length
-  if (nchar(bookm) > 128) {
-    bookm <- substr(bookm, 1, 128)
-  }
-
+  if (nchar(bookm) > max_length) {
+    words <- strsplit(bookm, " ")[[1]]
+    result <- ""
+    for (word in words) {
+      if (nchar(result) + nchar(word) + 1 <= max_length) {
+        result <- paste(result, word, sep = ifelse(nchar(result) == 0, "", " "))
+      } else {
+        break
+      }
+    }
+    return(result)
+  #  bookm <- substr(bookm, 1, 180)
+  } else {
   return(bookm)
+  }
 }
