@@ -94,7 +94,15 @@ change_colname <- function(df,
   new_df <- df
 
   # helper function
+  check_cols <- function(cols) {
+    missing <- setdiff(cols, names(df))
+    if (length(missing) > 0) {
+      warning("These columns not found: ", paste(missing, collapse = ", "))
+    }
+  }
+
   rename_with_prefix <- function(cols, prefix) {
+    check_cols(cols)
     if (!is.null(cols)) {
       new_names <- paste0(prefix, seq_along(cols))
       names(new_df)[names(new_df) %in% cols] <<- new_names
