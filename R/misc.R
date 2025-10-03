@@ -45,13 +45,13 @@ read_xlfile <- function(filename, sheetname) {
 #' @param df A data frame whose column names are to be changed.
 #' @param title_name Character vector of columns to rename as titles (`TTL1`, `TTL2`, ...).
 #' @param ftnote_name Character vector of columns to rename as footnotes (`FOOT1`, `FOOT2`, ...).
-#' @param pg_name Character vector of columns to rename as page identifiers (`Pgmname`).
-#' @param oid_name Character vector of columns to rename as object IDs (`OID`).
-#' @param pop_name Character vector of columns to rename as population labels (`Population`).
-#' @param source_name Character vector of columns to rename as sources (`Source`).
+#' @param pg_name Character vector of columns to rename as program name (`Pgmname`).
+#' @param oid_name Character vector of columns to rename as output OIDs (`OID`).
+#' @param pop_name Character vector of columns to rename as population (`Population`).
+#' @param source_name Character vector of columns to rename as dataset sources (`Source`).
 #' @param byline_name Character vector of columns to rename as bylines (`BYLINE1`, `BYLINE2`, ...).
-#' @param bookm_name Character vector of columns to rename as bookmarks (`BOOKM`).
-#' @param type_name Character vector of columns to rename as bookmarks (`Type`).
+#' @param bookm_name Character vector of columns to rename as bookmark (`BOOKM`).
+#' @param type_name Character vector of columns to rename as type (`Type`).
 #' @param ... Additional named mappings where the name is the new prefix and the
 #'   value is a character vector of existing column names.
 #'
