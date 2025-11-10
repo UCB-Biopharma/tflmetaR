@@ -3,7 +3,7 @@ utils::globalVariables(c("POPULATION", "OID", "SOURCE", "PGMNAMEW", "TTL1", "TYP
 #'
 #' Retrieves title-related fields (TTL1, TTL2, etc.) and population from the metadata.
 #'
-#' @param df A data frame of title and footnote metadata.
+#' @param df A data frame or tibble of title and footnote metadata.
 #' @param type Optional. A character string indicating the TFL type.
 #' @param tnumber Optional. TFL number.
 #' @param pname Optional. Program name.
@@ -20,7 +20,6 @@ get_title <- function(df = NULL,
   if (is.null(df)) stop("Input dataframe error! Check the input data and try again. \n")
 
   if (is.null(pname) & is.null(tnumber)) stop("Need to provide either a program name or TFL number to select row.\n")
-
   # select either on program nmae of TFL number
   if (!is.null(pname)) {
     title_list <- select_with_name(df = df, pname = pname, oid = oid)
