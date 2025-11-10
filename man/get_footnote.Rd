@@ -14,7 +14,7 @@ get_footnote(
 )
 }
 \arguments{
-\item{df}{A data frame of title and footnote metadata.}
+\item{df}{A data frame or tibble of title and footnote metadata.}
 
 \item{type}{Optional. A character string indicating the TFL type.}
 
