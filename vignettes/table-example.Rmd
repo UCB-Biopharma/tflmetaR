@@ -1,17 +1,8 @@
 ---
-title: "table-example"
+title: "Using tflmetaR with gt for Professional Tables"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{table-example}
-  %\VignetteEngine{knitr::rmarkdown}
-  %\VignetteEncoding{UTF-8}
----
-
----
-title: "Using tflmetaR with kableExtra"
-output: rmarkdown::html_vignette
-vignette: >
-  %\VignetteIndexEntry{Using tflmetaR with kableExtra}
+  %\VignetteIndexEntry{Using tflmetaR with gt for Professional Tables}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -19,16 +10,28 @@ vignette: >
 ```{r setup, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
-  comment = "#>"
+  comment = "#>",
+  message = FALSE,
+  warning = FALSE
 )
+# Load required packages
 library(tflmetaR)
-library(kableExtra)
+library(gt)
 library(dplyr)
 ```
 
-## 📆 Overview
+## Introduction
 
-This vignette demonstrates how to annotate tables created with `knitr::kable()` and styled using `kableExtra`, using title and footnote metadata managed via the `tflmetaR` package.
+In clinical research and regulatory reporting, maintaining consistency and accuracy in table annotations—including titles, subtitles, footnotes, and data sources—is critical. Traditional approaches often embed these annotations directly within analysis scripts, leading to maintenance challenges, inconsistencies across outputs, and increased risk of errors during updates.
+
+The `tflmetaR` package addresses these challenges by implementing a **separation of metadata and code** design pattern. By externalizing table annotations into structured spreadsheets (Excel or CSV), `tflmetaR` enables:
+
+- **Centralized metadata management**: All titles, footnotes, and source information are stored in a single, auditable location
+- **Reduced code complexity**: Analysis scripts remain focused on data processing and visualization
+- **Enhanced reproducibility**: Metadata changes do not require modifications to validated code
+- **Regulatory compliance**: Supports audit-friendly workflows common in pharmaceutical and clinical settings
+
+This vignette demonstrates how to integrate `tflmetaR` with the `gt` package to create publication-quality tables with externally managed annotations.
 
 ---
 
