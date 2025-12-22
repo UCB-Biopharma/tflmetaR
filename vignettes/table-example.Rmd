@@ -35,29 +35,63 @@ This vignette demonstrates how to integrate `tflmetaR` with the `gt` package to 
 
 ---
 
-## 📂 Load Metadata
+## Loading Table Metadata
 
-You can load a title/footnote spreadsheet from CSV or Excel format.
+The first step in using `tflmetaR` is loading the metadata file that contains your table annotations. The package supports both Excel (`.xlsx`, `.xls`) and CSV formats through dedicated functions:
+
+- `read_tfile()`: Reads metadata from Excel files with optional sheet specification
+- `read_tfile_csv()`: Reads metadata from CSV files
+
+The metadata file should contain standardized columns including `PGMNAME` (program name), `TTL1` (primary title), `FOOT1` (first footnote), and `SOURCE` (data source). Additional columns for subtitles (`TTL2`, `TTL3`, ...), additional footnotes (`FOOT2`, `FOOT3`, ...), population definitions, and bylines are also supported.
 
 ```{r load-data}
-# Example CSV file from the package
-# meta <- read_tfile_csv(system.file("../inst/extdata", "sample_titles_in_csv.csv", package = "tftr"))
+# Load the sample metadata file included with the package
+file_path <- system.file("extdata", "sample_titles2.xlsx", package = "tflmetaR")
 
-# You could also use:
-file_name <- system.file("extdata", "sample_titles2.xlsx", package = "tflmetaR")
-meta <- read_tfile(filename = file_name, sheetname = "footer")
+# Read the metadata from the 'footer' sheet
+meta <- read_tfile(filename = file_path, sheetname = "footer")
+
+# Preview the structure of the metadata
+cat("Metadata columns:", paste(names(meta), collapse = ", "))
 ```
+
+The metadata file serves as a centralized repository for all table annotations, enabling consistent application across multiple outputs and facilitating updates without code modifications.
 
 ---
 
-## 🎯 Select Entry for a Specific Table
+## Extracting Table Annotations
+
+Once metadata is loaded, `tflmetaR` provides a suite of accessor functions to retrieve specific annotation components for a given table. Tables can be identified by their TFL number (`tnumber`) or program name (`pname`).
+
+### Core Accessor Functions
+
+| Function | Description |
+|----------|-------------|
+| `get_title()` | Retrieves title and subtitle fields (TTL1, TTL2, ...) along with population |
+| `get_footnote()` | Retrieves footnote fields (FOOT1, FOOT2, ...) with optional timestamp |
+| `get_source()` | Retrieves data source information |
+| `get_pop()` | Retrieves population definition |
+| `get_byline()` | Retrieves byline fields (BYLINE1, BYLINE2, ...) |
+| `get_pgmname()` | Retrieves the program name |
 
 ```{r select-entry}
-# Select the metadata entry for a table
-title_list <- get_title(meta, tnumber = "Table 2.1")
-footnotes <- get_footnote(meta, tnumber = "Table 2.1")
-source_note <- get_source(meta, tnumber = "Table 2.1")
+# Extract metadata components for a specific table
+# Tables are identified by their TFL number (e.g., "Table 2.1")
+title_info <- get_title(meta, tnumber = "Table 2.1")
+footnotes <- get_footnote(meta, tnumber = "Table 2.1", add_footr_tstamp = FALSE)
+source_info <- get_source(meta, tnumber = "Table 2.1")
+population <- get_pop(meta, tnumber = "Table 2.1")
+bylines <- get_byline(meta, tnumber = "Table 2.1")
+pgm_name <- get_pgmname(meta, tnumber = "Table 2.1")
+
+# Display extracted metadata
+cat("Title:", unlist(title_info$TTL1), "\n")
+cat("Population:", unlist(population), "\n")
+cat("Byline:", unlist(bylines), "\n")
+cat("Program:", unlist(pgm_name), "\n")
 ```
+
+Each function returns a named list containing the non-missing fields, allowing flexible integration with various table rendering packages.
 
 ---
 
