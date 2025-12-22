@@ -161,24 +161,38 @@ The `gt` package offers extensive customization options for table styling, inclu
 
 ---
 
-## ✅ Summary
+## Summary
 
-With the `tflmetaR` package, you can:
+The `tflmetaR` package provides a robust solution for managing table annotations in clinical and regulatory reporting environments. By externalizing metadata to structured spreadsheets, organizations can:
 
-- Manage annotation metadata externally
-- Easily reuse footnotes and titles
-- Apply consistent formatting to `kable` tables across reports
+- **Streamline maintenance**: Update titles, footnotes, and source information without modifying analysis code
+- **Ensure consistency**: Apply standardized annotations across all Tables, Figures, and Listings (TFLs)
+- **Support compliance**: Maintain audit-ready documentation with clear separation of data and presentation logic
+- **Enhance collaboration**: Allow non-programmers to review and update table annotations directly
 
-This is especially valuable for clinical and regulatory reports that must adhere to strict documentation standards.
-
----
-
-## 🔗 Related Packages
-
-- [`kableExtra`](https://haozhu233.github.io/kableExtra/)
-- [`flextable`](https://davidgohel.github.io/flextable/)
-- `tflmetaR::get_title()`, `get_footnote()`, `get_source()`
+When combined with modern table rendering packages like `gt`, `tflmetaR` enables the creation of publication-quality outputs that meet the demanding requirements of pharmaceutical and clinical research.
 
 ---
 
+## Related Resources
 
+### Compatible Table Packages
+
+- [`gt`](https://gt.rstudio.com/) - Publication-quality tables with extensive customization
+- [`flextable`](https://davidgohel.github.io/flextable/) - Tables for Word, PowerPoint, and HTML
+- [`huxtable`](https://hughjonesd.github.io/huxtable/) - Tables with a simple, modern interface
+
+### tflmetaR Core Functions
+
+| Function | Purpose |
+|----------|---------|
+| `read_tfile()` | Load metadata from Excel |
+| `read_tfile_csv()` | Load metadata from CSV |
+| `get_title()` | Extract titles and subtitles |
+| `get_footnote()` | Extract footnotes |
+| `get_source()` | Extract data source |
+| `get_pop()` | Extract population |
+| `get_byline()` | Extract bylines |
+| `get_pgmname()` | Extract program name |
+
+---
