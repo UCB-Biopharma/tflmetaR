@@ -95,23 +95,69 @@ Each function returns a named list containing the non-missing fields, allowing f
 
 ---
 
-## 📄 Create and Annotate a Table
+## Creating Annotated Tables with gt
+
+The `gt` package provides a powerful framework for creating publication-quality tables in R. When combined with `tflmetaR`, you can seamlessly apply externally managed annotations to your tables.
+
+### Building a Basic Annotated Table
+
+The following example demonstrates how to create a table with title, subtitle, footnotes, and source notes using metadata extracted via `tflmetaR`:
 
 ```{r basic-table}
-# Create a simple table
-data <- head(mtcars, 5)
+# Prepare sample data
+sample_data <- mtcars %>%
+  head(5) %>%
+  select(mpg, cyl, hp, wt) %>%
+  mutate(across(everything(), ~ round(.x, 1)))
 
-# Build title text and footnote text
-title_text <- paste(title_list, collapse = "\n")
-footnote_text <- paste(unlist(footnotes), collapse = "\n")
-source_text <- paste(unlist(source_note), collapse = "\n")
+# Extract annotation text from metadata
+main_title <- unlist(title_info$TTL1)
+subtitle <- unlist(title_info$TTL2)
+pop_text <- unlist(population)
 
-# Render kable table with annotations
-kable(data, format = "html", caption = title_text) %>%
-  kable_styling(bootstrap_options = c("striped", "hover"), full_width = FALSE) %>%
-  add_footnote(label = footnote_text, notation = "symbol") %>%
-  add_footnote(label = source_text, notation = "none")
+# Extract multiple footnotes
+foot1 <- unlist(footnotes$FOOT1)
+foot2 <- unlist(footnotes$FOOT2)
+
+source_text <- unlist(source_info)
+
+# Create the annotated gt table
+sample_data %>%
+  gt() %>%
+  tab_header(
+    title = main_title,
+    subtitle = html(paste0(subtitle, "<br>", pop_text))
+  ) %>%
+  tab_footnote(
+    footnote = foot1,
+    locations = cells_column_labels(columns = mpg)
+  ) %>%
+  tab_footnote(
+    footnote = foot2,
+    locations = cells_column_labels(columns = cyl)
+  ) %>%
+  tab_source_note(
+    source_note = paste("Source:", source_text)
+  ) %>%
+  cols_label(
+    mpg = "Miles/Gallon",
+    cyl = "Cylinders",
+    hp = "Horsepower",
+    wt = "Weight (1000 lbs)"
+  ) %>%
+  tab_options(
+    table.font.size = px(14),
+    heading.title.font.size = px(16),
+    heading.subtitle.font.size = px(14)
+  )
 ```
+
+The `gt` package offers extensive customization options for table styling, including:
+
+- **`tab_header()`**: Adds title and optional subtitle
+- **`tab_footnote()`**: Adds footnotes with precise location targeting
+- **`tab_source_note()`**: Adds source attribution at the table footer
+- **`tab_options()`**: Controls global table styling options
 
 ---
 
