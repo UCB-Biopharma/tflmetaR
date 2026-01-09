@@ -65,24 +65,26 @@ Once metadata is loaded, `tflmetaR` provides a suite of accessor functions to re
 
 ### Core Accessor Functions
 
-| Function | Description |
-|----------|-------------|
-| `get_title()` | Retrieves title and subtitle fields (TTL1, TTL2, ...) along with population |
-| `get_footnote()` | Retrieves footnote fields (FOOT1, FOOT2, ...) with optional timestamp |
-| `get_source()` | Retrieves data source information |
-| `get_pop()` | Retrieves population definition |
-| `get_byline()` | Retrieves byline fields (BYLINE1, BYLINE2, ...) |
-| `get_pgmname()` | Retrieves the program name |
+| Function | Description | Returns |
+|-------|-------------|---------|
+| `get_title()` | Retrieves title-related fields (TTL1, TTL2, etc.) from the metadata | Named list of non-missing title fields |
+| `get_footnote()` | Retrieves footnote fields (FOOT1, FOOT2, etc.) from the metadata | Named list of non-missing footnote fields |
+| `get_source()` | Retrieves source fields (e.g., SOURCE1) from the metadata | Named list of non-missing source fields |
+| `get_pop()` | Retrieves population field from the metadata | Named list containing the population field |
+| `get_byline()` | Retrieves byline fields (BYLINE1, BYLINE2, etc.) from the metadata | Named list of non-missing byline fields |
+| `get_pgmname()` | Retrieves program name field (PGMNAME) from the metadata | Named list containing the program name field |
 
 ```{r select-entry}
 # Extract metadata components for a specific table
 # Tables are identified by their TFL number (e.g., "Table 2.1")
-title_info <- get_title(meta, tnumber = "Table 2.1")
-footnotes <- get_footnote(meta, tnumber = "Table 2.1", add_footr_tstamp = FALSE)
-source_info <- get_source(meta, tnumber = "Table 2.1")
-population <- get_pop(meta, tnumber = "Table 2.1")
-bylines <- get_byline(meta, tnumber = "Table 2.1")
-pgm_name <- get_pgmname(meta, tnumber = "Table 2.1")
+tfl_number <- "Table 2.1"
+
+title_info <- get_title(meta, tnumber = tfl_number)
+footnotes <- get_footnote(meta, tnumber = tfl_number, add_footr_tstamp = FALSE)
+source_info <- get_source(meta, tnumber = tfl_number)
+population <- get_pop(meta, tnumber = tfl_number)
+bylines <- get_byline(meta, tnumber = tfl_number)
+pgm_name <- get_pgmname(meta, tnumber = tfl_number)
 
 # Display extracted metadata
 cat("Title:", unlist(title_info$TTL1), "\n")
@@ -146,6 +148,7 @@ sample_data %>%
     wt = "Weight (1000 lbs)"
   ) %>%
   tab_options(
+    table.width = pct(100),
     table.font.size = px(14),
     heading.title.font.size = px(16),
     heading.subtitle.font.size = px(14)
