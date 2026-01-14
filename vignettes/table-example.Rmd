@@ -112,16 +112,16 @@ sample_data <- mtcars %>%
   select(mpg, cyl, hp, wt) %>%
   mutate(across(everything(), ~ round(.x, 1)))
 
-# Extract annotation text from metadata
-main_title <- unlist(title_info$TTL1)
-subtitle <- unlist(title_info$TTL2)
-pop_text <- unlist(population)
+# Extract annotation text from metadata using [[1]] notation
+main_title <- title_info$TTL1[[1]]
+subtitle <- title_info$TTL2[[1]]
+pop_text <- population$POPULATION[[1]]
 
 # Extract multiple footnotes
-foot1 <- unlist(footnotes$FOOT1)
-foot2 <- unlist(footnotes$FOOT2)
+foot1 <- footnotes$FOOT1[[1]]
+foot2 <- footnotes$FOOT2[[1]]
 
-source_text <- unlist(source_info)
+source_text <- source_info$SOURCE[[1]]
 
 # Create the annotated gt table
 sample_data %>%
