@@ -49,7 +49,7 @@ The metadata file should contain standardized columns including `PGMNAME` (progr
 file_path <- system.file("extdata", "sample_titles2.xlsx", package = "tflmetaR")
 
 # Read the metadata from the 'footer' sheet
-meta <- read_tfile(filename = file_path, sheetname = "footer")
+meta <- tflmetaR::read_tfile(filename = file_path, sheetname = "footer")
 
 # Preview the structure of the metadata
 cat("Metadata columns:", paste(names(meta), collapse = ", "))
@@ -79,17 +79,15 @@ Once metadata is loaded, `tflmetaR` provides a suite of accessor functions to re
 # Tables are identified by their TFL number (e.g., "Table 2.1")
 tfl_number <- "Table 2.1"
 
-title_info <- get_title(meta, tnumber = tfl_number)
-footnotes <- get_footnote(meta, tnumber = tfl_number, add_footr_tstamp = FALSE)
-source_info <- get_source(meta, tnumber = tfl_number)
-population <- get_pop(meta, tnumber = tfl_number)
-bylines <- get_byline(meta, tnumber = tfl_number)
-pgm_name <- get_pgmname(meta, tnumber = tfl_number)
+title_info <- tflmetaR::get_title(meta, tnumber = tfl_number)
+footnotes <- tflmetaR::get_footnote(meta, tnumber = tfl_number, add_footr_tstamp = FALSE)
+source_info <- tflmetaR::get_source(meta, tnumber = tfl_number)
+population <- tflmetaR::get_pop(meta, tnumber = tfl_number)
+pgm_name <- tflmetaR::get_pgmname(meta, tnumber = tfl_number)
 
 # Display extracted metadata
 cat("Title:", unlist(title_info$TTL1), "\n")
 cat("Population:", unlist(population), "\n")
-cat("Byline:", unlist(bylines), "\n")
 cat("Program:", unlist(pgm_name), "\n")
 ```
 
@@ -125,33 +123,33 @@ source_text <- source_info$SOURCE[[1]]
 
 # Create the annotated gt table
 sample_data %>%
-  gt() %>%
-  tab_header(
+  gt::gt() %>%
+  gt::tab_header(
     title = main_title,
-    subtitle = html(paste0(subtitle, "<br>", pop_text))
+    subtitle = gt::html(paste0(subtitle, "<br>", pop_text))
   ) %>%
-  tab_footnote(
+  gt::tab_footnote(
     footnote = foot1,
-    locations = cells_column_labels(columns = mpg)
+    locations = gt::cells_column_labels(columns = mpg)
   ) %>%
-  tab_footnote(
+  gt::tab_footnote(
     footnote = foot2,
-    locations = cells_column_labels(columns = cyl)
+    locations = gt::cells_column_labels(columns = cyl)
   ) %>%
-  tab_source_note(
+  gt::tab_source_note(
     source_note = paste("Source:", source_text)
   ) %>%
-  cols_label(
+  gt::cols_label(
     mpg = "Miles/Gallon",
     cyl = "Cylinders",
     hp = "Horsepower",
     wt = "Weight (1000 lbs)"
   ) %>%
-  tab_options(
-    table.width = pct(100),
-    table.font.size = px(14),
-    heading.title.font.size = px(16),
-    heading.subtitle.font.size = px(14)
+  gt::tab_options(
+    table.width = gt::pct(100),
+    table.font.size = gt::px(14),
+    heading.title.font.size = gt::px(16),
+    heading.subtitle.font.size = gt::px(14)
   )
 ```
 
