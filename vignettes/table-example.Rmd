@@ -1,17 +1,8 @@
 ---
-title: "table-example"
+title: "Using tflmetaR with gt for Professional Tables"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{table-example}
-  %\VignetteEngine{knitr::rmarkdown}
-  %\VignetteEncoding{UTF-8}
----
-
----
-title: "Using tflmetaR with kableExtra"
-output: rmarkdown::html_vignette
-vignette: >
-  %\VignetteIndexEntry{Using tflmetaR with kableExtra}
+  %\VignetteIndexEntry{Using tflmetaR with gt for Professional Tables}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -19,83 +10,190 @@ vignette: >
 ```{r setup, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
-  comment = "#>"
+  comment = "#>",
+  message = FALSE,
+  warning = FALSE
 )
+# Load required packages
 library(tflmetaR)
-library(kableExtra)
+library(gt)
 library(dplyr)
 ```
 
-## 📆 Overview
+## Introduction
 
-This vignette demonstrates how to annotate tables created with `knitr::kable()` and styled using `kableExtra`, using title and footnote metadata managed via the `tflmetaR` package.
+In clinical research and regulatory reporting, maintaining consistency and accuracy in table annotations—including titles, subtitles, footnotes, and data sources—is critical. Traditional approaches often embed these annotations directly within analysis scripts, leading to maintenance challenges, inconsistencies across outputs, and increased risk of errors during updates.
+
+The `tflmetaR` package addresses these challenges by implementing a **separation of metadata and code** design pattern. By externalizing table annotations into structured spreadsheets (Excel or CSV), `tflmetaR` enables:
+
+- **Centralized metadata management**: All titles, footnotes, and source information are stored in a single, auditable location
+- **Reduced code complexity**: Analysis scripts remain focused on data processing and visualization
+- **Enhanced reproducibility**: Metadata changes do not require modifications to validated code
+- **Regulatory compliance**: Supports audit-friendly workflows common in pharmaceutical and clinical settings
+
+This vignette demonstrates how to integrate `tflmetaR` with the `gt` package to create publication-quality tables with externally managed annotations.
 
 ---
 
-## 📂 Load Metadata
+## Loading Table Metadata
 
-You can load a title/footnote spreadsheet from CSV or Excel format.
+The first step in using `tflmetaR` is loading the metadata file that contains your table annotations. The package supports both Excel (`.xlsx`, `.xls`) and CSV formats through dedicated functions:
+
+- `read_tfile()`: Reads metadata from Excel files with optional sheet specification
+- `read_tfile_csv()`: Reads metadata from CSV files
+
+The metadata file should contain standardized columns including `PGMNAME` (program name), `TTL1` (primary title), `FOOT1` (first footnote), and `SOURCE` (data source). Additional columns for subtitles (`TTL2`, `TTL3`, ...), additional footnotes (`FOOT2`, `FOOT3`, ...), population definitions, and bylines are also supported.
 
 ```{r load-data}
-# Example CSV file from the package
-# meta <- read_tfile_csv(system.file("../inst/extdata", "sample_titles_in_csv.csv", package = "tftr"))
+# Load the sample metadata file included with the package
+file_path <- system.file("extdata", "sample_titles2.xlsx", package = "tflmetaR")
 
-# You could also use:
-file_name <- system.file("extdata", "sample_titles2.xlsx", package = "tflmetaR")
-meta <- read_tfile(filename = file_name, sheetname = "footer")
+# Read the metadata from the 'footer' sheet
+meta <- tflmetaR::read_tfile(filename = file_path, sheetname = "footer")
+
+# Preview the structure of the metadata
+cat("Metadata columns:", paste(names(meta), collapse = ", "))
 ```
+
+The metadata file serves as a centralized repository for all table annotations, enabling consistent application across multiple outputs and facilitating updates without code modifications.
 
 ---
 
-## 🎯 Select Entry for a Specific Table
+## Extracting Table Annotations
+
+Once metadata is loaded, `tflmetaR` provides a suite of accessor functions to retrieve specific annotation components for a given table. Tables can be identified by their TFL number (`tnumber`) or program name (`pname`).
+
+### Core Accessor Functions
+
+| Function | Description | Returns |
+|-------|-------------|---------|
+| `get_title()` | Retrieves title-related fields (TTL1, TTL2, etc.) from the metadata | Named list of non-missing title fields |
+| `get_footnote()` | Retrieves footnote fields (FOOT1, FOOT2, etc.) from the metadata | Named list of non-missing footnote fields |
+| `get_source()` | Retrieves source fields (e.g., SOURCE1) from the metadata | Named list of non-missing source fields |
+| `get_pop()` | Retrieves population field from the metadata | Named list containing the population field |
+| `get_byline()` | Retrieves byline fields (BYLINE1, BYLINE2, etc.) from the metadata | Named list of non-missing byline fields |
+| `get_pgmname()` | Retrieves program name field (PGMNAME) from the metadata | Named list containing the program name field |
 
 ```{r select-entry}
-# Select the metadata entry for a table
-title_list <- get_title(meta, tnumber = "Table 2.1")
-footnotes <- get_footnote(meta, tnumber = "Table 2.1")
-source_note <- get_source(meta, tnumber = "Table 2.1")
+# Extract metadata components for a specific table
+# Tables are identified by their TFL number (e.g., "Table 2.1")
+tfl_number <- "Table 2.1"
+
+title_info <- tflmetaR::get_title(meta, tnumber = tfl_number)
+footnotes <- tflmetaR::get_footnote(meta, tnumber = tfl_number, add_footr_tstamp = FALSE)
+source_info <- tflmetaR::get_source(meta, tnumber = tfl_number)
+population <- tflmetaR::get_pop(meta, tnumber = tfl_number)
+pgm_name <- tflmetaR::get_pgmname(meta, tnumber = tfl_number)
+
+# Display extracted metadata
+cat("Title:", unlist(title_info$TTL1), "\n")
+cat("Population:", unlist(population), "\n")
+cat("Program:", unlist(pgm_name), "\n")
 ```
+
+Each function returns a named list containing the non-missing fields, allowing flexible integration with various table rendering packages.
 
 ---
 
-## 📄 Create and Annotate a Table
+## Creating Annotated Tables with gt
+
+The `gt` package provides a powerful framework for creating publication-quality tables in R. When combined with `tflmetaR`, you can seamlessly apply externally managed annotations to your tables.
+
+### Building a Basic Annotated Table
+
+The following example demonstrates how to create a table with title, subtitle, footnotes, and source notes using metadata extracted via `tflmetaR`:
 
 ```{r basic-table}
-# Create a simple table
-data <- head(mtcars, 5)
+# Prepare sample data
+sample_data <- mtcars %>%
+  head(5) %>%
+  select(mpg, cyl, hp, wt) %>%
+  mutate(across(everything(), ~ round(.x, 1)))
 
-# Build title text and footnote text
-title_text <- paste(title_list, collapse = "\n")
-footnote_text <- paste(unlist(footnotes), collapse = "\n")
-source_text <- paste(unlist(source_note), collapse = "\n")
+# Extract annotation text from metadata using [[1]] notation
+main_title <- title_info$TTL1[[1]]
+subtitle <- title_info$TTL2[[1]]
+pop_text <- population$POPULATION[[1]]
 
-# Render kable table with annotations
-kable(data, format = "html", caption = title_text) %>%
-  kable_styling(bootstrap_options = c("striped", "hover"), full_width = FALSE) %>%
-  add_footnote(label = footnote_text, notation = "symbol") %>%
-  add_footnote(label = source_text, notation = "none")
+# Extract multiple footnotes
+foot1 <- footnotes$FOOT1[[1]]
+foot2 <- footnotes$FOOT2[[1]]
+
+source_text <- source_info$SOURCE[[1]]
+
+# Create the annotated gt table
+sample_data |>
+  gt::gt() |>
+  gt::tab_header(
+    title = main_title,
+    subtitle = gt::html(paste0(subtitle, "<br>", pop_text))
+  ) |>
+  gt::tab_footnote(
+    footnote = foot1,
+    locations = gt::cells_column_labels(columns = mpg)
+  ) |>
+  gt::tab_footnote(
+    footnote = foot2,
+    locations = gt::cells_column_labels(columns = cyl)
+  ) |>
+  gt::tab_source_note(
+    source_note = paste("Source:", source_text)
+  ) |>
+  gt::cols_label(
+    mpg = "Miles/Gallon",
+    cyl = "Cylinders",
+    hp = "Horsepower",
+    wt = "Weight (1000 lbs)"
+  ) |>
+  gt::tab_options(
+    table.width = gt::pct(100),
+    table.font.size = gt::px(14),
+    heading.title.font.size = gt::px(16),
+    heading.subtitle.font.size = gt::px(14)
+  )
 ```
 
----
+The `gt` package offers extensive customization options for table styling, including:
 
-## ✅ Summary
-
-With the `tflmetaR` package, you can:
-
-- Manage annotation metadata externally
-- Easily reuse footnotes and titles
-- Apply consistent formatting to `kable` tables across reports
-
-This is especially valuable for clinical and regulatory reports that must adhere to strict documentation standards.
+- **`tab_header()`**: Adds title and optional subtitle
+- **`tab_footnote()`**: Adds footnotes with precise location targeting
+- **`tab_source_note()`**: Adds source attribution at the table footer
+- **`tab_options()`**: Controls global table styling options
 
 ---
 
-## 🔗 Related Packages
+## Summary
 
-- [`kableExtra`](https://haozhu233.github.io/kableExtra/)
-- [`flextable`](https://davidgohel.github.io/flextable/)
-- `tflmetaR::get_title()`, `get_footnote()`, `get_source()`
+The `tflmetaR` package provides a robust solution for managing table annotations in clinical and regulatory reporting environments. By externalizing metadata to structured spreadsheets, organizations can:
+
+- **Streamline maintenance**: Update titles, footnotes, and source information without modifying analysis code
+- **Ensure consistency**: Apply standardized annotations across all Tables, Figures, and Listings (TFLs)
+- **Support compliance**: Maintain audit-ready documentation with clear separation of data and presentation logic
+- **Enhance collaboration**: Allow non-programmers to review and update table annotations directly
+
+When combined with modern table rendering packages like `gt`, `tflmetaR` enables the creation of publication-quality outputs that meet the demanding requirements of pharmaceutical and clinical research.
 
 ---
 
+## Related Resources
 
+### Compatible Table Packages
+
+- [`gt`](https://gt.rstudio.com/) - Publication-quality tables with extensive customization
+- [`flextable`](https://davidgohel.github.io/flextable/) - Tables for Word, PowerPoint, and HTML
+- [`huxtable`](https://hughjonesd.github.io/huxtable/) - Tables with a simple, modern interface
+
+### tflmetaR Core Functions
+
+| Function | Purpose |
+|----------|---------|
+| `read_tfile()` | Load metadata from Excel |
+| `read_tfile_csv()` | Load metadata from CSV |
+| `get_title()` | Extract titles and subtitles |
+| `get_footnote()` | Extract footnotes |
+| `get_source()` | Extract data source |
+| `get_pop()` | Extract population |
+| `get_byline()` | Extract bylines |
+| `get_pgmname()` | Extract program name |
+
+---
