@@ -122,29 +122,29 @@ foot2 <- footnotes$FOOT2[[1]]
 source_text <- source_info$SOURCE[[1]]
 
 # Create the annotated gt table
-sample_data %>%
-  gt::gt() %>%
+sample_data |>
+  gt::gt() |>
   gt::tab_header(
     title = main_title,
     subtitle = gt::html(paste0(subtitle, "<br>", pop_text))
-  ) %>%
+  ) |>
   gt::tab_footnote(
     footnote = foot1,
     locations = gt::cells_column_labels(columns = mpg)
-  ) %>%
+  ) |>
   gt::tab_footnote(
     footnote = foot2,
     locations = gt::cells_column_labels(columns = cyl)
-  ) %>%
+  ) |>
   gt::tab_source_note(
     source_note = paste("Source:", source_text)
-  ) %>%
+  ) |>
   gt::cols_label(
     mpg = "Miles/Gallon",
     cyl = "Cylinders",
     hp = "Horsepower",
     wt = "Weight (1000 lbs)"
-  ) %>%
+  ) |>
   gt::tab_options(
     table.width = gt::pct(100),
     table.font.size = gt::px(14),
