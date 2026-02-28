@@ -3,26 +3,26 @@
 # Utility to map spreadsheet headers to canonical names using a JSON config.
 # Dependencies: jsonlite, readxl, writexl
 
-if (!requireNamespace("jsonlite", quietly = TRUE)) {
-  install.packages("jsonlite")
-}
-if (!requireNamespace("readxl", quietly = TRUE)) {
-  install.packages("readxl")
-}
-if (!requireNamespace("writexl", quietly = TRUE)) {
-  install.packages("writexl")
-}
-if (!requireNamespace("stringr", quietly = TRUE)) {
-  install.packages("stringr")
-}
+# if (!requireNamespace("jsonlite", quietly = TRUE)) {
+#   install.packages("jsonlite")
+# }
+# if (!requireNamespace("readxl", quietly = TRUE)) {
+#   install.packages("readxl")
+# }
+# if (!requireNamespace("writexl", quietly = TRUE)) {
+#   install.packages("writexl")
+# }
+# if (!requireNamespace("stringr", quietly = TRUE)) {
+#   install.packages("stringr")
+# }
 
-suppressPackageStartupMessages({
-  library(jsonlite)
-  library(readxl)
-  library(writexl)
-  library(stringr)
+#suppressPackageStartupMessages({
+# library(jsonlite)
+# library(readxl)
+# library(writexl)
+# library(stringr)
 
-})
+#})
 
 # ---- Helpers ----
 normalize_header <- function(x) {
@@ -67,30 +67,120 @@ apply_header_mapping <- function(df, cfg) {
 }
 
 
-# ---- Main file-to-file function ----
-map_excel_headers <- function(input_xlsx,
-                              output_xlsx,
-                              config_path,
-                              sheet = 1) {
+#' Rename Excel columns using a JSON-based header mapping configuration
+#'
+#' Reads an Excel worksheet, maps its column headers to canonical field names
+#' defined in a JSON configuration file, and writes the updated data to a new
+#' Excel file.
+#'
+#' @param input_xlsx Path to the input Excel file.
+#' @param output_xlsx Path to the output Excel file to create.
+#' @param config_path Path to a JSON configuration file describing canonical
+#'   field names, matching rules, and aliases.
+#' @param sheet Sheet index or name passed to
+#'   \code{\link[readxl:read_excel]{readxl::read_excel}}.
+#'   Defaults to \code{1}.
+#'
+#' @details
+#' The JSON configuration file must contain the following top-level fields:
+#'
+#' \describe{
+#'   \item{\code{matching_rules}}{A list controlling how header names are normalized
+#'   prior to matching. Supported elements include:
+#'     \itemize{
+#'       \item \code{case_insensitive}: logical; if \code{TRUE}, headers are matched
+#'         without case sensitivity.
+#'       \item \code{trim_whitespace}: logical; if \code{TRUE}, leading and trailing
+#'         whitespace is removed.
+#'       \item \code{normalize}: character vector specifying additional normalization
+#'         steps. Currently supported:
+#'           \itemize{
+#'             \item \code{"collapse_spaces"} — collapse multiple internal spaces to one.
+#'             \item \code{"remove_underscores"} — remove underscore characters.
+#'           }
+#'     }
+#'   }
+#'
+#'   \item{\code{canonical_fields}}{Character vector of allowed canonical output
+#'   column names (e.g., \code{"TTL1"}, \code{"FOOT1"}, \code{"Population"}).}
+#'
+#'   \item{\code{aliases}}{Named list mapping each canonical field to a character
+#'   vector of acceptable input header variants.}
+#' }
+#'
+#' Header Mapping Behavior:
+#' \itemize{
+#'   \item Incoming column names are normalized in the following order:
+#'     lowercasing → trimming whitespace → removing underscores →
+#'     collapsing internal spaces.
+#'
+#'   \item After normalization, headers are matched against normalized aliases
+#'     to determine their canonical field name.
+#'
+#'   \item Columns that do not match any alias are preserved unchanged.
+#'
+#'   \item If multiple input columns map to the same canonical field,
+#'     output names are made unique using
+#'     \code{\link[base:make.unique]{base::make.unique}},
+#'     appending suffixes such as \code{.1}, \code{.2}, etc.
+#' }
+#'
+#' The function:
+#' \enumerate{
+#'   \item Parses the JSON configuration using
+#'     \code{\link[jsonlite:fromJSON]{jsonlite::fromJSON}}.
+#'   \item Reads the Excel sheet using
+#'     \code{\link[readxl:read_excel]{readxl::read_excel}}.
+#'   \item Applies header mapping via \code{apply_header_mapping()}.
+#'   \item Writes the mapped data frame using
+#'     \code{\link[writexl:write_xlsx]{writexl::write_xlsx}}.
+#' }
+#'
+#' @return Invisibly returns \code{output_xlsx}.
+#'
+#' @examples
+#' \dontrun{
+#' cfg_path <- system.file(
+#'   "extdata",
+#'   "field_mapping.config.json",
+#'   package = "tflmetaR"
+#' )
+#'
+#' change_colname(
+#'   input_xlsx  = "input.xlsx",
+#'   output_xlsx = "output.xlsx",
+#'   config_path = cfg_path
+#' )
+#' }
+#'
+#' @seealso
+#' \code{\link[readxl:read_excel]{readxl::read_excel}},
+#' \code{\link[writexl:write_xlsx]{writexl::write_xlsx}},
+#' \code{\link[jsonlite:fromJSON]{jsonlite::fromJSON}},
+#' \code{\link[base:make.unique]{base::make.unique}}
+#'
+#'
+#'#' @export
+change_colname <- function(input_xlsx,
+                           output_xlsx,
+                           config_path,
+                           sheet = 1) {
   cfg <- jsonlite::fromJSON(config_path, simplifyVector = TRUE)
-  # Read the input Excel (first sheet by default)
   df <- readxl::read_excel(input_xlsx, sheet = sheet)
-  # Apply mapping
   df_mapped <- apply_header_mapping(df, cfg)
-  # Write output Excel
   writexl::write_xlsx(df_mapped, output_xlsx)
   invisible(output_xlsx)
 }
 
-wd <- getwd()
-
-cfg_path <- str_c( wd, '/inst/extdata/field_mapping.config.json')
-in_path  <- str_c( wd, '/inst/extdata/test_input_before_mapping.xlsx')
-exp_path <- str_c( wd, '/inst/extdata/test_output_after_mapping.xlsx') # expected output generated previously
-tmp_out  <- str_c( wd, '/inst/extdata/test_output_after_mapping_new.xlsx')
-map_excel_headers(input_xlsx = in_path,
-                  output_xlsx = tmp_out,
-                  config_path = cfg_path)
+# wd <- getwd()
+#
+# cfg_path <- str_c( wd, '/inst/extdata/field_mapping.config.json')
+# in_path  <- str_c( wd, '/inst/extdata/test_input_before_mapping.xlsx')
+# exp_path <- str_c( wd, '/inst/extdata/test_output_after_mapping.xlsx') # expected output generated previously
+# tmp_out  <- str_c( wd, '/inst/extdata/test_output_after_mapping_new.xlsx')
+# map_excel_headers(input_xlsx = in_path,
+#                   output_xlsx = tmp_out,
+#                   config_path = cfg_path)
 
 # ---- Optional: convenience wrapper that returns a data.frame ----
 map_dataframe_headers <- function(df, config_path=cfg_path) {
