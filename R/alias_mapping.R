@@ -91,7 +91,7 @@
 #' \code{\link[base:make.unique]{base::make.unique}}
 #'
 #'
-#'#' @export
+#' @export
 change_colname <- function(input_xlsx,
                            output_xlsx,
                            config_path,
