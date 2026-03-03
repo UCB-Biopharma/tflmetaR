@@ -105,9 +105,9 @@ The following example demonstrates how to create a table with title, subtitle, f
 
 ```{r basic-table}
 # Prepare sample data
-sample_data <- mtcars %>%
-  head(5) %>%
-  select(mpg, cyl, hp, wt) %>%
+sample_data <- mtcars |>
+  head(5) |>
+  select(mpg, cyl, hp, wt) |>
   mutate(across(everything(), ~ round(.x, 1)))
 
 # Extract annotation text from metadata using [[1]] notation

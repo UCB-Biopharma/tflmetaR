@@ -36,17 +36,11 @@ We begin by loading all necessary packages for survival analysis, data manipulat
 
 ```{r load-packages, message=FALSE, warning=FALSE}
 library(haven)
-library(admiral)
 library(janitor)
-library(xportr)
-library(glue)
 library(dplyr)
-library(lubridate)
-library(tidyr)
 library(survival)
 library(survminer)
 library(gridify)
-library(tfootr)
 ```
 
 ---
@@ -59,7 +53,7 @@ The Analysis Dataset for Time-to-Event (ADTTE) follows CDISC ADaM standards. Her
 # get addtte data ----
 # synthetic adtte for oncology therapeutic area from CDISC
 
-adtte <- read_xpt("~/tflmetaR/inst/extdata/adam_adtte.xpt")
+adtte <- read_xpt(system.file("extdata", "adam_adtte.xpt", package="tflmetaR"))
 ```
 
 ### Data Transformation
@@ -108,8 +102,8 @@ ggsurv <- ggsurvplot(fit1,
   surv.median.line = "hv",
   tables.theme = theme_survminer() +
     theme(
-      base_size = 9,
-      base_family = "",
+   #   base_size = 9,
+   #   base_family = "",
       axis.text.x = element_text(size = 9, color = "gray30"),
       axis.text.y = element_text(size = 9, color = "gray30"),
       plot.title = element_text(size = 9),
@@ -193,7 +187,7 @@ fig <- gridify(
   set_cell("footer_left", paste0("Program: f_surv_gridify.R,", format(Sys.time(), "%Y-%m-%d %H:%M:%S"))) |>
   set_cell("footer_right", paste0("Page ", 1, " of ", 1))
 
-gridify::export_to(fig, "./vignettes/f_surv_gridify.pdf")
+gridify::export_to(fig, "f_surv_gridify.pdf")
 ```
 
 ---
@@ -215,7 +209,7 @@ We read the titles and header information from an Excel spreadsheet.
 
 # read headers, titles, and footnotes excel spreadsheet
 
-file_name <- file.path("./inst/extdata", "st_titles.xls")
+file_name <- system.file("extdata", "st_titles.xls", package = "tflmetaR")
 title_file <- tflmetaR::read_tfile(filename = file_name, sheetname = "Sheet1")
 header_file <- tflmetaR::read_tfile(filename = file_name, sheetname = "Headr")
 
@@ -270,7 +264,7 @@ fig2 <- gridify(
   )) |>
   set_cell("footer_right", sprintf("Page %d of %d", 1, 1))
 
-gridify::export_to(fig2, "./vignettes/f_surv_tflmetar.pdf")
+gridify::export_to(fig2, "f_surv_tflmetar.pdf")
 ```
 
 ---
