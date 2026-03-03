@@ -1,39 +1,43 @@
 Package: tflmetaR
-Title: Read And Extract Headers/Titles/Footnotes File for Annotating TFLs/TLGs
+Title: Manage Annotation Metadata in Statistical Outputs
 Version: 0.1.0
 Authors@R: c(
-    person("Gary", "Cao", , "Gary.Cao@UCB.com", role = c("aut", "cre")),
-    person("Amber", "Wu", , "amber.wu2@UCB.com", role = "aut"),
-    person("Yao", "Lu", ,"Yao.Lu@UCB.com", role = "aut"),
-    person("Lan", "Cheng", , "lan.cheng@ucb.com", role = "aut"))
-Description: Putting titles, headers, or footnotes in R programs violates **separation of data and code** practice. 
-    This package offers convenience to read and process titles etc. from a spreadsheet for annotating the clinical study reports (CSR).
-License: Apache License 2.0
-Encoding: UTF-8
-Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.3.3
-Suggests: 
-    ggplot2,
-    gridExtra,
-    kableExtra,
-    knitr,
-    mockery (>= 0.3.0),
-    patchwork,
-    rmarkdown,
-    writexl,
-    admiral,
-    gt,
-    testthat (>= 3.0.0)
-VignetteBuilder: knitr
-Config/testthat/edition: 3
+    person("Gary", "Cao", , "gary.cao@ucb.com", role = c("aut", "cre")),
+    person("Amber", "Wu", , "amber.wu2@ucb.com", role = "aut"),
+    person("Yao", "Lu", , "yao.lu@ucb.com", role = "aut"),
+    person("Lan", "Cheng", , "lan.cheng@ucb.com", role = "aut"),
+    person("UCB S.A., Belgium", role = c("cph", "fnd"))
+  )
+Description: A simple tool to retrieve headers, titles, and footnotes from
+    structured metadata sources (e.g., Excel or CSV files) for annotating
+    tables, listings, and figures in clinical study reports (CSRs). It
+    supports separation of metadata from analysis code in clinical
+    reporting workflows.
+License: Apache License (>= 2.0)
 Imports: 
     dplyr,
     glue,
+    jsonlite,
     magrittr,
     readr,
     readxl,
     rlang,
     rstudioapi,
-    jsonlite,
-    writexl,
-    stringr
+    writexl
+Suggests: 
+    gridify,
+    gt,
+    haven,
+    janitor,
+    knitr,
+    mockery (>= 0.3.0),
+    rmarkdown,
+    survival,
+    survminer,
+    testthat (>= 3.0.0)
+VignetteBuilder: 
+    knitr
+Config/testthat/edition: 3
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.3

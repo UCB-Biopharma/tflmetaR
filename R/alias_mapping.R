@@ -105,7 +105,7 @@ change_colname <- function(input_xlsx,
 
 
 # ---- Optional: convenience wrapper that returns a data.frame ----
-map_dataframe_headers <- function(df, config_path=cfg_path) {
+map_dataframe_headers <- function(df, config_path) {
   cfg <- jsonlite::fromJSON(config_path, simplifyVector = TRUE)
   apply_header_mapping(df, cfg)
 }

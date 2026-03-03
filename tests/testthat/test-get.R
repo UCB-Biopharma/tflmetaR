@@ -1,8 +1,5 @@
-library(testthat)
-library(dplyr)
+testthat::skip_if_not_installed("mockery")
 library(mockery)
-library(glue)
-
 
 test_that("multiplication works", {
   expect_equal(2 * 2, 4)

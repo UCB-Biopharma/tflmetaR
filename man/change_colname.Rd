@@ -102,6 +102,4 @@ change_colname(
 \code{\link[writexl:write_xlsx]{writexl::write_xlsx}},
 \code{\link[jsonlite:fromJSON]{jsonlite::fromJSON}},
 \code{\link[base:make.unique]{base::make.unique}}
-
-#' @export
 }
