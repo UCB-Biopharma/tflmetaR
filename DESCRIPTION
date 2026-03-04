@@ -22,7 +22,6 @@ Imports:
     readr,
     readxl,
     rlang,
-    rstudioapi,
     writexl
 Suggests: 
     gridify,

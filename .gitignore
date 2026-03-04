@@ -1,5 +1,17 @@
+# RStudio
 .Rproj.user
 .Rhistory
 .RData
 .Ruserdata
-inst/doc
+
+# vignettes outputs
+vignettes/*.html
+vignettes/*.pdf
+
+# Package build artifacts
+doc/
+inst/doc/
+Meta/
+man/*.html
+/doc/
+/Meta/
