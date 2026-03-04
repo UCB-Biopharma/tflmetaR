@@ -79,7 +79,12 @@ get_footnote <- function(df = NULL,
 
 get_footr_tstamp <- function(pgmname_str, src_str) {
   runtime_stamp <- format(Sys.time(), "%Y-%m-%d %H:%M:%S")
-  glue::glue("Generated from {pgmname_str} on {runtime_stamp} Data Source(s): {src_str}")
+  sprintf(
+    "Generated from %s on %s Data Source(s): %s",
+    pgmname_str,
+    runtime_stamp,
+    src_str
+  )
 }
 
 #' Extract Upper-Left Header Text
