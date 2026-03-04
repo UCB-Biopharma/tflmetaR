@@ -16,12 +16,10 @@ Description: A simple tool to retrieve headers, titles, and footnotes from
 License: Apache License (>= 2.0)
 Imports: 
     dplyr,
-    glue,
     jsonlite,
     magrittr,
     readr,
     readxl,
-    rlang,
     writexl
 Suggests: 
     gridify,

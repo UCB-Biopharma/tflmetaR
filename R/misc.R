@@ -59,13 +59,11 @@ read_xlfile <- function(filename, sheetname) {
 #' select_row(metadata_df, by_column = "PGMNAME", by_value = "ADSL", oid = "T001")
 #' }
 #'
-#' @importFrom dplyr filter
-#' @importFrom rlang sym
 #' @export
 select_row <- function(data, by_column, by_value, oid=NULL) {
-  df <- data %>% filter(!!sym(by_column) == by_value)
+  df <- data |> dplyr::filter(.data[[by_column]] == by_value)
 
-  if (!is.null(oid))  df <- df %>% filter(OID == oid)
+  if (!is.null(oid))  df <- df |> dplyr::filter(.data[["OID"]] == oid)
 
   if (nrow(df) == 0) {
     stop("No row is found. Check the title and footnote file and try again.\n")
@@ -101,7 +99,7 @@ select_row <- function(data, by_column, by_value, oid=NULL) {
 #' select_cols(metadata_df, select_type = "PGMNAME")
 #' }
 #'
-#' @importFrom dplyr select starts_with
+#' @importFrom dplyr select starts_with all_of
 #' @export
 select_cols <- function(data, select_type, add_footr_tstamp=TRUE) {
   type <- toupper(select_type);
@@ -110,26 +108,24 @@ select_cols <- function(data, select_type, add_footr_tstamp=TRUE) {
   if (is.null(select_type)) {
     cols <- data
   } else if (type=="TITLE") {
-    cols <- data %>% select(starts_with("TTL"), POPULATION)
+    cols <- data |> select(starts_with("TTL"), POPULATION)
   } else if (type=="FOOTR") {
-    cols <- data %>% select(starts_with("FOOT"))
+    cols <- data |> select(starts_with("FOOT"))
 
     if (!is.null(add_footr_tstamp) && add_footr_tstamp) {
-      src <- data %>% select(SOURCE)
-      pgmname <- data %>% select(SOURCE)
+      src <- ""
+      if ("SOURCE" %in% names(data)) src <- data |> select(SOURCE)
+
+      pgmname <- ""
+      if ("PGMNAME" %in% names(data)) pgmname <- data |> select(PGMNAME)
 
       cols$source <- get_footr_tstamp(unlist(pgmname), unlist(src))
     }
   } else {
-    cols <- data %>% select(type)
+    cols <- data |> dplyr::select(all_of(type))
   }
 
-  out <- Filter(function(x) !is.na(x), cols)
+  out <- Filter(function(x) !all(is.na(x)), cols)
   out
 }
 
-
-get_footr_tstamp <- function(pgmname_str, src_str) {
-  runtime_stamp <- format(Sys.time(), "%Y-%m-%d %H:%M:%S")
-  glue::glue("Generated from {pgmname_str} on {runtime_stamp} Data Source(s): {src_str}")
-}
