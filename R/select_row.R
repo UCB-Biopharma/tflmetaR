@@ -8,7 +8,6 @@
 #'
 #' @return A single-row data frame (list) with matching metadata.
 #'
-#' @import magrittr
 #' @export
 select_with_number <- function(df = list(),
                                type = NULL,

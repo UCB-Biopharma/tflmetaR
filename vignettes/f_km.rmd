@@ -36,7 +36,6 @@ We begin by loading all necessary packages for survival analysis, data manipulat
 
 ```{r load-packages, message=FALSE, warning=FALSE}
 library(haven)
-library(janitor)
 library(dplyr)
 library(survival)
 library(survminer)
@@ -63,7 +62,7 @@ We filter the data for Progression-Free Survival (PFS) analysis and prepare it f
 ```{r prepare-data}
 tte <- adtte |>
   rename(avalc = AVALU) |>
-  clean_names() |>
+  rename_with(tolower) |>
   filter(paramcd == "PFS") |>
   arrange(desc(trtp)) |>
   relocate(usubjid, trtp, cnsr, evntdesc, avalc, aval, trta) |> #  distinct(usubjid)

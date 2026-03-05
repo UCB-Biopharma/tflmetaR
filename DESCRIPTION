@@ -17,14 +17,12 @@ License: Apache License (>= 2.0)
 Imports: 
     dplyr,
     jsonlite,
-    magrittr,
     readxl,
     writexl
 Suggests: 
     gridify,
     gt,
     haven,
-    janitor,
     knitr,
     mockery (>= 0.3.0),
     rmarkdown,

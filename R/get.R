@@ -27,7 +27,7 @@ get_title <- function(df = NULL,
     title_list <- select_with_number(df = df, tnumber = tnumber)
   }
   # select only title, subtitle(s) and population.
-  filtered_list <- title_list %>%
+  filtered_list <- title_list |>
     dplyr::select(starts_with("TTL"), POPULATION)
   t_list <- Filter(function(x) !is.na(x), filtered_list)
 
@@ -62,12 +62,12 @@ get_footnote <- function(df = NULL,
     footnote_list <- select_with_number(df = df, tnumber = tnumber)
   }
   # select only footnotes
-  filtered_list <- footnote_list %>%
+  filtered_list <- footnote_list |>
     dplyr::select(starts_with("FOOT"))
 
   if (!is.null(add_footr_tstamp) && add_footr_tstamp) {
-    src <- footnote_list %>% select(SOURCE)
-    pgmname <- footnote_list %>% select(PGMNAME)
+    src <- footnote_list |> select(SOURCE)
+    pgmname <- footnote_list |> select(PGMNAME)
 
     filtered_list$source <- get_footr_tstamp(unlist(pgmname), unlist(src))
   }
@@ -101,7 +101,7 @@ get_footr_tstamp <- function(pgmname_str, src_str) {
 get_ulheader <- function(df,
                          by_list = TRUE) {
   # Read header spreadsheet
-  ulheader <- df %>% dplyr::select(starts_with("UL"))
+  ulheader <- df |> dplyr::select(starts_with("UL"))
   ulheader <- Filter(function(x) !is.na(x), ulheader)
 
   if (by_list) {
@@ -125,7 +125,7 @@ get_ulheader <- function(df,
 get_urheader <- function(df,
                          by_list = TRUE) {
   # Read header spreadsheet
-  urheader <- df %>% dplyr::select(starts_with("UR"))
+  urheader <- df |> dplyr::select(starts_with("UR"))
   urheader <- Filter(function(x) !is.na(x), urheader)
 
   if (by_list) {
@@ -162,7 +162,7 @@ get_pop <- function(df = NULL,
     pop_list <- select_with_number(df = df, tnumber = tnumber)
   }
   # select only population
-  filtered_list <- pop_list %>%
+  filtered_list <- pop_list |>
     dplyr::select(POPULATION)
   p_list <- Filter(function(x) !is.na(x), filtered_list)
 
@@ -194,7 +194,7 @@ get_byline <- function(df = NULL,
     byline_list <- select_with_number(df = df, tnumber = tnumber)
   }
   # select only byline
-  filtered_list <- byline_list %>%
+  filtered_list <- byline_list |>
     dplyr::select(starts_with("BYLINE"))
   b_list <- Filter(function(x) !is.na(x), filtered_list)
 
@@ -226,7 +226,7 @@ get_pgmname <- function(df = NULL,
     pgmname_list <- select_with_number(df = df, tnumber = tnumber)
   }
   # select only program name
-  filtered_list <- pgmname_list %>%
+  filtered_list <- pgmname_list |>
     dplyr::select(PGMNAME)
   p_list <- Filter(function(x) !is.na(x), filtered_list)
 
@@ -258,7 +258,7 @@ get_source <- function(df = NULL,
     source_list <- select_with_number(df = df, tnumber = tnumber)
   }
   # select only footnotes
-  filtered_list <- source_list %>%
+  filtered_list <- source_list |>
     dplyr::select(starts_with("SOURCE"))
   f_list <- Filter(function(x) !is.na(x), filtered_list)
 

@@ -62,8 +62,8 @@ pgmname <- get_pgmname(meta, tnumber = "Table 1.1")
 
 # Use with flextable (example)
 library(flextable)
-flextable(iris) %>%
-  set_caption(title$TTL1) %>%
+flextable(iris) |>  
+  set_caption(title$TTL1) |> 
   add_footer_lines(values = footnotes)
 ```
 
