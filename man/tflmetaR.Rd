@@ -2,11 +2,11 @@
 % Please edit documentation in R/tflmetaR.R
 \name{tflmetaR}
 \alias{tflmetaR}
-\title{Get title and footnotes from an Excel file}
+\title{Retrieve titles and footnotes from a metadata file}
 \usage{
 tflmetaR(
-  xlfile,
-  sheet_name,
+  file,
+  sheet = NULL,
   by_column = "PGMNAME",
   by_value,
   select_type = NULL,
@@ -15,39 +15,63 @@ tflmetaR(
 )
 }
 \arguments{
-\item{xlfile}{Filename including folder path and file extension (xls/xlsx).}
+\item{file}{A file path to the metadata source. Supported extensions are
+\code{.xls}, \code{.xlsx}, and \code{.csv}.}
 
-\item{sheet_name}{Sheet to read.}
+\item{sheet}{Sheet name to read when \code{file} is an Excel file.
+Ignored when \code{file} is a CSV.}
 
-\item{by_column}{Column name that is used to filter proper titles and
-footnotes. Default is "PGMNAME".}
+\item{by_column}{Column name used to filter the appropriate titles and
+footnotes. Default is \code{"PGMNAME"}.}
 
-\item{by_value}{Column value that is used to filter proper titles and
-footnotes.}
+\item{by_value}{Value in \code{by_column} used to filter the appropriate
+titles and footnotes.}
 
-\item{select_type}{Either NULL to return the entire selected row, "title" to
-return columns starting with "TTL", "footr" to return columns starting with
-"FOOT", or a specific column name to return that particular column. The
-default is NULL.}
+\item{select_type}{Selection type:
+\itemize{
+\item \code{NULL}: return the entire selected row (all columns).
+\item \code{"TITLE"}: return columns starting with \code{"TTL"} plus \code{POPULATION}.
+\item \code{"FOOTR"}: return columns starting with \code{"FOOT"} (and optionally add a timestamp line).
+\item Otherwise: a specific column name to return that column.
+}
+Matching is case-insensitive (internally uppercased).}
 
-\item{add_footr_tstamp}{If TRUE, add timestamp and source information as the
-last line of the footnotes. It is only applied when select_type = "footr"}
+\item{add_footr_tstamp}{If \code{TRUE}, add timestamp/source information as
+the last line of the footnotes. Only applied when \code{select_type = "FOOTR"}.}
 
-\item{oid}{If not NULL, oid is used to filter the appropriate titles and
-footnotes. The default value is NULL.}
+\item{oid}{If not \code{NULL}, further filter by \code{OID == oid}.}
 }
 \value{
-Returns a data frame
+A data frame containing the selected row/columns.
 }
 \description{
-Get title and footnotes from an Excel file
+Read annotation metadata (titles/footnotes/etc.) from either an Excel file
+(\code{.xls} / \code{.xlsx}) or a CSV file (\code{.csv}). The function first
+reads the source file, then filters to a single row using \code{by_column},
+\code{by_value}, and optional \code{oid}, and finally selects the requested
+set of columns via \code{select_type}.
+}
+\details{
+The input file must exist. Unsupported file extensions result in an error.
+For CSV sources, \code{sheet} is ignored.
 }
 \examples{
 \dontrun{
-(1) To get titles:  tflmetaR(filename, "Sheet1", by_value="t_dm", select_type="title")
-(2) To get footers: tflmetaR(filename, "Sheet1", by_value="t_dm", select_type="footr")
-(3) To get a specific cell value, i.e., SOURCE:
-      tflmetaR(filename, "Sheet1", by_value="t_dm", select_type="source")
-(4) To get the whole row: tflmetaR(filename, "Sheet1", by_value="t_dm")
+# Excel:
+# (1) Get titles
+tflmetaR("metadata.xlsx", sheet = 1, by_value = "t_dm", select_type = "TITLE")
+
+# (2) Get footnotes
+tflmetaR("metadata.xlsx", sheet = "Sheet1", by_value = "t_dm", select_type = "FOOTR")
+
+# (3) Get a specific column sheet, e.g., SOURCE
+tflmetaR("metadata.xlsx", sheet_name = "Sheet1", by_value = "t_dm", select_type = "SOURCE")
+
+# (4) Get the whole row
+tflmetaR("metadata.xlsx", sheet = "Sheet1", by_value = "t_dm")
+
+# CSV:
+tflmetaR("metadata.csv", by_value = "t_dm", select_type = "TITLE")
 }
+
 }

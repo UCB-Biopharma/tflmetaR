@@ -1,97 +1,18 @@
+test_that("select_row errors when by_column is not a single string", {
+  df <- data.frame(PGMNAME = "t_dm", OID = "T001", stringsAsFactors = FALSE)
 
-test_that("read_xlfile throws an error if the file does not exist", {
-  expect_error(tflmetaR::read_xlfile("non_existent_file.xls", "Sheet1"),
-               "`path` does not exist: 'non_existent_file.xls'")
+  expect_error(select_row(df, by_column = 123, by_value = "t_dm"),
+               "`by_column` must be a single character string")
+
+  expect_error(select_row(df, by_column = c("PGMNAME", "OID"), by_value = "t_dm"),
+               "`by_column` must be a single character string")
 })
 
-test_that("read_xlfile reads the requested sheet and validates required columns", {
-  testthat::skip_if_not_installed("writexl")
+test_that("select_row errors when by_column is not found in data", {
+  df <- data.frame(PGMNAME = "t_dm", OID = "T001", stringsAsFactors = FALSE)
 
-  # Build a minimal valid sheet (note: lowercase names to test toupper())
-  df_ok <- data.frame(
-    pgmname = "T14-01",
-    ttl1    = "Title line 1",
-    foot1   = "Footnote line 1",
-    source  = "ADSL",
-    stringsAsFactors = FALSE
-  )
-
-  # A second sheet to confirm sheetname argument is respected
-  df_other <- data.frame(
-    pgmname = "OTHER",
-    ttl1    = "Other title",
-    foot1   = "Other footnote",
-    source  = "OTHER_SRC",
-    stringsAsFactors = FALSE
-  )
-
-  xlsx_path <- tempfile(fileext = ".xlsx")
-  writexl::write_xlsx(
-    x = list(Sheet1 = df_ok, Sheet2 = df_other),
-    path = xlsx_path
-  )
-
-  res <- read_xlfile(xlsx_path, "Sheet1")
-
-  # Basic class check
-  testthat::expect_true(is.data.frame(res))
-
-  # Names are uppercased
-  testthat::expect_true(all(c("PGMNAME", "TTL1", "FOOT1", "SOURCE") %in% names(res)))
-  testthat::expect_false(any(c("pgmname", "ttl1", "foot1", "source") %in% names(res)))
-
-  # Content matches the selected sheet (Sheet1, not Sheet2)
-  testthat::expect_identical(res$PGMNAME[[1]], "T14-01")
-  testthat::expect_identical(res$SOURCE[[1]], "ADSL")
-})
-
-test_that("read_xlfile errors when required columns are missing", {
-  testthat::skip_if_not_installed("writexl")
-
-  # Missing FOOT1 and SOURCE
-  df_bad <- data.frame(
-    PGMNAME = "T14-01",
-    TTL1    = "Title line 1",
-    stringsAsFactors = FALSE
-  )
-
-  xlsx_path <- tempfile(fileext = ".xlsx")
-  writexl::write_xlsx(list(Sheet1 = df_bad), xlsx_path)
-
-  testthat::expect_error(
-    read_xlfile(xlsx_path, "Sheet1"),
-    regexp = "required column\\(s\\) missing"
-  )
-})
-
-test_that("read_xlfile accepts mixed-case column names and still validates", {
-  testthat::skip_if_not_installed("writexl")
-
-  df_mixed <- data.frame(
-    PgmName = "T14-01",
-    ttL1    = "Title line 1",
-    Foot1   = "Footnote line 1",
-    SoUrCe  = "ADSL",
-    stringsAsFactors = FALSE
-  )
-
-  xlsx_path <- tempfile(fileext = ".xlsx")
-  writexl::write_xlsx(list(Sheet1 = df_mixed), xlsx_path)
-
-  res <- read_xlfile(xlsx_path, "Sheet1")
-  testthat::expect_true(all(c("PGMNAME", "TTL1", "FOOT1", "SOURCE") %in% names(res)))
-})
-
-test_that("read_xlfile errors for a non-existent sheet", {
-  # This error is thrown by readxl
-  xlsx_path <- tempfile(fileext = ".xlsx")
-
-  testthat::skip_if_not_installed("writexl")
-  writexl::write_xlsx(list(Sheet1 = data.frame(a = 1)), xlsx_path)
-
-  testthat::expect_error(
-    read_xlfile(xlsx_path, "NoSuchSheet")
-  )
+  expect_error(select_row(df, by_column = "NOPE", by_value = "t_dm"),
+               "`by_column` not found in data")
 })
 
 test_that("select_row returns exactly one matching row (no oid)", {
@@ -165,6 +86,18 @@ test_that("select_row errors when multiple rows match even with oid (data issue)
   )
 })
 
+test_that("select_row returns exactly one row when both filters match", {
+  df <- data.frame(PGMNAME = c("t_dm", "t_dm"),
+                   OID = c("T001", "T002"),
+                   X = c("1", "2"),
+                   stringsAsFactors = FALSE)
+
+  out <- select_row(df, by_column = "PGMNAME", by_value = "t_dm", oid = "T002")
+  expect_equal(nrow(out), 1)
+  expect_identical(out$OID[[1]], "T002")
+  expect_identical(out$X[[1]], "2")
+})
+
 test_that("select_cols: NULL select_type returns all columns (and drops NA-only columns)", {
   df <- data.frame(
     TTL1 = "t1",
@@ -181,6 +114,15 @@ test_that("select_cols: NULL select_type returns all columns (and drops NA-only 
   # Should keep all non-NA-only columns
   testthat::expect_true(is.list(out))
   testthat::expect_setequal(names(out), setdiff(names(df), "ALLNA"))
+})
+
+test_that("select_row errors when oid is provided but OID column is missing", {
+  df <- data.frame(PGMNAME = c("t_dm", "ae"), stringsAsFactors = FALSE)
+
+  expect_error(
+    select_row(df, by_column = "PGMNAME", by_value = "t_dm", oid = "T001"),
+    regexp = "Column `OID` not found"
+  )
 })
 
 test_that("select_cols: TITLE selects TTL* and POPULATION", {
@@ -300,3 +242,42 @@ test_that("select_cols: keeps columns that are partially NA", {
   testthat::expect_true(any(is.na(unlist(out$TTL1))))
 })
 
+test_that("select_cols: FOOTR does not call get_footr_tstamp when add_footr_tstamp is FALSE/NULL", {
+  df <- data.frame(FOOT1 = "f1", SOURCE = "src", PGMNAME = "pgm", stringsAsFactors = FALSE)
+
+  # FALSE
+  out1 <- select_cols(df, select_type = "FOOTR", add_footr_tstamp = FALSE)
+  expect_true("FOOT1" %in% names(out1))
+  expect_false("source" %in% names(out1))
+
+  # NULL (your code checks !is.null(add_footr_tstamp) && add_footr_tstamp)
+  out2 <- select_cols(df, select_type = "FOOTR", add_footr_tstamp = NULL)
+  expect_true("FOOT1" %in% names(out2))
+  expect_false("source" %in% names(out2))
+})
+
+test_that("select_cols: FOOTR handles missing SOURCE and/or PGMNAME defensively", {
+  # Missing SOURCE
+  df1 <- data.frame(FOOT1 = "f1", PGMNAME = "pgm", stringsAsFactors = FALSE)
+
+  testthat::local_mocked_bindings(
+    get_footr_tstamp = function(pgmname, src) "TS",
+    .env = asNamespace("tflmetaR") # change if pkg name differs
+  )
+
+  out1 <- select_cols(df1, select_type = "FOOTR", add_footr_tstamp = TRUE)
+  expect_true("FOOT1" %in% names(out1))
+  expect_true("source" %in% names(out1))  # your function adds it even if src is ""
+  expect_identical(unlist(out1$source), "TS")
+
+  # Missing PGMNAME
+  df2 <- data.frame(FOOT1 = "f1", SOURCE = "src", stringsAsFactors = FALSE)
+  out2 <- select_cols(df2, select_type = "FOOTR", add_footr_tstamp = TRUE)
+  expect_true("source" %in% names(out2))
+})
+
+test_that("select_cols: selecting a specific column errors if missing", {
+  df <- data.frame(PGMNAME = "t_dm", stringsAsFactors = FALSE)
+
+  expect_error(select_cols(df, select_type = "NOPE"))
+})

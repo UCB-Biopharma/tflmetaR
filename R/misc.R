@@ -1,41 +1,3 @@
-#' Read and Validate Excel File
-#'
-#' Reads an Excel file and verifies that it contains all required columns.
-#' Column names are converted to uppercase before validation.
-#'
-#' @param filename A string. The path to the Excel file.
-#' @param sheetname A string. The name of the sheet within the Excel file to read.
-#'
-#' @return A data frame containing the contents of the Excel sheet, if all required columns
-#' (`PGMNAME`, `TTL1`, `FOOT1`, and `SOURCE`) are present. Otherwise, the function throws an error.
-#'
-#' @details
-#' This function reads an Excel file using [readxl::read_excel()] and ensures the
-#' presence of specific required columns. It is intended to standardize input structure
-#' for downstream processing of metadata related to clinical tables and figures.
-#'
-#' @examples
-#' \dontrun{
-#' read_xlfile("metadata.xlsx", "Sheet1")
-#' }
-#'
-#' @importFrom readxl read_excel
-#' @export
-read_xlfile <- function(filename, sheetname) {
-  df <- readxl::read_excel(filename, sheet = sheetname)
-
-  # TODO awu: use zzz.R and getOption() to get required_cols
-  colnames(df) <- toupper(colnames(df))
-  required_cols <- c("PGMNAME", "TTL1", "FOOT1", "SOURCE")
-
-  if (!all(required_cols %in% colnames(df)))
-    stop("Input file has required column(s) missing.\n")
-
-  df
-}
-
-
-
 #' Select a Single Row from a Data Frame Based on Column Value(s)
 #'
 #' Filters a data frame to return a single matching row based on a specified column-value pair,
@@ -56,14 +18,26 @@ read_xlfile <- function(filename, sheetname) {
 #'
 #' @examples
 #' \dontrun{
-#' select_row(metadata_df, by_column = "PGMNAME", by_value = "ADSL", oid = "T001")
+#' select_row(metadata_df, by_column = "PGMNAME", by_value = "t_dm", oid = "T001")
 #' }
 #'
 #' @export
 select_row <- function(data, by_column, by_value, oid=NULL) {
-  df <- data |> dplyr::filter(.data[[by_column]] == by_value)
+  if (!is.character(by_column) || length(by_column) != 1) {
+    stop("`by_column` must be a single character string.", call. = FALSE)
+  }
+  if (!by_column %in% names(data)) {
+    stop("`by_column` not found in data: ", by_column, call. = FALSE)
+  }
 
-  if (!is.null(oid))  df <- df |> dplyr::filter(.data[["OID"]] == oid)
+  df <- data[data[[by_column]] == by_value, , drop = FALSE]
+
+  if (!is.null(oid)) {
+    if (!"OID" %in% names(df)) {
+      stop("Column `OID` not found in data but `oid` was provided.", call. = FALSE)
+    }
+    df <- df[df[["OID"]] == oid, , drop = FALSE]
+  }
 
   if (nrow(df) == 0) {
     stop("No row is found. Check the title and footnote file and try again.\n")
@@ -128,4 +102,6 @@ select_cols <- function(data, select_type, add_footr_tstamp=TRUE) {
   out <- Filter(function(x) !all(is.na(x)), cols)
   out
 }
+
+
 

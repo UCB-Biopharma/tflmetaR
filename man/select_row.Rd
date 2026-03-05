@@ -30,7 +30,7 @@ and meets the expected structure for further processing.
 }
 \examples{
 \dontrun{
-select_row(metadata_df, by_column = "PGMNAME", by_value = "ADSL", oid = "T001")
+select_row(metadata_df, by_column = "PGMNAME", by_value = "t_dm", oid = "T001")
 }
 
 }

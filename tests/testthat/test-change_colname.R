@@ -1,6 +1,6 @@
 
 # ---- 1) EXPLICIT CALL: map_excel_headers() file -> file ----
-testthat::test_that("alias_mapping() maps headers and preserves data", {
+test_that("alias_mapping() maps headers and preserves data", {
   input_xlsx <- system.file(
     "extdata",
     "test_input_before_mapping.xlsx",
@@ -41,7 +41,7 @@ testthat::test_that("alias_mapping() maps headers and preserves data", {
 })
 
 # ---- 2) IN-MEMORY CALL: map_dataframe_headers() ----
-testthat::test_that("map_dataframe_headers() maps TTL1 and preserves unmapped", {
+test_that("map_dataframe_headers() maps TTL1 and preserves unmapped", {
   # Minimal in-memory example
   df <- data.frame(
     "Title 1"         = c("A", "B"),
@@ -64,7 +64,7 @@ testthat::test_that("map_dataframe_headers() maps TTL1 and preserves unmapped", 
 
 
 # ---- 3) Collision handling (TTL1 & TITLE_1) ----
-testthat::test_that("Duplicate canonical collisions become unique", {
+test_that("Duplicate canonical collisions become unique", {
   df <- data.frame(
     "Title 1" = c("x", "y"),
     "TITLE_1" = c("p", "q"),
@@ -84,7 +84,7 @@ testthat::test_that("Duplicate canonical collisions become unique", {
 })
 
 # ---- 4) Idempotency (file -> file twice) ----
-testthat::test_that("map_excel_headers() is idempotent", {
+test_that("map_excel_headers() is idempotent", {
   tmp1 <- tempfile(fileext = ".xlsx")
   tmp2 <- tempfile(fileext = ".xlsx")
 

@@ -1,41 +1,88 @@
-#' Get title and footnotes from an Excel file
+#' Retrieve titles and footnotes from a metadata file
 #'
-#' @param xlfile Filename including folder path and file extension (xls/xlsx).
-#' @param sheet_name Sheet to read.
-#' @param by_column Column name that is used to filter proper titles and
-#'   footnotes. Default is "PGMNAME".
-#' @param by_value Column value that is used to filter proper titles and
-#'   footnotes.
-#' @param select_type Either NULL to return the entire selected row, "title" to
-#'   return columns starting with "TTL", "footr" to return columns starting with
-#'   "FOOT", or a specific column name to return that particular column. The
-#'   default is NULL.
-#' @param add_footr_tstamp If TRUE, add timestamp and source information as the
-#'   last line of the footnotes. It is only applied when select_type = "footr"
-#' @param oid If not NULL, oid is used to filter the appropriate titles and
-#'   footnotes. The default value is NULL.
+#' Read annotation metadata (titles/footnotes/etc.) from either an Excel file
+#' (\code{.xls} / \code{.xlsx}) or a CSV file (\code{.csv}). The function first
+#' reads the source file, then filters to a single row using \code{by_column},
+#' \code{by_value}, and optional \code{oid}, and finally selects the requested
+#' set of columns via \code{select_type}.
 #'
-#' @return Returns a data frame
-#' @export
+#' @param file A file path to the metadata source. Supported extensions are
+#'   \code{.xls}, \code{.xlsx}, and \code{.csv}.
+#' @param sheet Sheet name to read when \code{file} is an Excel file.
+#'   Ignored when \code{file} is a CSV.
+#' @param by_column Column name used to filter the appropriate titles and
+#'   footnotes. Default is \code{"PGMNAME"}.
+#' @param by_value Value in \code{by_column} used to filter the appropriate
+#'   titles and footnotes.
+#' @param select_type Selection type:
+#'   \itemize{
+#'     \item \code{NULL}: return the entire selected row (all columns).
+#'     \item \code{"TITLE"}: return columns starting with \code{"TTL"} plus \code{POPULATION}.
+#'     \item \code{"FOOTR"}: return columns starting with \code{"FOOT"} (and optionally add a timestamp line).
+#'     \item Otherwise: a specific column name to return that column.
+#'   }
+#'   Matching is case-insensitive (internally uppercased).
+#' @param add_footr_tstamp If \code{TRUE}, add timestamp/source information as
+#'   the last line of the footnotes. Only applied when \code{select_type = "FOOTR"}.
+#' @param oid If not \code{NULL}, further filter by \code{OID == oid}.
+#'
+#' @return A data frame containing the selected row/columns.
+#'
+#' @details
+#' The input file must exist. Unsupported file extensions result in an error.
+#' For CSV sources, \code{sheet} is ignored.
 #'
 #' @examples
 #' \dontrun{
-#' (1) To get titles:  tflmetaR(filename, "Sheet1", by_value="t_dm", select_type="title")
-#' (2) To get footers: tflmetaR(filename, "Sheet1", by_value="t_dm", select_type="footr")
-#' (3) To get a specific cell value, i.e., SOURCE:
-#'       tflmetaR(filename, "Sheet1", by_value="t_dm", select_type="source")
-#' (4) To get the whole row: tflmetaR(filename, "Sheet1", by_value="t_dm")
+#' # Excel:
+#' # (1) Get titles
+#' tflmetaR("metadata.xlsx", sheet = 1, by_value = "t_dm", select_type = "TITLE")
+#'
+#' # (2) Get footnotes
+#' tflmetaR("metadata.xlsx", sheet = "Sheet1", by_value = "t_dm", select_type = "FOOTR")
+#'
+#' # (3) Get a specific column sheet, e.g., SOURCE
+#' tflmetaR("metadata.xlsx", sheet_name = "Sheet1", by_value = "t_dm", select_type = "SOURCE")
+#'
+#' # (4) Get the whole row
+#' tflmetaR("metadata.xlsx", sheet = "Sheet1", by_value = "t_dm")
+#'
+#' # CSV:
+#' tflmetaR("metadata.csv", by_value = "t_dm", select_type = "TITLE")
 #' }
-tflmetaR <- function(xlfile,
-                   sheet_name,
-                   by_column="PGMNAME",
-                   by_value,
-                   select_type=NULL,
-                   add_footr_tstamp=TRUE,
-                   oid=NULL) {
-  read_xlfile(xlfile, sheet_name) %>%
-    select_row(by_column, by_value, oid) %>%
-    select_cols(select_type, add_footr_tstamp)
+#'
+#' @export
+tflmetaR <- function(file,
+                     sheet = NULL,
+                     by_column = "PGMNAME",
+                     by_value,
+                     select_type = NULL,
+                     add_footr_tstamp = TRUE,
+                     oid = NULL) {
+  if (!file.exists(file)) {
+    stop("File does not exist: ", file)
+  }
+
+  ext <- tolower(tools::file_ext(file))
+
+  data <- switch(
+    ext,
+    "xlsx" = readxl::read_excel(file, sheet = sheet),
+    "xls"  = readxl::read_excel(file, sheet = sheet),
+    "csv"  = utils::read.csv(file, stringsAsFactors = FALSE, check.names = FALSE),
+    stop("Unsupported file type. Only .xlsx, .xls, and .csv are allowed.")
+  )
+
+  colnames(data) <- toupper(colnames(data))
+  required_cols <- c("PGMNAME", "TTL1", "FOOT1", "SOURCE")
+
+  if (!all(required_cols %in% colnames(data)))
+    stop("Input file has required column(s) missing.\n")
+
+
+  data |>
+    tflmetaR::select_row(by_column, by_value, oid) %>%
+    tflmetaR::select_cols(select_type, add_footr_tstamp)
 }
 
 
