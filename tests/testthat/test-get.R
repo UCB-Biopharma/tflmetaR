@@ -26,10 +26,10 @@ test_that("get_title uses select_with_name when pname is provided", {
   expect_named(result, c("TTL1", "POPULATION"))
 })
 
-test_that("get_title uses select_with_number when pname is NULL", {
+test_that("get_title uses select_row when pname is NULL", {
   df <- data.frame(TTL1 = "Title", POPULATION = "Test")
-  mock_select_with_number <- mock(df)
-  stub(get_title, "select_with_number", mock_select_with_number)
+  mock_select_row <- mock(df)
+  stub(get_title, "select_row", mock_select_row)
 
   result <- get_title(df = df, tnumber = "Title")
   expect_true(is.data.frame(result))
@@ -38,8 +38,8 @@ test_that("get_title uses select_with_number when pname is NULL", {
 
 test_that("get_title filters out NA columns", {
   df <- data.frame(TTL1 = "Title", TTL2 = NA, POPULATION = "Pop")
-  mock_select_with_number <- mock(df)
-  stub(get_title, "select_with_number", mock_select_with_number)
+  mock_select_row <- mock(df)
+  stub(get_title, "select_row", mock_select_row)
 
   result <- get_title(df = df, tnumber = "Title")
   expect_true("TTL1" %in% names(result))
@@ -69,10 +69,10 @@ test_that("get_footnote uses select_with_name when pname is provided", {
   #expect_equal(result$FOOT1, "Footnote")
 })
 
-test_that("get_footnote uses select_with_number when pname is NULL", {
+test_that("get_footnote uses select_row when pname is NULL", {
   df <- data.frame(FOOT1 = "Note", FOOT2 = "Another note")
-  mock_select_with_number <- mock(df)
-  stub(get_footnote, "select_with_number", mock_select_with_number)
+  mock_select_row <- mock(df)
+  stub(get_footnote, "select_row", mock_select_row)
 
   result <- get_footnote(df = df, tnumber = "001", add_footr_tstamp=FALSE)
   expect_true(is.data.frame(result))
@@ -81,8 +81,8 @@ test_that("get_footnote uses select_with_number when pname is NULL", {
 
 test_that("get_footnote filters out NA footnote columns", {
   df <- data.frame(FOOT1 = "Footnote", FOOT2 = NA)
-  mock_select_with_number <- mock(df)
-  stub(get_footnote, "select_with_number", mock_select_with_number)
+  mock_select_row <- mock(df)
+  stub(get_footnote, "select_row", mock_select_row)
 
   result <- get_footnote(df = df, tnumber = "X", add_footr_tstamp=FALSE)
   expect_true("FOOT1" %in% names(result))
@@ -179,10 +179,10 @@ test_that("get_pop uses select_with_name when pname is provided", {
   expect_named(result, "POPULATION")
 })
 
-test_that("get_pop uses select_with_number when pname is NULL", {
+test_that("get_pop uses select_row when pname is NULL", {
   df <- data.frame(TTL1 = "Title", POPULATION = "Test Population")
-  mock_select_with_number <- mock(df)
-  stub(get_pop, "select_with_number", mock_select_with_number)
+  mock_select_row <- mock(df)
+  stub(get_pop, "select_row", mock_select_row)
 
   result <- get_pop(df = df, tnumber = "Title")
   expect_true(is.data.frame(result))
@@ -191,8 +191,8 @@ test_that("get_pop uses select_with_number when pname is NULL", {
 
 test_that("get_pop returns only POPULATION column", {
   df <- data.frame(TTL1 = "Title", TTL2 = "Subtitle", POPULATION = "ITT Population", FOOT1 = "Note")
-  mock_select_with_number <- mock(df)
-  stub(get_pop, "select_with_number", mock_select_with_number)
+  mock_select_row <- mock(df)
+  stub(get_pop, "select_row", mock_select_row)
 
   result <- get_pop(df = df, tnumber = "Title")
   expect_true("POPULATION" %in% names(result))
@@ -203,8 +203,8 @@ test_that("get_pop returns only POPULATION column", {
 
 test_that("get_pop filters out NA population", {
   df <- data.frame(TTL1 = "Title", POPULATION = NA)
-  mock_select_with_number <- mock(df)
-  stub(get_pop, "select_with_number", mock_select_with_number)
+  mock_select_row <- mock(df)
+  stub(get_pop, "select_row", mock_select_row)
 
   result <- get_pop(df = df, tnumber = "Title")
   expect_equal(ncol(result), 0)
@@ -232,10 +232,10 @@ test_that("get_byline uses select_with_name when pname is provided", {
   expect_named(result, "BYLINE1")
 })
 
-test_that("get_byline uses select_with_number when pname is NULL", {
+test_that("get_byline uses select_row when pname is NULL", {
   df <- data.frame(BYLINE1 = "Author", BYLINE2 = "Institution")
-  mock_select_with_number <- mock(df)
-  stub(get_byline, "select_with_number", mock_select_with_number)
+  mock_select_row <- mock(df)
+  stub(get_byline, "select_row", mock_select_row)
 
   result <- get_byline(df = df, tnumber = "001")
   expect_true(is.data.frame(result))
@@ -244,8 +244,8 @@ test_that("get_byline uses select_with_number when pname is NULL", {
 
 test_that("get_byline filters out NA byline columns", {
   df <- data.frame(BYLINE1 = "Author", BYLINE2 = NA, BYLINE3 = "Institution")
-  mock_select_with_number <- mock(df)
-  stub(get_byline, "select_with_number", mock_select_with_number)
+  mock_select_row <- mock(df)
+  stub(get_byline, "select_row", mock_select_row)
 
   result <- get_byline(df = df, tnumber = "any")
   expect_named(result, c("BYLINE1", "BYLINE3"))
@@ -254,8 +254,8 @@ test_that("get_byline filters out NA byline columns", {
 
 test_that("get_byline returns only BYLINE* columns", {
   df <- data.frame(TTL1 = "Title", BYLINE1 = "Author", POPULATION = "ITT", FOOT1 = "Note")
-  mock_select_with_number <- mock(df)
-  stub(get_byline, "select_with_number", mock_select_with_number)
+  mock_select_row <- mock(df)
+  stub(get_byline, "select_row", mock_select_row)
 
   result <- get_byline(df = df, tnumber = "Title")
   expect_true("BYLINE1" %in% names(result))
@@ -266,8 +266,8 @@ test_that("get_byline returns only BYLINE* columns", {
 
 test_that("get_byline handles no BYLINE columns gracefully", {
   df <- data.frame(TTL1 = "Title", POPULATION = "ITT")
-  mock_select_with_number <- mock(df)
-  stub(get_byline, "select_with_number", mock_select_with_number)
+  mock_select_row <- mock(df)
+  stub(get_byline, "select_row", mock_select_row)
 
   result <- get_byline(df = df, tnumber = "Title")
   expect_equal(ncol(result), 0)
@@ -295,10 +295,10 @@ test_that("get_pgmname uses select_with_name when pname is provided", {
   expect_named(result, "PGMNAME")
 })
 
-test_that("get_pgmname uses select_with_number when pname is NULL", {
+test_that("get_pgmname uses select_row when pname is NULL", {
   df <- data.frame(PGMNAME = "t_dm", TTL1 = "Title")
-  mock_select_with_number <- mock(df)
-  stub(get_pgmname, "select_with_number", mock_select_with_number)
+  mock_select_row <- mock(df)
+  stub(get_pgmname, "select_row", mock_select_row)
 
   result <- get_pgmname(df = df, tnumber = "Table 1.1")
   expect_true(is.data.frame(result))
@@ -307,8 +307,8 @@ test_that("get_pgmname uses select_with_number when pname is NULL", {
 
 test_that("get_pgmname returns only PGMNAME column", {
   df <- data.frame(TTL1 = "Title", PGMNAME = "t_dm", POPULATION = "ITT", FOOT1 = "Note")
-  mock_select_with_number <- mock(df)
-  stub(get_pgmname, "select_with_number", mock_select_with_number)
+  mock_select_row <- mock(df)
+  stub(get_pgmname, "select_row", mock_select_row)
 
   result <- get_pgmname(df = df, tnumber = "Table 1.1")
   expect_true("PGMNAME" %in% names(result))
@@ -319,8 +319,8 @@ test_that("get_pgmname returns only PGMNAME column", {
 
 test_that("get_pgmname filters out NA program names", {
   df <- data.frame(TTL1 = "Title", PGMNAME = NA)
-  mock_select_with_number <- mock(df)
-  stub(get_pgmname, "select_with_number", mock_select_with_number)
+  mock_select_row <- mock(df)
+  stub(get_pgmname, "select_row", mock_select_row)
 
   result <- get_pgmname(df = df, tnumber = "Title")
   expect_equal(ncol(result), 0)
@@ -341,7 +341,7 @@ test_that("get_source throws error when neither pname nor tnumber is provided", 
 test_that("get_source uses select_with_name when pname is provided", {
   df <- data.frame(SOURCE1 = "Source info", SOURCE2 = NA)
   mock_select_with_name <- mock(df)
-  stub(get_source, "select_with_name", mock_select_with_name)
+  stub(get_source, "select_row", mock_select_with_name)
 
   result <- get_source(df = df, pname = "my_program", oid = NULL)
   expect_true(is.data.frame(result))
@@ -349,10 +349,10 @@ test_that("get_source uses select_with_name when pname is provided", {
   #expect_equal(result$SOURCE1, "Source info")
 })
 
-test_that("get_source uses select_with_number when pname is NULL", {
+test_that("get_source uses select_row when pname is NULL", {
   df <- data.frame(SOURCE1 = "Generated data", SOURCE2 = "External")
-  mock_select_with_number <- mock(df)
-  stub(get_source, "select_with_number", mock_select_with_number)
+  mock_select_row <- mock(df)
+  stub(get_source, "select_row", mock_select_row)
 
   result <- get_source(df = df, tnumber = "001")
   expect_true(is.data.frame(result))
@@ -361,8 +361,8 @@ test_that("get_source uses select_with_number when pname is NULL", {
 
 test_that("get_source filters out NA source columns", {
   df <- data.frame(SOURCE1 = "One", SOURCE2 = NA, SOURCE3 = "Two")
-  mock_select_with_number <- mock(df)
-  stub(get_source, "select_with_number", mock_select_with_number)
+  mock_select_row <- mock(df)
+  stub(get_source, "select_row", mock_select_row)
 
   result <- get_source(df = df, tnumber = "any")
   expect_named(result, c("SOURCE1", "SOURCE3"))

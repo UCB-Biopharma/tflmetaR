@@ -44,9 +44,9 @@ get_bookm <- function(df = NULL,
 
   # select either on program nmae of TFL number
   if (!is.null(pname)) {
-    row <- select_with_name(df = df, pname = pname, oid = oid)
+    row <- select_row(df, by_column = "PGMNAME", by_value = pname, oid = oid)
   } else if (!is.null(tnumber)) {
-    row <- select_with_number(df = df, tnumber = tnumber)
+    row <- select_row(df, by_column = "TTL1", by_value = tnumber)
   } else {
     stop("Either `pname` or `tnumber` must be provided.")
   }

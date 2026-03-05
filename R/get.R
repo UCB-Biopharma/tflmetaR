@@ -20,13 +20,14 @@ get_title <- function(df = NULL,
   if (is.null(df)) stop("Input dataframe error! Check the input data and try again. \n")
 
   if (is.null(pname) & is.null(tnumber)) stop("Need to provide either a program name or TFL number to select row.\n")
-  # select either on program nmae of TFL number
+  # select either on program name of TFL number
   if (!is.null(pname)) {
-    title_list <- select_with_name(df = df, pname = pname, oid = oid)
+    title_list <- select_row(df, by_column = "PGMNAME", by_value = pname, oid = oid)
   } else {
-    title_list <- select_with_number(df = df, tnumber = tnumber)
+    title_list <- select_row(df, by_column = "TTL1", by_value = tnumber)
   }
   # select only title, subtitle(s) and population.
+  select_cols(title_list, select_type="TITLE")
   filtered_list <- title_list |>
     dplyr::select(starts_with("TTL"), POPULATION)
   t_list <- Filter(function(x) !is.na(x), filtered_list)
@@ -57,9 +58,9 @@ get_footnote <- function(df = NULL,
 
   # select either on program nmae of TFL number
   if (!is.null(pname)) {
-    footnote_list <- select_with_name(df = df, pname = pname, oid = oid)
+    footnote_list <- select_row(df, by_column = "PGMNAME", by_value = pname, oid = oid)
   } else {
-    footnote_list <- select_with_number(df = df, tnumber = tnumber)
+    footnote_list <- select_row(df, by_column = "TTL1", by_value = tnumber)
   }
   # select only footnotes
   filtered_list <- footnote_list |>
@@ -157,9 +158,9 @@ get_pop <- function(df = NULL,
 
   # select either on program nmae of TFL number
   if (!is.null(pname)) {
-    pop_list <- select_with_name(df = df, pname = pname, oid = oid)
+    pop_list <- select_row(df, by_column = "PGMNAME", by_value = pname, oid = oid)
   } else {
-    pop_list <- select_with_number(df = df, tnumber = tnumber)
+    pop_list <- select_row(df, by_column = "TTL1", by_value = tnumber)
   }
   # select only population
   filtered_list <- pop_list |>
@@ -189,9 +190,9 @@ get_byline <- function(df = NULL,
 
   # select either on program nmae of TFL number
   if (!is.null(pname)) {
-    byline_list <- select_with_name(df = df, pname = pname, oid = oid)
+    byline_list <- select_row(df, by_column = "PGMNAME", by_value = pname, oid = oid)
   } else {
-    byline_list <- select_with_number(df = df, tnumber = tnumber)
+    byline_list <- select_row(df, by_column = "TTL1", by_value = tnumber)
   }
   # select only byline
   filtered_list <- byline_list |>
@@ -221,9 +222,9 @@ get_pgmname <- function(df = NULL,
 
   # select either on program name or TFL number
   if (!is.null(pname)) {
-    pgmname_list <- select_with_name(df = df, pname = pname, oid = oid)
+    pgmname_list <- select_row(df, by_column = "PGMNAME", by_value = pname, oid = oid)
   } else {
-    pgmname_list <- select_with_number(df = df, tnumber = tnumber)
+    pgmname_list <- select_row(df, by_column = "TTL1", by_value = tnumber)
   }
   # select only program name
   filtered_list <- pgmname_list |>
@@ -253,9 +254,9 @@ get_source <- function(df = NULL,
 
   # select either on program nmae of TFL number
   if (!is.null(pname)) {
-    source_list <- select_with_name(df = df, pname = pname, oid = oid)
+    source_list <- select_row(df, by_column = "PGMNAME", by_value = pname, oid = oid)
   } else {
-    source_list <- select_with_number(df = df, tnumber = tnumber)
+    source_list <- select_row(df, by_column = "TTL1", by_value = tnumber)
   }
   # select only footnotes
   filtered_list <- source_list |>
