@@ -211,7 +211,7 @@ We read the titles and header information from an Excel spreadsheet.
 
 file_name <- system.file("extdata", "st_titles.xls", package = "tflmetaR")
 title_file <- tflmetaR::read_tfile(filename = file_name, sheetname = "Sheet1")
-header_file <- tflmetaR::read_tfile(filename = file_name, sheetname = "Headr")
+header_file <- tflmetaR::read_tfile(filename = file_name, sheetname = "Headr",                                          validate = FALSE)
 
 fig_number <- "Figure F01"
 ```

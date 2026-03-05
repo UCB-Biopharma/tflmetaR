@@ -5,8 +5,8 @@
 \title{Retrieve titles and footnotes from a metadata file}
 \usage{
 tflmetaR(
-  file,
-  sheet = NULL,
+  filename,
+  sheetname = NULL,
   by_column = "PGMNAME",
   by_value,
   select_type = NULL,
@@ -15,10 +15,10 @@ tflmetaR(
 )
 }
 \arguments{
-\item{file}{A file path to the metadata source. Supported extensions are
+\item{filename}{A file path to the metadata source. Supported extensions are
 \code{.xls}, \code{.xlsx}, and \code{.csv}.}
 
-\item{sheet}{Sheet name to read when \code{file} is an Excel file.
+\item{sheetname}{Sheet name to read when \code{file} is an Excel file.
 Ignored when \code{file} is a CSV.}
 
 \item{by_column}{Column name used to filter the appropriate titles and

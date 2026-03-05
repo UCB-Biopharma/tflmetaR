@@ -18,7 +18,6 @@ Imports:
     dplyr,
     jsonlite,
     magrittr,
-    readr,
     readxl,
     writexl
 Suggests: 

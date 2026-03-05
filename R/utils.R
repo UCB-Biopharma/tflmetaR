@@ -1,114 +1,105 @@
-#' Read Title and Footnote Metadata from an Excel File
+#' Reads metadata from an Excel (`.xlsx`, `.xls`) or CSV (`.csv`) file and
+#' standardizes column names to uppercase. The function also validates that
+#' required metadata columns are present in the input file.
 #'
-#' Reads and validates an Excel file containing header and footer information for
-#' clinical tables, figures, or listings (TFLs). The function supports reading from
-#' a specific sheet (e.g., "header") or the default sheet.
-#'
-#' @param filename A character string specifying the path to the Excel file.
-#' @param sheetname Optional. A character string specifying the sheet name to read.
-#' If `"header"`, only the first row is read (`n_max = 1`). If `NULL`, the default sheet is read.
+#' @param filename A character string specifying the path to the metadata file.
+#'   Supported formats are `.xlsx`, `.xls`, and `.csv`.
+#' @param sheetname For Excel files, the name or index of the worksheet to read.
+#'   Ignored when reading CSV files. Default is `NULL`, which uses the first
+#'   sheet.
+#' @param validate Logical. If `TRUE` (default), the function checks that required
+#'   metadata columns are present.
 #' @param ... Additional arguments passed to [readxl::read_excel()].
+#'   For CSV files, ... is ignored.
 #'
-#' @return A data frame with column names converted to uppercase. If `sheetname` is `NULL`,
-#' the returned data frame is validated to ensure it contains the required columns:
-#' `"PGMNAME"`, `"TTL1"`, `"SOURCE"`, and `"FOOT1"`.
+#' @return A data frame containing the metadata with column names converted
+#'   to uppercase.
+#'
 #'
 #' @details
-#' The function performs the following steps:
-#' - Validates the file path
-#' - Reads the Excel sheet using `readxl::read_excel()`
-#' - Converts all column names to uppercase
-#' - If reading the full sheet (not just header), validates that required columns are present
+#' The input metadata file must contain the following required columns:
+#' \describe{
+#'   \item{PGMNAME}{Program name associated with the TFL output.}
+#'   \item{TTL1}{Primary title text.}
+#'   \item{FOOT1}{Primary footnote text.}
+#'   \item{SOURCE}{Source description for the output.}
+#' }
+#'
+#' If `validate = TRUE` and any required column is missing, the function
+#' stops with an error.
 #'
 #' @examples
 #' \dontrun{
+#' filename <- system.file(
+#'    "extdata",
+#'    "st_titles.xls",
+#'    package = "tflmetaR"
+#'  )
 #' # Read from the 'header' sheet
-#' df_header <- read_tfile("titles_and_footnotes.xlsx", sheetname = "header")
-#'
-#' # Read the default sheet
-#' df_all <- read_tfile("titles_and_footnotes.xlsx")
+#' data <- read_tfile(filename, sheetname = "header")
 #' }
 #'
-#' @importFrom readxl read_excel
+#'
 #' @export
-read_tfile <- function(filename = NULL,
-                        sheetname = NULL, ...) {
-  if (!file.exists(filename)) stop("Input header_footer file does not exist! Check the filename and/or pathname and try again. \n", filename)
-
-  tfile <- tryCatch(
-    {
-      if (sheetname == "header") {
-        readxl::read_excel(filename, sheet = sheetname, n_max = 1, ...)
-        } else {
-          readxl::read_excel(filename, sheet = sheetname, ...)
-        }
-    },
-    error = function(e) {
-      message("An error occurred: ", e$message)
-    }
-  )
-  # check the read result
-  if (is.null(tfile)) {
-    stop("Failed to read the sheet. Please check the file and sheet name.")
-  } else {
-    colnames(tfile) <- toupper(colnames(tfile))
-    required_cols <- c("PGMNAME", "TTL1", "SOURCE", "FOOT1")
-    if (is.null(sheetname) & !all(required_cols %in% colnames(tfile))) {
-      stop("Input file misses required column(s).\n")
-    }
-  return(tfile)
+read_tfile <- function(filename, sheetname = NULL, validate = TRUE, ...) {
+  if (!is.character(filename) || length(filename) != 1L || is.na(filename) || filename == "") {
+    stop("`filename` must be a non-empty character string.", call. = FALSE)
   }
+
+  if (!file.exists(filename)) {
+    stop("File does not exist: ", filename, call. = FALSE)
+  }
+
+  ext <- tolower(tools::file_ext(filename))
+  required_cols <- c("PGMNAME", "TTL1", "FOOT1", "SOURCE")
+
+  data <- switch(
+    ext,
+    "xlsx" = readxl::read_excel(filename, sheet = sheetname, ...),
+    "xls"  = readxl::read_excel(filename, sheet = sheetname, ...),
+    "csv"  = read_tfile_csv(filename),
+    stop("Unsupported file type. Only .xlsx, .xls, and .csv are allowed.", call. = FALSE)
+  )
+
+  # Standardize column names to uppercase
+  names(data) <- toupper(names(data))
+
+  if (isTRUE(validate)) {
+    check_required_cols(data, required_cols)
+  }
+
+  data
 }
 
-#' Read Title and Footnote Metadata from a CSV File
-#'
-#' Reads and validates a CSV file containing titles and footnotes for tables or figures,
-#' and returns a data frame with standardized column names.
-#'
-#' The function is typically used in reporting workflows to load external metadata
-#' (titles, subtitles, footnotes, source notes, etc.) into the analysis environment.
-#'
-#' @param filename A character string specifying the path to the CSV file.
-#'
-#' @return A data frame with column names converted to uppercase. The data frame should
-#' contain at least the following required columns: `"PGMNAME"`, `"TTL1"`, `"SOURCE"`, and `"FOOT1"`.
-#'
-#' @details
-#' This function performs the following steps:
-#' - Checks whether the file exists
-#' - Reads the CSV using `readr::read_csv()`
-#' - Converts all column names to uppercase
-#'
-#' If the file does not exist or cannot be read, the function will stop with an informative error.
-#'
-#' @examples
-#' \dontrun{
-#' # Read a metadata file
-#' df <- read_tfile_csv("data/titles_footnotes.csv")
-#' head(df)
-#' }
-#'
-#' @importFrom readr read_csv
-#' @export
-read_tfile_csv <- function(filename = NULL) {
-  if (!file.exists(filename)) stop("Input header_footer file does not exist! Check the filename and/or pathname and try again. \n", filename)
 
-  tfile <- tryCatch(
-    {
-      tfile <- read_csv(filename)
-    },
-    error = function(e) {
-      message("An error occurred: ", e$message)
-    }
-  )
-  # check the read result
-  if (is.null(tfile)) {
-    stop("Failed to read the sheet. Please check the file and sheet name.")
-  } else {
-    colnames(tfile) <- toupper(colnames(tfile))
-    required_cols <- c("PGMNAME", "TTL1", "SOURCE", "FOOT1")
-    return(tfile)
+#' Internal helper: read CSV metadata file
+#' @noRd
+read_tfile_csv <- function(filename) {
+  if (!file.exists(filename)) {
+    stop("File does not exist: ", filename, call. = FALSE)
   }
+  utils::read.csv(filename, stringsAsFactors = FALSE, check.names = FALSE)
 }
 
+
+#' @noRd
+check_required_cols <- function(data, required_cols) {
+  if (is.null(names(data))) {
+    stop("Input metadata must have column names.", call. = FALSE)
+  }
+
+  data_cols <- toupper(names(data))
+  required_cols <- toupper(required_cols)
+
+  missing_cols <- setdiff(required_cols, data_cols)
+
+  if (length(missing_cols) > 0) {
+    stop(
+      "Input metadata file has required column(s) missing: ",
+      paste(missing_cols, collapse = ", "),
+      call. = FALSE
+    )
+  }
+  invisible(TRUE)
+}
 

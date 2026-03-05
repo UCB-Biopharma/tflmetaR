@@ -6,9 +6,9 @@
 #' \code{by_value}, and optional \code{oid}, and finally selects the requested
 #' set of columns via \code{select_type}.
 #'
-#' @param file A file path to the metadata source. Supported extensions are
+#' @param filename A file path to the metadata source. Supported extensions are
 #'   \code{.xls}, \code{.xlsx}, and \code{.csv}.
-#' @param sheet Sheet name to read when \code{file} is an Excel file.
+#' @param sheetname Sheet name to read when \code{file} is an Excel file.
 #'   Ignored when \code{file} is a CSV.
 #' @param by_column Column name used to filter the appropriate titles and
 #'   footnotes. Default is \code{"PGMNAME"}.
@@ -52,37 +52,16 @@
 #' }
 #'
 #' @export
-tflmetaR <- function(file,
-                     sheet = NULL,
+tflmetaR <- function(filename,
+                     sheetname = NULL,
                      by_column = "PGMNAME",
                      by_value,
                      select_type = NULL,
                      add_footr_tstamp = TRUE,
                      oid = NULL) {
-  if (!file.exists(file)) {
-    stop("File does not exist: ", file)
-  }
-
-  ext <- tolower(tools::file_ext(file))
-
-  data <- switch(
-    ext,
-    "xlsx" = readxl::read_excel(file, sheet = sheet),
-    "xls"  = readxl::read_excel(file, sheet = sheet),
-    "csv"  = utils::read.csv(file, stringsAsFactors = FALSE, check.names = FALSE),
-    stop("Unsupported file type. Only .xlsx, .xls, and .csv are allowed.")
-  )
-
-  colnames(data) <- toupper(colnames(data))
-  required_cols <- c("PGMNAME", "TTL1", "FOOT1", "SOURCE")
-
-  if (!all(required_cols %in% colnames(data)))
-    stop("Input file has required column(s) missing.\n")
-
-
-  data |>
-    tflmetaR::select_row(by_column, by_value, oid) %>%
-    tflmetaR::select_cols(select_type, add_footr_tstamp)
+  read_tfile(filename, sheetname = sheetname) |>
+    select_row(by_column, by_value, oid) |>
+    select_cols(select_type, add_footr_tstamp)
 }
 
 

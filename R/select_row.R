@@ -13,19 +13,7 @@
 select_with_number <- function(df = list(),
                                type = NULL,
                                tnumber = NULL) {
-  if (is.null(type) & is.null(tnumber)) stop("Selection paramters can not be NULL.\n")
-
-  if (is.null(type)) {
-    footer_list <- df %>% dplyr::filter(TTL1 == tnumber)
-  } else {
-    footer_list <- df %>% dplyr::filter(TYPE == type & TTL1 == tnumber)
-  }
-
-  ## make sure only one unique entry is generated
-  if (nrow(footer_list) == 0) stop("No entry is generated. Check the title and footnote file and try again.\n")
-  if (nrow(footer_list) > 1) stop("Non unique entry generated. Check the title and footnote file and try again.\n")
-
-  return(footer_list)
+  select_row(df, by_column = "TTL1", by_value = tnumber)
 }
 
 utils::globalVariables("PGMNAME")
@@ -44,23 +32,7 @@ select_with_name <- function(df = list(),
                              pname = "",
                              oid = "") {
 
-  if (is.null(pname)) stop("tflmetaR::select_with_name: 'pname' is NULL")
-
-  footer_list <- df %>% dplyr::filter(PGMNAME == pname)
-  if (!is.null(oid)) {
-    footer_list <- dplyr::filter(footer_list, OID == oid)
-  }
-
-  ## make sure only one unique entry is generated
-  oid_msg <- if (!is.null(oid)) paste0(" and OID = '", oid, "'") else ""
-  if (nrow(footer_list) == 0)
-    stop(sprintf("tflmetaR::select_with_name: No matching entry found in the Excel file for PGMNAME = '%s'%s.",
-                 pname, oid_msg))
-  if (nrow(footer_list) > 1)
-    stop(sprintf("tflmetaR::select_with_name: Non unique entry generated from the Excel file for PGMNAME = '%s'%s.",
-                 pname, oid_msg))
-
-  return(footer_list)
+  select_row(df, by_column = "PGMNAME", by_value = pname, oid = oid)
 }
 
 

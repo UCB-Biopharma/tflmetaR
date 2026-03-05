@@ -30,7 +30,7 @@ select_row <- function(data, by_column, by_value, oid=NULL) {
     stop("`by_column` not found in data: ", by_column, call. = FALSE)
   }
 
-  df <- data[data[[by_column]] == by_value, , drop = FALSE]
+  df <- data[data[[by_column]] %in% by_value, , drop = FALSE]
 
   if (!is.null(oid)) {
     if (!"OID" %in% names(df)) {

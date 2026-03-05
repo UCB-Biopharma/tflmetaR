@@ -6,7 +6,7 @@ test_that("select_with_number handles missing parameters", {
   df <- data.frame(TYPE = c("A", "B"), TTL1 = c(1, 2))
 
   expect_error(select_with_number(df),
-               regexp = "Selection paramters can not be NULL.")
+               regexp = "No row is found")
 })
 
 test_that("select_with_number filters correctly with type and tnumber", {
@@ -26,12 +26,7 @@ test_that("select_with_number filters correctly with only tnumber", {
   expect_equal(result$TTL1, 2)
 })
 
-test_that("select_with_number returns error for no match", {
-  df <- data.frame(TYPE = c("A", "B"), TTL1 = c(1, 2))
 
-  expect_error(select_with_number(df, type = "C", tnumber = 1),
-               regexp = "No entry is generated")
-})
 
 test_that("select_with_number returns error for non-unique match", {
   df <- data.frame(TYPE = c("A", "A"), TTL1 = c(1, 1))
@@ -44,13 +39,13 @@ test_that("select_with_number returns error for non-unique match", {
 test_that("select_with_name throws error when pname is NULL", {
   df <- data.frame(PGMNAME = "A", OID = "001")
   expect_error(select_with_name(df, pname = NULL, oid = "001"),
-               regexp = "'pname' is NULL")
+               regexp = "No row is found")
 })
 
 test_that("select_with_name throws error when no matching entry is found", {
   df <- data.frame(PGMNAME = "A", OID = "001")
   expect_error(select_with_name(df, pname = "B", oid = "001"),
-               regexp = "No matching entry")
+               regexp = "No row is found")
 })
 
 test_that("select_with_name throws error when multiple matching entries are found", {

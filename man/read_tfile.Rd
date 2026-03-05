@@ -2,44 +2,57 @@
 % Please edit documentation in R/utils.R
 \name{read_tfile}
 \alias{read_tfile}
-\title{Read Title and Footnote Metadata from an Excel File}
+\title{Reads metadata from an Excel (\code{.xlsx}, \code{.xls}) or CSV (\code{.csv}) file and
+standardizes column names to uppercase. The function also validates that
+required metadata columns are present in the input file.}
 \usage{
-read_tfile(filename = NULL, sheetname = NULL, ...)
+read_tfile(filename, sheetname = NULL, validate = TRUE, ...)
 }
 \arguments{
-\item{filename}{A character string specifying the path to the Excel file.}
+\item{filename}{A character string specifying the path to the metadata file.
+Supported formats are \code{.xlsx}, \code{.xls}, and \code{.csv}.}
 
-\item{sheetname}{Optional. A character string specifying the sheet name to read.
-If \code{"header"}, only the first row is read (\code{n_max = 1}). If \code{NULL}, the default sheet is read.}
+\item{sheetname}{For Excel files, the name or index of the worksheet to read.
+Ignored when reading CSV files. Default is \code{NULL}, which uses the first
+sheet.}
 
-\item{...}{Additional arguments passed to \code{\link[readxl:read_excel]{readxl::read_excel()}}.}
+\item{validate}{Logical. If \code{TRUE} (default), the function checks that required
+metadata columns are present.}
+
+\item{...}{Additional arguments passed to \code{\link[readxl:read_excel]{readxl::read_excel()}}.
+For CSV files, ... is ignored.}
 }
 \value{
-A data frame with column names converted to uppercase. If \code{sheetname} is \code{NULL},
-the returned data frame is validated to ensure it contains the required columns:
-\code{"PGMNAME"}, \code{"TTL1"}, \code{"SOURCE"}, and \code{"FOOT1"}.
+A data frame containing the metadata with column names converted
+to uppercase.
 }
 \description{
-Reads and validates an Excel file containing header and footer information for
-clinical tables, figures, or listings (TFLs). The function supports reading from
-a specific sheet (e.g., "header") or the default sheet.
+Reads metadata from an Excel (\code{.xlsx}, \code{.xls}) or CSV (\code{.csv}) file and
+standardizes column names to uppercase. The function also validates that
+required metadata columns are present in the input file.
 }
 \details{
-The function performs the following steps:
-\itemize{
-\item Validates the file path
-\item Reads the Excel sheet using \code{readxl::read_excel()}
-\item Converts all column names to uppercase
-\item If reading the full sheet (not just header), validates that required columns are present
+The input metadata file must contain the following required columns:
+\describe{
+\item{PGMNAME}{Program name associated with the TFL output.}
+\item{TTL1}{Primary title text.}
+\item{FOOT1}{Primary footnote text.}
+\item{SOURCE}{Source description for the output.}
 }
+
+If \code{validate = TRUE} and any required column is missing, the function
+stops with an error.
 }
 \examples{
 \dontrun{
+filename <- system.file(
+   "extdata",
+   "st_titles.xls",
+   package = "tflmetaR"
+ )
 # Read from the 'header' sheet
-df_header <- read_tfile("titles_and_footnotes.xlsx", sheetname = "header")
-
-# Read the default sheet
-df_all <- read_tfile("titles_and_footnotes.xlsx")
+data <- read_tfile(filename, sheetname = "header")
 }
+
 
 }

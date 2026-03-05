@@ -23,8 +23,8 @@ test_that("alias_mapping() maps headers and preserves data", {
 
   change_colname(input_xlsx, output_xlsx, config_path)
 
-  actual   <- read_excel(output_xlsx)
-  expected <- read_excel(exp_path)
+  actual   <- readxl::read_excel(output_xlsx)
+  expected <- readxl::read_excel(exp_path)
 
   # Compare column names
   expect_identical(names(actual), names(expected))
@@ -103,8 +103,8 @@ test_that("map_excel_headers() is idempotent", {
   invisible(change_colname(input_xlsx, tmp1, config_path))
   invisible(change_colname(tmp1, tmp2, config_path))
 
-  df1 <- read_excel(tmp1)
-  df2 <- read_excel(tmp2)
+  df1 <- readxl::read_excel(tmp1)
+  df2 <- readxl::read_excel(tmp2)
 
   expect_identical(names(df1), names(df2))
   expect_identical(
