@@ -4,22 +4,20 @@
 \alias{get_pop}
 \title{Extract Population Metadata}
 \usage{
-get_pop(df = NULL, type = NULL, tnumber = NULL, pname = NULL, oid = NULL)
+get_pop(df, tnumber = NULL, pname = NULL, oid = NULL)
 }
 \arguments{
-\item{df}{A data frame or tibble of title and footnote metadata.}
+\item{df}{A data frame or tibble containing title and footnote metadata.}
 
-\item{type}{Optional. A character string indicating the TFL type.}
+\item{tnumber}{Optional TFL number.}
 
-\item{tnumber}{Optional. TFL number.}
+\item{pname}{Optional program name.}
 
-\item{pname}{Optional. Program name.}
-
-\item{oid}{Optional. Object ID.}
+\item{oid}{Optional object ID.}
 }
 \value{
-A named list containing the population field.
+A named list of non-missing population field.
 }
 \description{
-Retrieves population field from the metadata.
+Retrieves population field from metadata for a specified program name or TFL number.
 }

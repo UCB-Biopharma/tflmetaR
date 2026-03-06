@@ -18,31 +18,31 @@
 #'
 #' @examples
 #' \dontrun{
-#' select_row(metadata_df, by_column = "PGMNAME", by_value = "t_dm", oid = "T001")
+#' select_row(data, by_column = "PGMNAME", by_value = "t_dm")
 #' }
 #'
-#' @export
+#' @noRd
 select_row <- function(data, by_column, by_value, oid=NULL) {
   if (!is.character(by_column) || length(by_column) != 1) {
-    stop("`by_column` must be a single character string.", call. = FALSE)
+    stop("`by_column` must be a single character string", call. = FALSE)
   }
   if (!by_column %in% names(data)) {
-    stop("`by_column` not found in data: ", by_column, call. = FALSE)
+    stop("Column `", by_column, "` is not present in `data`", call. = FALSE)
   }
 
   df <- data[data[[by_column]] %in% by_value, , drop = FALSE]
 
   if (!is.null(oid)) {
     if (!"OID" %in% names(df)) {
-      stop("Column `OID` not found in data but `oid` was provided.", call. = FALSE)
+      stop("`oid` was supplied but column `OID` is missing from `data`", call. = FALSE)
     }
     df <- df[df[["OID"]] == oid, , drop = FALSE]
   }
 
   if (nrow(df) == 0) {
-    stop("No row is found. Check the title and footnote file and try again.\n")
+    stop("No rows match the specified criteria", call. = FALSE)
   } else if (nrow(df) > 1) {
-    stop("Non unique entry generated. Check the title and footnote file and try again.\n")
+    stop("Expected exactly one matching row, but found ", nrow(df), call. = FALSE)
   }
   df
 }
@@ -53,55 +53,103 @@ select_row <- function(data, by_column, by_value, oid=NULL) {
 #' (e.g., titles, footnotes, or a named column). Optionally appends a timestamp to footnotes.
 #'
 #' @param data A data frame containing metadata (e.g., titles, footnotes, sources).
-#' @param select_type A string indicating the type of columns to select. Can be `"TITLE"`,
-#' `"FOOTR"`, or a specific column name. If `NULL`, all columns are returned.
+#' @param select_type A character string indicating which columns to return.
+#'   If `NULL`, all columns are returned.
+#'   If `"TITLE"`, columns starting with `"TTL"` and `"POPULATION"` are returned.
+#'   If `"FOOTR"`, columns starting with `"FOOT"` are returned.
+#'   If `select_type` matches a column name exactly, that column is returned.
+#'   Otherwise, columns whose names start with `select_type` are returned.
 #' @param add_footr_tstamp Logical or a function. If `TRUE`, a function named `add_footr_tstamp()`
 #' is called to append timestamps to footnotes. Defaults to `TRUE`.
 #'
 #' @return A list of selected columns from the input data, with `NA` values removed.
 #'
-#' @details
-#' - If `select_type` is `"TITLE"`, selects all columns starting with `"TTL"` and the `POPULATION` column.
-#' - If `"FOOTR"`, selects columns starting with `"FOOT"` and optionally appends timestamp from `SOURCE`.
-#' - If a specific column name is provided, attempts to select it directly.
-#' - If `select_type` is `NULL`, returns all columns.
-#'
 #' @examples
 #' \dontrun{
-#' select_cols(metadata_df, select_type = "TITLE")
-#' select_cols(metadata_df, select_type = "FOOTR", add_footr_tstamp = TRUE)
-#' select_cols(metadata_df, select_type = "PGMNAME")
+#' select_cols(data, select_type = "TITLE")
+#' select_cols(data, select_type = "FOOTR")
+#' select_cols(data, select_type = "PGMNAME")
 #' }
 #'
-#' @importFrom dplyr select starts_with all_of
-#' @export
-select_cols <- function(data, select_type, add_footr_tstamp=TRUE) {
-  type <- toupper(select_type);
-  cols <- NULL;
+#' @noRd
+select_cols <- function(data, select_type, add_footr_tstamp = TRUE) {
+  stopifnot(is.data.frame(data))
+  cols <- NULL
 
   if (is.null(select_type)) {
     cols <- data
-  } else if (type=="TITLE") {
-    cols <- data |> select(starts_with("TTL"), POPULATION)
-  } else if (type=="FOOTR") {
-    cols <- data |> select(starts_with("FOOT"))
 
-    if (!is.null(add_footr_tstamp) && add_footr_tstamp) {
-      src <- ""
-      if ("SOURCE" %in% names(data)) src <- data |> select(SOURCE)
-
-      pgmname <- ""
-      if ("PGMNAME" %in% names(data)) pgmname <- data |> select(PGMNAME)
-
-      cols$source <- get_footr_tstamp(unlist(pgmname), unlist(src))
-    }
   } else {
-    cols <- data |> dplyr::select(all_of(type))
+    type <- toupper(select_type)
+
+    if (type == "TITLE") {
+      cols <- select_starts_with(data, "TTL", keep_cols = "POPULATION")
+
+    } else if (type == "FOOTR") {
+      cols <- select_starts_with(data, "FOOT")
+
+      if (isTRUE(add_footr_tstamp)) {
+        src <- if ("SOURCE" %in% names(data)) data[["SOURCE"]][1] else ""
+        pgmname <- if ("PGMNAME" %in% names(data)) data[["PGMNAME"]][1] else ""
+
+        cols$source <- include_footr_tstamp(pgmname, src)
+      }
+
+    } else if (type %in% names(data)) {
+      cols <- data[type]
+
+    } else {
+      cols <- select_starts_with(data, type)
+    }
   }
 
-  out <- Filter(function(x) !all(is.na(x)), cols)
-  out
+  cols[!vapply(cols, function(x) all(is.na(x)), logical(1))]
 }
 
+#' Helper
+#' @noRd
+include_footr_tstamp <- function(pgmname_str, src_str) {
+  stopifnot(is.character(pgmname_str), length(pgmname_str) == 1)
+  stopifnot(is.character(src_str), length(src_str) == 1)
 
+  runtime_stamp <- format(Sys.time(), "%Y-%m-%d %H:%M:%S")
+  sprintf(
+    "Generated from %s on %s Data Source(s): %s",
+    pgmname_str,
+    runtime_stamp,
+    src_str
+  )
+}
 
+#' Return columns whose names start with a prefix, optionally keeping other columns
+#'
+#' @examples
+#' \dontrun{
+#' select_starts_with(data, "TTL", keep_cols = "POPULATION")
+#' }
+#' @noRd
+select_starts_with <- function(data, prefix, keep_cols = NULL) {
+  stopifnot(is.data.frame(data))
+  stopifnot(is.character(prefix), length(prefix) == 1)
+
+  prefix_cols <- names(data)[startsWith(names(data), prefix)]
+  cols <- unique(c(prefix_cols, keep_cols))
+  cols <- cols[cols %in% names(data)]
+
+  data[, cols, drop = FALSE]
+}
+
+#' Helper
+#' @noRd
+validate_input <- function(df, pname, tnumber) {
+  if (is.null(df)) {
+    stop("`df` must be provided.", call. = FALSE)
+  }
+  if (is.null(pname) && is.null(tnumber)) {
+    stop("Either `pname` or `tnumber` must be provided.", call. = FALSE)
+  }
+  if (!is.null(pname) && !is.null(tnumber)) {
+    stop("Only one of `pname` or `tnumber` should be supplied.", call. = FALSE)
+  }
+  invisible(TRUE)
+}

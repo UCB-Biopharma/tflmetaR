@@ -2,24 +2,23 @@
 % Please edit documentation in R/get.R
 \name{get_title}
 \alias{get_title}
-\title{Extract Titles and Subtitle Metadata}
+\title{Extract Title Metadata}
 \usage{
-get_title(df = NULL, type = NULL, tnumber = NULL, pname = NULL, oid = NULL)
+get_title(df, tnumber = NULL, pname = NULL, oid = NULL)
 }
 \arguments{
-\item{df}{A data frame or tibble of title and footnote metadata.}
+\item{df}{A data frame or tibble containing title and footnote metadata.}
 
-\item{type}{Optional. A character string indicating the TFL type.}
+\item{tnumber}{Optional TFL number.}
 
-\item{tnumber}{Optional. TFL number.}
+\item{pname}{Optional program name.}
 
-\item{pname}{Optional. Program name.}
-
-\item{oid}{Optional. Object ID.}
+\item{oid}{Optional object ID.}
 }
 \value{
-A named list of non-missing title fields.
+A named list of non-missing title-related fields.
 }
 \description{
-Retrieves title-related fields (TTL1, TTL2, etc.) and population from the metadata.
+Retrieves title-related fields (\code{TTL1}, \code{TTL2}, etc.) and population
+information from metadata for a specified program name or TFL number.
 }

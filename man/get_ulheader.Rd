@@ -13,8 +13,8 @@ get_ulheader(df, by_list = TRUE)
 If \code{FALSE}, returns a collapsed string.}
 }
 \value{
-A character vector or a list depending on \code{by_list}.
+A list or a character string depending on \code{by_list}.
 }
 \description{
-Retrieves upper-left (UL*) header fields from the metadata.
+Retrieves upper-left (\verb{UL*}) header fields from metadata.
 }

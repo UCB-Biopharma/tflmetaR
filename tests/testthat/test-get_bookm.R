@@ -1,6 +1,3 @@
-# tests/testthat/test-get_bookm.R
-
-library(testthat)
 
 test_that("get_bookm() returns bookm when present", {
   df <- data.frame(

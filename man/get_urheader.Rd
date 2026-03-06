@@ -13,8 +13,8 @@ get_urheader(df, by_list = TRUE)
 If \code{FALSE}, returns a collapsed string.}
 }
 \value{
-A character vector or a list depending on \code{by_list}.
+A list if \code{by_list = TRUE}, otherwise a single character string.
 }
 \description{
-Retrieves upper-right (UR*) header fields from the metadata.
+Retrieves upper-right (UR*) header fields from metadata.
 }

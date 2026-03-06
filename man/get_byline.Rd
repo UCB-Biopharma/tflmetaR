@@ -4,22 +4,21 @@
 \alias{get_byline}
 \title{Extract Byline Metadata}
 \usage{
-get_byline(df = NULL, type = NULL, tnumber = NULL, pname = NULL, oid = NULL)
+get_byline(df, tnumber = NULL, pname = NULL, oid = NULL)
 }
 \arguments{
-\item{df}{A data frame or tibble of title and footnote metadata.}
+\item{df}{A data frame or tibble containing title and footnote metadata.}
 
-\item{type}{Optional. A character string indicating the TFL type.}
+\item{tnumber}{Optional TFL number.}
 
-\item{tnumber}{Optional. TFL number.}
+\item{pname}{Optional program name.}
 
-\item{pname}{Optional. Program name.}
-
-\item{oid}{Optional. Object ID.}
+\item{oid}{Optional object ID.}
 }
 \value{
 A named list of non-missing byline fields.
 }
 \description{
-Retrieves byline fields (BYLINE1, BYLINE2, etc.) from the metadata.
+Retrieves byline fields (BYLINE1, BYLINE2, etc.) from metadata for a
+specified program name or TFL number.
 }

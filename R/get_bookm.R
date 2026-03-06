@@ -9,8 +9,6 @@
 #' external abbreviation lookup table stored in `abbrev.xlsx`.
 #'
 #' @param df A data frame containing metadata (must have at least one row).
-#' @param type Optional character string specifying the object type
-#'   (e.g., `"Table"`, `"Listing"`, `"Figure"`). Not used for filtering.
 #' @param tnumber A character or numeric value specifying the table or listing number.
 #' @param pname A character string specifying the program name.
 #'   If not `NULL`, this takes priority over `tnumber`.
@@ -34,13 +32,11 @@
 #'
 #' @export
 get_bookm <- function(df = NULL,
-                      type = NULL,
                       tnumber = NULL,
                       pname = NULL,
                       oid = NULL,
                       abbrev_file = "st_abbrev.xlsx") {
-  # Input checks
-  if (is.null(df)) stop("`df` must be provided.")
+  validate_input(df, pname, tnumber)
 
   # select either on program nmae of TFL number
   if (!is.null(pname)) {
@@ -50,9 +46,6 @@ get_bookm <- function(df = NULL,
   } else {
     stop("Either `pname` or `tnumber` must be provided.")
   }
-
-  if (nrow(row) == 0) stop("No matching row found in `df`.")
-  if (nrow(row) > 1) warning("Multiple rows found; returning the first match.")
 
   # Extract bookm
   bookm <- row$BOOKM[1]

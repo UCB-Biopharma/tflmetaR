@@ -6,7 +6,6 @@
 \usage{
 get_bookm(
   df = NULL,
-  type = NULL,
   tnumber = NULL,
   pname = NULL,
   oid = NULL,
@@ -15,9 +14,6 @@ get_bookm(
 }
 \arguments{
 \item{df}{A data frame containing metadata (must have at least one row).}
-
-\item{type}{Optional character string specifying the object type
-(e.g., \code{"Table"}, \code{"Listing"}, \code{"Figure"}). Not used for filtering.}
 
 \item{tnumber}{A character or numeric value specifying the table or listing number.}
 

@@ -5,8 +5,7 @@
 \title{Extract Footnote Metadata}
 \usage{
 get_footnote(
-  df = NULL,
-  type = NULL,
+  df,
   tnumber = NULL,
   pname = NULL,
   oid = NULL,
@@ -14,22 +13,21 @@ get_footnote(
 )
 }
 \arguments{
-\item{df}{A data frame or tibble of title and footnote metadata.}
+\item{df}{A data frame or tibble containing title and footnote metadata.}
 
-\item{type}{Optional. A character string indicating the TFL type.}
+\item{tnumber}{Optional TFL number.}
 
-\item{tnumber}{Optional. TFL number.}
+\item{pname}{Optional program name.}
 
-\item{pname}{Optional. Program name.}
+\item{oid}{Optional object ID.}
 
-\item{oid}{Optional. Object ID.}
-
-\item{add_footr_tstamp}{If TRUE, add timestamp and source information as the
-last line of the footnotes. Default is TRUE.}
+\item{add_footr_tstamp}{Logical. If \code{TRUE}, append timestamp and source
+information as the last footnote line. Defaults to \code{TRUE}.}
 }
 \value{
 A named list of non-missing footnote fields.
 }
 \description{
-Retrieves footnote fields (FOOT1, FOOT2, etc.) from the metadata.
+Retrieves footnote fields (FOOT1, FOOT2, etc.) from metadata for a specified
+program name or TFL number.
 }
