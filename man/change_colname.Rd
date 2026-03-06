@@ -56,8 +56,8 @@ vector of acceptable input header variants.}
 Header Mapping Behavior:
 \itemize{
 \item Incoming column names are normalized in the following order:
-lowercasing → trimming whitespace → removing underscores →
-collapsing internal spaces.
+convert to lowercase -> trim whitespace -> remove underscores ->
+collapse internal spaces.
 
 \item After normalization, headers are matched against normalized aliases
 to determine their canonical field name.

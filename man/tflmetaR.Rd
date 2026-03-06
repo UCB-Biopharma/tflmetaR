@@ -34,7 +34,7 @@ titles and footnotes.}
 \item \code{"FOOTR"}: return columns starting with \code{"FOOT"} (and optionally add a timestamp line).
 \item Otherwise: a specific column name to return that column.
 }
-Matching is case-insensitive (internally uppercased).}
+Matching is case-insensitive (internally converted to uppercase).}
 
 \item{add_footr_tstamp}{If \code{TRUE}, add timestamp/source information as
 the last line of the footnotes. Only applied when \code{select_type = "FOOTR"}.}

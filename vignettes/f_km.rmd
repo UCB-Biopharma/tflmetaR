@@ -195,7 +195,7 @@ gridify::export_to(fig, "f_surv_gridify.pdf")
 
 The `tflmetaR` package enables **separation of metadata and code** by storing titles, footnotes, and headers in external spreadsheets. This approach:
 
-- Centralizes all annotations in one auditable location
+- Centralizes all annotations in a single location to support audit and traceability
 - Reduces code complexity and maintenance burden
 - Supports regulatory compliance workflows
 

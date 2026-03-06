@@ -1,8 +1,3 @@
----
-title: README.md
-
----
-
 # tflmetaR <a href="https://github.com/Cassinic/tflmetaR/"><img src="man/figure/logo.png" alt="tflmetaR logo" align="right" height="140"></a>
 
 <!-- badges: start -->
@@ -14,9 +9,9 @@ title: README.md
 
 ## 📌 Overview
 
-`tflmetaR` is an R package designed to simplify the management and application of titles, subtitles, and footnotes in clinical study report (CSR) deliverables. It provides a structured interface for separating content metadata (like table headers and footers) from the code that generates the actual tables or figures.
+`tflmetaR` is an R package designed to simplify the management and application of titles, subtitles, and footnotes in clinical study report (CSR) deliverable. It provides a structured interface for separating content metadata (like table headers and footers) from the code that generates the actual tables or figures.
 
-This approach aligns with best practices in software design by supporting **separation of data and code**, improving maintainability, reusability, and reducing the risk of hard-coded text in analysis scripts.
+This approach aligns with best practices in software design by supporting **separation of data and code**, improving maintainability, re-usability, and reducing the risk of hard-coded text in analysis scripts.
 
 ---
 

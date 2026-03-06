@@ -1,4 +1,4 @@
-#' Select a Single Row from a Data Frame Based on Column Value(s)
+#' Internal Helper to Select a Single Row Based on Filtering Criteria
 #'
 #' Filters a data frame to return a single matching row based on a specified column-value pair,
 #' with an optional filter on `OID`. Ensures the result is unique and non-empty.
@@ -47,7 +47,7 @@ select_row <- function(data, by_column, by_value, oid=NULL) {
   df
 }
 
-#' Select Metadata Columns from a Data Frame
+#' Internal Helper to Select Metadata Columns Based on Filtering Criteria
 #'
 #' Selects specific columns from a metadata data frame based on the type of content desired
 #' (e.g., titles, footnotes, or a named column). Optionally appends a timestamp to footnotes.

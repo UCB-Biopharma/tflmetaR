@@ -26,9 +26,9 @@ In clinical research and regulatory reporting, maintaining consistency and accur
 
 The `tflmetaR` package addresses these challenges by implementing a **separation of metadata and code** design pattern. By externalizing table annotations into structured spreadsheets (Excel or CSV), `tflmetaR` enables:
 
-- **Centralized metadata management**: All titles, footnotes, and source information are stored in a single, auditable location
+- **Centralized metadata management**: All titles, footnotes, and source information are stored in a single location to support audit and traceability
 - **Reduced code complexity**: Analysis scripts remain focused on data processing and visualization
-- **Enhanced reproducibility**: Metadata changes do not require modifications to validated code
+- **Code stability**: Metadata changes do not require modifications to validated code
 - **Regulatory compliance**: Supports audit-friendly workflows common in pharmaceutical and clinical settings
 
 This vignette demonstrates how to integrate `tflmetaR` with the `gt` package to create publication-quality tables with externally managed annotations.

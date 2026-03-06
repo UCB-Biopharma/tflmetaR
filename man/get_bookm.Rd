@@ -5,47 +5,57 @@
 \title{Get Bookmark Value with Abbreviation Shortening}
 \usage{
 get_bookm(
-  df = NULL,
+  df,
   tnumber = NULL,
   pname = NULL,
   oid = NULL,
-  abbrev_file = "st_abbrev.xlsx"
+  abbrev_file = "st_abbrev.xlsx",
+  max_length = 180
 )
 }
 \arguments{
 \item{df}{A data frame containing metadata (must have at least one row).}
 
-\item{tnumber}{A character or numeric value specifying the table or listing number.}
+\item{tnumber}{A character string specifying the table or listing number.}
 
 \item{pname}{A character string specifying the program name.
 If not \code{NULL}, this takes priority over \code{tnumber}.}
 
-\item{oid}{Optional character or numeric object identifier (not used for filtering).}
+\item{oid}{An optional character string object identifier.}
 
-\item{abbrev_file}{Path to an abbreviation Excel file (default = \code{"abbrev.xlsx"}).
-The file must have two columns: first = phrase, second = abbreviation.}
+\item{abbrev_file}{Path to an abbreviation Excel file (default = \code{"st_abbrev.xlsx"}).
+The file must contain two columns: the first for phrases and the second for
+their corresponding abbreviations.}
+
+\item{max_length}{Maximum allowed bookmark length. Default is \code{180}.}
 }
 \value{
 A character string containing a sanitized (and possibly shortened) bookmark.
 }
 \description{
 The \code{get_bookm()} function extracts or constructs a bookmark string
-from a data frame row. It first looks for a \code{"bookm"} column; if not found
+from a data frame row. It first looks for a \code{"BOOKM"} column; if not found
 or if empty, it falls back to \code{get_title()}. The result is sanitized
-so that it can be safely used as a filename or PDF bookmark. If the length
-of the bookmark exceeds 128 characters, phrases are shortened using an
-external abbreviation lookup table stored in \code{abbrev.xlsx}.
+so that it can be safely used as a filename or PDF bookmark. If the bookmark
+exceeds \code{max_length}, phrases are shortened using an external abbreviation
+lookup table stored in \code{abbrev.xlsx}.
 }
 \examples{
-\dontrun{
 df <- data.frame(
-  tnumber = c("1", "2"),
-  pname   = c("adsl_summary", "ae_list"),
-  bookm   = c(NA, "Listing_2_Bookmark")
+  TTL1    = c("1", "2"),
+  PGMNAME = c("adsl_summary", "ae_list"),
+  BOOKM   = c(NA, "Listing_2_Bookmark")
 )
 
-get_bookm(df, pname = "adsl_summary") # fallback to get_title()
-get_bookm(df, tnumber = "2")          # uses bookm column
+get_bookm(df, pname = "ae_list")
+get_bookm(df, tnumber = "2")
+
+# BOOKM is NA, so the function falls back to get_title()
+get_bookm(df, pname = "adsl_summary")
+
+\donttest{
+  # Example using an external abbreviation file
+  get_bookm(df, pname = "adsl_summary", abbrev_file = "st_abbrev.xlsx")
 }
 
 }
