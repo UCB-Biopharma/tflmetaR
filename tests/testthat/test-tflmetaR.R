@@ -182,4 +182,56 @@ test_that("tflmetaR reads metadata from CSV in extdata", {
   expect_true(nrow(res_all) == 1)
 })
 
+test_that("tflmetaR errors when by_value is missing", {
 
+  df <- data.frame(
+    PGMNAME = "t_dm",
+    TTL1 = "Title",
+    FOOT1 = "Footnote",
+    SOURCE = "ADSL",
+    stringsAsFactors = FALSE
+  )
+
+  file <- tempfile(fileext = ".csv")
+  write.csv(df, file, row.names = FALSE)
+
+  expect_error(
+    tflmetaR(file),
+    "`by_value` must be provided."
+  )
+
+})
+
+test_that("tflmetaR treats FOOTR select_type case-insensitively", {
+  csv_file <- tempfile(fileext = ".csv")
+
+  write.csv(
+    data.frame(
+      PGMNAME = "t_dm",
+      OID = "T001",
+      TTL1 = "Table 1. Demographics",
+      TTL2 = "Safety Population",
+      FOOT1 = "Source: ADSL",
+      FOOT2 = "*: Baseline record",
+      SOURCE = "ADSL"
+    ),
+    csv_file,
+    row.names = FALSE
+  )
+
+  result_upper <- tflmetaR(
+    filename = csv_file,
+    by_value = "t_dm",
+    select_type = "FOOTR",
+    add_footr_tstamp = FALSE
+  )
+
+  result_mixed <- tflmetaR(
+    filename = csv_file,
+    by_value = "t_dm",
+    select_type = "footr",
+    add_footr_tstamp = FALSE
+  )
+
+  expect_equal(result_mixed, result_upper)
+})

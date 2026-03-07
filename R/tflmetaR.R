@@ -1,67 +1,100 @@
-#' Retrieve titles and footnotes from a metadata file
+#' Retrieve metadata for a table, listing, or figure
 #'
-#' Read annotation metadata (titles/footnotes/etc.) from either an Excel file
-#' (\code{.xls} / \code{.xlsx}) or a CSV file (\code{.csv}). The function first
-#' reads the source file, then filters to a single row using \code{by_column},
-#' \code{by_value}, and optional \code{oid}, and finally selects the requested
-#' set of columns via \code{select_type}.
+#' Reads annotation metadata from an Excel (`.xls`, `.xlsx`) or CSV (`.csv`)
+#' file, filters to a single row using `by_column`, `by_value`, and optional
+#' `oid`, and returns the requested columns based on `select_type`.
 #'
-#' @param filename A file path to the metadata source. Supported extensions are
-#'   \code{.xls}, \code{.xlsx}, and \code{.csv}.
-#' @param sheetname Sheet name to read when \code{file} is an Excel file.
-#'   Ignored when \code{file} is a CSV.
-#' @param by_column Column name used to filter the appropriate titles and
-#'   footnotes. Default is \code{"PGMNAME"}.
-#' @param by_value Value in \code{by_column} used to filter the appropriate
-#'   titles and footnotes.
-#' @param select_type Selection type:
+#' @param filename Path to the metadata file. Supported extensions are
+#'   `.xls`, `.xlsx`, and `.csv`.
+#' @param sheetname For Excel files, the worksheet name or index to read.
+#'   Ignored for CSV files. If `NULL` (default), the first worksheet is used.
+#' @param by_column Column name used to filter the desired metadata row.
+#'   Matching is case-insensitive. Default is `"PGMNAME"`.
+#' @param by_value Value in `by_column` used to select the desired row.
+#' @param oid Optional object identifier used for additional filtering.
+#' @param select_type Type of metadata to return:
 #'   \itemize{
-#'     \item \code{NULL}: return the entire selected row (all columns).
-#'     \item \code{"TITLE"}: return columns starting with \code{"TTL"} plus \code{POPULATION}.
-#'     \item \code{"FOOTR"}: return columns starting with \code{"FOOT"} (and optionally add a timestamp line).
-#'     \item Otherwise: a specific column name to return that column.
+#'     \item `NULL`: return the full selected row.
+#'     \item `"TITLE"`: return title columns (for example, columns beginning
+#'       with `"TTL"`) and related title metadata.
+#'     \item `"FOOTR"`: return footnote columns (for example, columns beginning
+#'       with `"FOOT"`). If `add_footr_tstamp = TRUE`, a timestamp/source line
+#'       may be appended.
+#'     \item otherwise: return the specified column or set of matching columns.
 #'   }
-#'   Matching is case-insensitive (internally converted to uppercase).
-#' @param add_footr_tstamp If \code{TRUE}, add timestamp/source information as
-#'   the last line of the footnotes. Only applied when \code{select_type = "FOOTR"}.
-#' @param oid If not \code{NULL}, further filter by \code{OID == oid}.
-#'
-#' @return A data frame containing the selected row/columns.
+#'   Matching is case-insensitive.
+#' @param add_footr_tstamp Logical. If `TRUE`, append timestamp/source
+#'   information when `select_type = "FOOTR"`. Ignored otherwise.
 #'
 #' @details
-#' The input file must exist. Unsupported file extensions result in an error.
-#' For CSV sources, \code{sheet} is ignored.
+#' This function provides a simple interface for retrieving titles,
+#' footnotes, or other annotation metadata from a structured metadata file.
+#'
+#' Internally, the metadata file is read using [read_tfile()], after which
+#' the appropriate row and columns are extracted based on the supplied
+#' filtering and selection arguments.
+#'
+#' @return A data frame containing the selected row or columns.
 #'
 #' @examples
-#' \dontrun{
-#' # Excel:
-#' # (1) Get titles
-#' tflmetaR("metadata.xlsx", sheet = 1, by_value = "t_dm", select_type = "TITLE")
+#' # Create a small example metadata file
+#' csv_file <- tempfile(fileext = ".csv")
+#' write.csv(
+#'   data.frame(
+#'     PGMNAME = "t_dm",
+#'     OID = "T001",
+#'     TTL1 = "Table 1. Demographics",
+#'     TTL2 = "Safety Population",
+#'     FOOT1 = "Source: ADSL",
+#'     SOURCE = "ADSL"
+#'   ),
+#'   csv_file,
+#'   row.names = FALSE
+#' )
 #'
-#' # (2) Get footnotes
-#' tflmetaR("metadata.xlsx", sheet = "Sheet1", by_value = "t_dm", select_type = "FOOTR")
+#' # Return title-related columns
+#' tflmetaR(
+#'   filename = csv_file,
+#'   by_value = "t_dm",
+#'   select_type = "TITLE"
+#' )
 #'
-#' # (3) Get a specific column sheet, e.g., SOURCE
-#' tflmetaR("metadata.xlsx", sheet_name = "Sheet1", by_value = "t_dm", select_type = "SOURCE")
+#' # Return footnote-related columns
+#' tflmetaR(
+#'   filename = csv_file,
+#'   by_value = "t_dm",
+#'   select_type = "FOOTR",
+#'   add_footr_tstamp = FALSE
+#' )
 #'
-#' # (4) Get the whole row
-#' tflmetaR("metadata.xlsx", sheet = "Sheet1", by_value = "t_dm")
+#' # Return a specific column
+#' tflmetaR(
+#'   filename = csv_file,
+#'   by_value = "t_dm",
+#'   select_type = "SOURCE"
+#' )
 #'
-#' # CSV:
-#' tflmetaR("metadata.csv", by_value = "t_dm", select_type = "TITLE")
-#' }
+#' # Return the full selected row
+#' tflmetaR(
+#'   filename = csv_file,
+#'   by_value = "t_dm"
+#' )
 #'
 #' @export
 tflmetaR <- function(filename,
                      sheetname = NULL,
                      by_column = "PGMNAME",
                      by_value,
+                     oid = NULL,
                      select_type = NULL,
-                     add_footr_tstamp = TRUE,
-                     oid = NULL) {
+                     add_footr_tstamp = TRUE) {
+
+  if (missing(by_value)) {
+    stop("`by_value` must be provided.", call. = FALSE)
+  }
+
   read_tfile(filename, sheetname = sheetname) |>
     select_row(by_column, by_value, oid) |>
     select_cols(select_type, add_footr_tstamp)
 }
-
 

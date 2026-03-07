@@ -26,6 +26,9 @@ select_row <- function(data, by_column, by_value, oid=NULL) {
   if (!is.character(by_column) || length(by_column) != 1) {
     stop("`by_column` must be a single character string", call. = FALSE)
   }
+
+  by_column <- toupper(by_column)
+
   if (!by_column %in% names(data)) {
     stop("Column `", by_column, "` is not present in `data`", call. = FALSE)
   }
@@ -139,7 +142,7 @@ select_starts_with <- function(data, prefix, keep_cols = NULL) {
   data[, cols, drop = FALSE]
 }
 
-#' Helper
+
 #' @noRd
 validate_input <- function(df, pname, tnumber) {
   if (is.null(df)) {
