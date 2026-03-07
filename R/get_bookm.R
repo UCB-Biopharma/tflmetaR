@@ -13,14 +13,16 @@
 #' `max_length` characters.
 #'
 #' @param df A data frame containing metadata.
-#' @param tnumber A character string specifying the table, listing, or figure
-#'   number. Used when `pname` is `NULL`.
-#' @param pname A character string specifying the program name. If supplied,
-#'   it takes priority over `tnumber`.
+#' @param tnumber An optional character string specifying the TFL number
+#'   stored in `TTL1`, such as `"Table 14.1.1"`.
+#' @param pname An optional character string specifying the program name
+#'   stored in `PGMNAME`.
+#'
+#'   Exactly one of `tnumber` or `pname` must be supplied.
 #' @param oid An optional character string specifying the object identifier.
-#' @param abbrev_file Path to an Excel file containing abbreviation mappings.
-#'   Defaults to `"st_abbrev.xlsx"`. The file is expected to contain three
-#'   columns corresponding to scope, phrase, and abbreviation.
+#' @param abbrev_file Optional path to an Excel file containing abbreviation
+#'   mappings. The file should contain three columns corresponding to scope,
+#'   phrase, and abbreviation. If `NULL`, no abbreviation table is applied.
 #' @param max_length Maximum allowed bookmark length. Default is `180`.
 #'
 #' @return A character string containing sanitized bookmark text.
@@ -60,7 +62,7 @@ get_bookm <- function(df,
                       tnumber = NULL,
                       pname = NULL,
                       oid = NULL,
-                      abbrev_file = "st_abbrev.xlsx",
+                      abbrev_file = NULL,
                       max_length = 180) {
   validate_input(df, pname, tnumber)
 
@@ -84,10 +86,17 @@ get_bookm <- function(df,
 
   # If too long, apply abbreviation table
   if (nchar(bookm) > max_length) {
-    if (!file.exists(abbrev_file)) {
+    if (is.null(abbrev_file)) {
       warning(
         sprintf(
-          "Bookmark exceeds %s characters and abbrev file not found; returning long bookmark.",
+          "Bookmark exceeds %s characters and no abbrev file was provided.",
+          max_length
+        )
+      )
+    } else if (!file.exists(abbrev_file)) {
+      warning(
+        sprintf(
+          "Bookmark exceeds %s characters and abbrev file not found.",
           max_length
         )
       )

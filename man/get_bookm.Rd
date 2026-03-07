@@ -9,24 +9,26 @@ get_bookm(
   tnumber = NULL,
   pname = NULL,
   oid = NULL,
-  abbrev_file = "st_abbrev.xlsx",
+  abbrev_file = NULL,
   max_length = 180
 )
 }
 \arguments{
 \item{df}{A data frame containing metadata.}
 
-\item{tnumber}{A character string specifying the table, listing, or figure
-number. Used when \code{pname} is \code{NULL}.}
+\item{tnumber}{An optional character string specifying the TFL number
+stored in \code{TTL1}, such as \code{"Table 14.1.1"}.}
 
-\item{pname}{A character string specifying the program name. If supplied,
-it takes priority over \code{tnumber}.}
+\item{pname}{An optional character string specifying the program name
+stored in \code{PGMNAME}.
+
+Exactly one of \code{tnumber} or \code{pname} must be supplied.}
 
 \item{oid}{An optional character string specifying the object identifier.}
 
-\item{abbrev_file}{Path to an Excel file containing abbreviation mappings.
-Defaults to \code{"st_abbrev.xlsx"}. The file is expected to contain three
-columns corresponding to scope, phrase, and abbreviation.}
+\item{abbrev_file}{Optional path to an Excel file containing abbreviation
+mappings. The file should contain three columns corresponding to scope,
+phrase, and abbreviation. If \code{NULL}, no abbreviation table is applied.}
 
 \item{max_length}{Maximum allowed bookmark length. Default is \code{180}.}
 }
