@@ -2,19 +2,32 @@
 % Please edit documentation in R/get.R
 \name{get_urheader}
 \alias{get_urheader}
-\title{Extract Upper-Right Header Text}
+\title{Get Upper-Right Header Text}
 \usage{
 get_urheader(df, by_list = TRUE)
 }
 \arguments{
-\item{df}{A data frame of metadata.}
+\item{df}{A data frame containing metadata.}
 
 \item{by_list}{Logical. If \code{TRUE}, returns a list of non-missing values.
-If \code{FALSE}, returns a collapsed string.}
+If \code{FALSE}, returns a single collapsed character string.}
 }
 \value{
-A list if \code{by_list = TRUE}, otherwise a single character string.
+A list of header values or a single character string depending on
+the value of \code{by_list}.
 }
 \description{
-Retrieves upper-right (UR*) header fields from metadata.
+Retrieves upper-right header fields (for example, \code{UR1}, \code{UR2}) from metadata.
+}
+\examples{
+meta <- data.frame(
+  UL1 = "Drug X",
+  UL2 = "Study 001",
+  UR1 = "CONFIDENTIAL",
+  UR2 = "VERSION: FINAL"
+)
+
+get_urheader(meta)
+get_urheader(meta, by_list = FALSE)
+
 }

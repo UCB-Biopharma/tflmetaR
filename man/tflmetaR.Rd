@@ -22,7 +22,8 @@ tflmetaR(
 Ignored for CSV files. If \code{NULL} (default), the first worksheet is used.}
 
 \item{by_column}{Column name used to filter the desired metadata row.
-Matching is case-insensitive. Default is \code{"PGMNAME"}.}
+The column name is matched case-insensitively against the metadata.
+Default is \code{"PGMNAME"} (program name).}
 
 \item{by_value}{Value in \code{by_column} used to select the desired row.}
 
@@ -37,8 +38,7 @@ with \code{"TTL"}) and related title metadata.
 with \code{"FOOT"}). If \code{add_footr_tstamp = TRUE}, a timestamp/source line
 may be appended.
 \item otherwise: return the specified column or set of matching columns.
-}
-Matching is case-insensitive.}
+}}
 
 \item{add_footr_tstamp}{Logical. If \code{TRUE}, append timestamp/source
 information when \code{select_type = "FOOTR"}. Ignored otherwise.}
@@ -65,10 +65,9 @@ csv_file <- tempfile(fileext = ".csv")
 write.csv(
   data.frame(
     PGMNAME = "t_dm",
-    OID = "T001",
-    TTL1 = "Table 1. Demographics",
-    TTL2 = "Safety Population",
-    FOOT1 = "Source: ADSL",
+    TTL1 = "Table 14.1.1",
+    TTL2 = "Subject Disposition",
+    FOOT1 = "All Randomized Subjects",
     SOURCE = "ADSL"
   ),
   csv_file,

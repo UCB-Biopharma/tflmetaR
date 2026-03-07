@@ -9,7 +9,8 @@
 #' @param sheetname For Excel files, the worksheet name or index to read.
 #'   Ignored for CSV files. If `NULL` (default), the first worksheet is used.
 #' @param by_column Column name used to filter the desired metadata row.
-#'   Matching is case-insensitive. Default is `"PGMNAME"`.
+#'   The column name is matched case-insensitively against the metadata.
+#'   Default is `"PGMNAME"` (program name).
 #' @param by_value Value in `by_column` used to select the desired row.
 #' @param oid Optional object identifier used for additional filtering.
 #' @param select_type Type of metadata to return:
@@ -22,7 +23,6 @@
 #'       may be appended.
 #'     \item otherwise: return the specified column or set of matching columns.
 #'   }
-#'   Matching is case-insensitive.
 #' @param add_footr_tstamp Logical. If `TRUE`, append timestamp/source
 #'   information when `select_type = "FOOTR"`. Ignored otherwise.
 #'
@@ -42,10 +42,9 @@
 #' write.csv(
 #'   data.frame(
 #'     PGMNAME = "t_dm",
-#'     OID = "T001",
-#'     TTL1 = "Table 1. Demographics",
-#'     TTL2 = "Safety Population",
-#'     FOOT1 = "Source: ADSL",
+#'     TTL1 = "Table 14.1.1",
+#'     TTL2 = "Subject Disposition",
+#'     FOOT1 = "All Randomized Subjects",
 #'     SOURCE = "ADSL"
 #'   ),
 #'   csv_file,

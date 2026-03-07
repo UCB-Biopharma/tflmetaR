@@ -28,22 +28,20 @@
 #' @examples
 #' # Example 1: return BOOKM when it is present
 #' df1 <- data.frame(
-#'   TTL1 = "Table 2. Subject Disposition",
-#'   PGMNAME = "t_disp",
-#'   BOOKM = "Table_2_Subject_Disposition",
-#'   stringsAsFactors = FALSE
+#'   TTL1 = "Figure 1.1",
+#'   PGMNAME = "f_km.R",
+#'   BOOKM = "KM_PLOT"
 #' )
 #'
-#' get_bookm(df1, pname = "t_disp")
-#' get_bookm(df1, tnumber = "Table 2. Subject Disposition")
+#' get_bookm(df1, pname = "f_km.R")
+#' get_bookm(df1, tnumber = "Figure 1.1")
 #'
 #' # Example 2: fall back to title text when BOOKM is missing
 #' df2 <- data.frame(
 #'   TTL1 = "Adverse Events",
 #'   TTL2 = "Safety Population",
 #'   PGMNAME = "t_ae",
-#'   BOOKM = NA,
-#'   stringsAsFactors = FALSE
+#'   BOOKM = NA
 #' )
 #'
 #' get_bookm(df2, pname = "t_ae")
@@ -52,8 +50,7 @@
 #' df3 <- data.frame(
 #'   TTL1 = "Listing 3. Laboratory Results",
 #'   PGMNAME = "l_lab",
-#'   BOOKM = "Lab: ALT/AST * Overview?",
-#'   stringsAsFactors = FALSE
+#'   BOOKM = "Lab: ALT/AST * Overview?"
 #' )
 #'
 #' get_bookm(df3, pname = "l_lab")

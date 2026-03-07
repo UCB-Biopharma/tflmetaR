@@ -2,23 +2,40 @@
 % Please edit documentation in R/get.R
 \name{get_pgmname}
 \alias{get_pgmname}
-\title{Extract Program Name Metadata}
+\title{Get Program Name Metadata}
 \usage{
 get_pgmname(df, tnumber = NULL, pname = NULL, oid = NULL)
 }
 \arguments{
-\item{df}{A data frame or tibble containing title and footnote metadata.}
+\item{df}{A data frame containing TFL metadata.}
 
-\item{tnumber}{Optional TFL number.}
+\item{tnumber}{An optional character string specifying the TFL number
+stored in \code{TTL1}, such as \code{"Table 14.1.1"}.}
 
-\item{pname}{Optional program name.}
+\item{pname}{An optional character string specifying the program name
+stored in \code{PGMNAME}.
 
-\item{oid}{Optional object ID.}
+Exactly one of \code{tnumber} or \code{pname} must be supplied.}
+
+\item{oid}{An optional character string specifying the object ID stored
+in \code{OID}. Use this when multiple rows match the program name.}
 }
 \value{
-A named list of non-missing program name field.
+A named list containing the non-missing program name field.
 }
 \description{
-Retrieves program name field (PGMNAME) from metadata for a specified
+Retrieves the program name field (\code{PGMNAME}) from metadata for a specified
 program name or TFL number.
+}
+\examples{
+meta <- data.frame(
+  PGMNAME = c("t_dm", "t_ae"),
+  TTL1 = c("Table 14.1.1", "Table 14.3.1"),
+  SOURCE = c("ADSL", "ADAE"),
+  FOOT1 = c("ITT Population", "Safety Population")
+)
+
+get_pgmname(meta, pname = "t_dm")
+get_pgmname(meta, tnumber = "Table 14.3.1")
+
 }

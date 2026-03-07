@@ -2,7 +2,7 @@
 % Please edit documentation in R/get.R
 \name{get_footnote}
 \alias{get_footnote}
-\title{Extract Footnote Metadata}
+\title{Get Footnote Metadata}
 \usage{
 get_footnote(
   df,
@@ -13,21 +13,46 @@ get_footnote(
 )
 }
 \arguments{
-\item{df}{A data frame or tibble containing title and footnote metadata.}
+\item{df}{A data frame containing TFL metadata.}
 
-\item{tnumber}{Optional TFL number.}
+\item{tnumber}{An optional character string specifying the TFL number
+stored in \code{TTL1}, such as \code{"Table 14.1.1"}.}
 
-\item{pname}{Optional program name.}
+\item{pname}{An optional character string specifying the program name
+stored in \code{PGMNAME}.
 
-\item{oid}{Optional object ID.}
+Exactly one of \code{tnumber} or \code{pname} must be supplied.}
+
+\item{oid}{An optional character string specifying the object ID stored
+in \code{OID}. Use this when multiple rows match the program name.}
 
 \item{add_footr_tstamp}{Logical. If \code{TRUE}, append timestamp and source
 information as the last footnote line. Defaults to \code{TRUE}.}
 }
 \value{
-A named list of non-missing footnote fields.
+A named list of non-missing footnote-related metadata fields.
 }
 \description{
-Retrieves footnote fields (FOOT1, FOOT2, etc.) from metadata for a specified
-program name or TFL number.
+Retrieves footnote-related fields (for example, \code{FOOT1}, \code{FOOT2}) from a TFL
+metadata data frame for a specified program name or TFL number.
+}
+\examples{
+meta <- data.frame(
+  PGMNAME = c("t_dm", "t_ae"),
+  TTL1 = c("Table 14.1.1", "Table 14.3.1"),
+  TTL2 = c("Subject Disposition", "Adverse Events"),
+  SOURCE = c("ADSL", "ADAE"),
+  FOOT1 = c(
+    "All Randomized Subjects",
+    "Safety Population"
+  ),
+  FOOT2 = c(
+    "Reference: Listing 11.3",
+    "Adverse events coded using MedDRA"
+  )
+)
+
+get_footnote(meta, pname = "t_dm", add_footr_tstamp = FALSE)
+get_footnote(meta, tnumber = "Table 14.3.1", add_footr_tstamp = FALSE)
+
 }

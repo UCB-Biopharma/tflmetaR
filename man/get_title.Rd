@@ -2,23 +2,48 @@
 % Please edit documentation in R/get.R
 \name{get_title}
 \alias{get_title}
-\title{Extract Title Metadata}
+\title{Get Title Metadata}
 \usage{
 get_title(df, tnumber = NULL, pname = NULL, oid = NULL)
 }
 \arguments{
-\item{df}{A data frame or tibble containing title and footnote metadata.}
+\item{df}{A data frame containing TFL metadata.}
 
-\item{tnumber}{Optional TFL number.}
+\item{tnumber}{An optional character string specifying the TFL number
+stored in \code{TTL1}, such as \code{"Table 14.1.1"}.}
 
-\item{pname}{Optional program name.}
+\item{pname}{An optional character string specifying the program name
+stored in \code{PGMNAME}.
 
-\item{oid}{Optional object ID.}
+Exactly one of \code{tnumber} or \code{pname} must be supplied.}
+
+\item{oid}{An optional character string specifying the object ID stored
+in \code{OID}. Use this when multiple rows match the program name.}
 }
 \value{
-A named list of non-missing title-related fields.
+A named list containing non-missing title-related metadata fields.
 }
 \description{
-Retrieves title-related fields (\code{TTL1}, \code{TTL2}, etc.) and population
-information from metadata for a specified program name or TFL number.
+Retrieves title-related fields (for example, \code{TTL1}, \code{TTL2}) from a TFL
+metadata data frame for a specified program name or table number.
+}
+\examples{
+meta <- data.frame(
+  PGMNAME = c("t_dm", "t_ae"),
+  TTL1 = c("Table 14.1.1", "Table 14.3.1"),
+  TTL2 = c("Subject Disposition", "Adverse Events"),
+  SOURCE = c("ADSL", "ADAE"),
+  FOOT1 = c(
+    "All Randomized Subjects",
+    "Safety Population"
+  ),
+  FOOT2 = c(
+    "Reference: Listing 11.3",
+    "Adverse events coded using MedDRA"
+  )
+)
+
+get_title(meta, pname = "t_dm")
+get_title(meta, tnumber = "Table 14.3.1")
+
 }
