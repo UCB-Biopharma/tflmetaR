@@ -133,7 +133,7 @@ test_that("tflmetaR reads metadata from CSV in extdata", {
 
   csv_path <- system.file(
     "extdata",
-    "sample_titles_in_csv.csv",
+    "sample_titles.csv",
     package = "tflmetaR"
   )
 

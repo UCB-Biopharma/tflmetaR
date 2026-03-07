@@ -1,0 +1,5 @@
+Type,Pgmname,OID,Source,Population,TTL1,TTL2,TTL3,BYLINE1,BYLINE2,BOOKM,FOOT1,FOOT2,FOOT3,FOOT4,FOOT5,FOOT6,FOOT7,FOOT8
+,l_dem,,ADSL,Safety Population,Listing 2.1,Demographics,,,,,ES = Enrolled Set,Note: This example shows how to use {tflmetaR} .,,,,,,
+,l_disp,b,ADSL,Safety Population,Listing 1.1,Participant Disposition,,,,,ES = Enrolled Set,,,,,,,
+,t_dm,a,palmerpenguins,Penguin Population,Table 2.1,Sample Table with Penguin Data,Test Subtitle,,,,ES = Enrolled Set,Reference: Listing 2.1,,,,,,
+Figure,km_plot.R,,SDTM,ITT,Figure 1.2,Kaplan-Meier Plot,Study XYZ-123,Sponsor: ACME Pharma,,KM_PLOT,ES = Enrolled Set,Note: This example shows how to use {tflmetaR} .,,,,,,

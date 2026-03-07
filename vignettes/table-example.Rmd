@@ -46,7 +46,7 @@ The metadata file should contain standardized columns including `PGMNAME` (progr
 
 ```{r load-data}
 # Load the sample metadata file included with the package
-file_path <- system.file("extdata", "sample_titles2.xlsx", package = "tflmetaR")
+file_path <- system.file("extdata", "sample_titles.xlsx", package = "tflmetaR")
 
 # Read the metadata from the 'footer' sheet
 meta <- tflmetaR::read_tfile(filename = file_path, sheetname = "footer")
