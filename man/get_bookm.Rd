@@ -2,7 +2,7 @@
 % Please edit documentation in R/get_bookm.R
 \name{get_bookm}
 \alias{get_bookm}
-\title{Get Bookmark Value with Abbreviation Shortening}
+\title{Get bookmark text for a table, listing, or figure}
 \usage{
 get_bookm(
   df,
@@ -14,48 +14,70 @@ get_bookm(
 )
 }
 \arguments{
-\item{df}{A data frame containing metadata (must have at least one row).}
+\item{df}{A data frame containing metadata.}
 
-\item{tnumber}{A character string specifying the table or listing number.}
+\item{tnumber}{A character string specifying the table, listing, or figure
+number. Used when \code{pname} is \code{NULL}.}
 
-\item{pname}{A character string specifying the program name.
-If not \code{NULL}, this takes priority over \code{tnumber}.}
+\item{pname}{A character string specifying the program name. If supplied,
+it takes priority over \code{tnumber}.}
 
-\item{oid}{An optional character string object identifier.}
+\item{oid}{An optional character string specifying the object identifier.}
 
-\item{abbrev_file}{Path to an abbreviation Excel file (default = \code{"st_abbrev.xlsx"}).
-The file must contain two columns: the first for phrases and the second for
-their corresponding abbreviations.}
+\item{abbrev_file}{Path to an Excel file containing abbreviation mappings.
+Defaults to \code{"st_abbrev.xlsx"}. The file is expected to contain three
+columns corresponding to scope, phrase, and abbreviation.}
 
 \item{max_length}{Maximum allowed bookmark length. Default is \code{180}.}
 }
 \value{
-A character string containing a sanitized (and possibly shortened) bookmark.
+A character string containing sanitized bookmark text.
 }
 \description{
-The \code{get_bookm()} function extracts or constructs a bookmark string
-from a data frame row. It first looks for a \code{"BOOKM"} column; if not found
-or if empty, it falls back to \code{get_title()}. The result is sanitized
-so that it can be safely used as a filename or PDF bookmark. If the bookmark
-exceeds \code{max_length}, phrases are shortened using an external abbreviation
-lookup table stored in \code{abbrev.xlsx}.
+Returns bookmark text from metadata for a specified output. The function
+first identifies the matching row in \code{df} using \code{pname} or \code{tnumber}.
+If a non-missing \code{BOOKM} value is available, that value is returned.
+Otherwise, the function falls back to \code{\link[=get_title]{get_title()}} and combines the
+returned title components into a single bookmark string.
+}
+\details{
+The bookmark text is sanitized by removing characters that are not suitable
+for bookmark use. If the result exceeds \code{max_length}, the function attempts
+to shorten it using abbreviation mappings from \code{abbrev_file}. If the
+bookmark is still too long, it is truncated at a word boundary up to
+\code{max_length} characters.
 }
 \examples{
-df <- data.frame(
-  TTL1    = c("1", "2"),
-  PGMNAME = c("adsl_summary", "ae_list"),
-  BOOKM   = c(NA, "Listing_2_Bookmark")
+# Example 1: return BOOKM when it is present
+df1 <- data.frame(
+  TTL1 = "Table 2. Subject Disposition",
+  PGMNAME = "t_disp",
+  BOOKM = "Table_2_Subject_Disposition",
+  stringsAsFactors = FALSE
 )
 
-get_bookm(df, pname = "ae_list")
-get_bookm(df, tnumber = "2")
+get_bookm(df1, pname = "t_disp")
+get_bookm(df1, tnumber = "Table 2. Subject Disposition")
 
-# BOOKM is NA, so the function falls back to get_title()
-get_bookm(df, pname = "adsl_summary")
+# Example 2: fall back to title text when BOOKM is missing
+df2 <- data.frame(
+  TTL1 = "Adverse Events",
+  TTL2 = "Safety Population",
+  PGMNAME = "t_ae",
+  BOOKM = NA,
+  stringsAsFactors = FALSE
+)
 
-\donttest{
-  # Example using an external abbreviation file
-  get_bookm(df, pname = "adsl_summary", abbrev_file = "st_abbrev.xlsx")
-}
+get_bookm(df2, pname = "t_ae")
+
+# Example 3: invalid characters are removed
+df3 <- data.frame(
+  TTL1 = "Listing 3. Laboratory Results",
+  PGMNAME = "l_lab",
+  BOOKM = "Lab: ALT/AST * Overview?",
+  stringsAsFactors = FALSE
+)
+
+get_bookm(df3, pname = "l_lab")
 
 }

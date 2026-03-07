@@ -1,42 +1,62 @@
-#' Get Bookmark Value with Abbreviation Shortening
+#' Get bookmark text for a table, listing, or figure
 #'
-#' @description
-#' The `get_bookm()` function extracts or constructs a bookmark string
-#' from a data frame row. It first looks for a `"BOOKM"` column; if not found
-#' or if empty, it falls back to `get_title()`. The result is sanitized
-#' so that it can be safely used as a filename or PDF bookmark. If the bookmark
-#' exceeds `max_length`, phrases are shortened using an external abbreviation
-#' lookup table stored in `abbrev.xlsx`.
+#' Returns bookmark text from metadata for a specified output. The function
+#' first identifies the matching row in `df` using `pname` or `tnumber`.
+#' If a non-missing `BOOKM` value is available, that value is returned.
+#' Otherwise, the function falls back to [get_title()] and combines the
+#' returned title components into a single bookmark string.
 #'
-#' @param df A data frame containing metadata (must have at least one row).
-#' @param tnumber A character string specifying the table or listing number.
-#' @param pname A character string specifying the program name.
-#'   If not `NULL`, this takes priority over `tnumber`.
-#' @param oid An optional character string object identifier.
-#' @param abbrev_file Path to an abbreviation Excel file (default = `"st_abbrev.xlsx"`).
-#'   The file must contain two columns: the first for phrases and the second for
-#'   their corresponding abbreviations.
+#' The bookmark text is sanitized by removing characters that are not suitable
+#' for bookmark use. If the result exceeds `max_length`, the function attempts
+#' to shorten it using abbreviation mappings from `abbrev_file`. If the
+#' bookmark is still too long, it is truncated at a word boundary up to
+#' `max_length` characters.
+#'
+#' @param df A data frame containing metadata.
+#' @param tnumber A character string specifying the table, listing, or figure
+#'   number. Used when `pname` is `NULL`.
+#' @param pname A character string specifying the program name. If supplied,
+#'   it takes priority over `tnumber`.
+#' @param oid An optional character string specifying the object identifier.
+#' @param abbrev_file Path to an Excel file containing abbreviation mappings.
+#'   Defaults to `"st_abbrev.xlsx"`. The file is expected to contain three
+#'   columns corresponding to scope, phrase, and abbreviation.
 #' @param max_length Maximum allowed bookmark length. Default is `180`.
 #'
-#' @return A character string containing a sanitized (and possibly shortened) bookmark.
+#' @return A character string containing sanitized bookmark text.
 #'
 #' @examples
-#' df <- data.frame(
-#'   TTL1    = c("1", "2"),
-#'   PGMNAME = c("adsl_summary", "ae_list"),
-#'   BOOKM   = c(NA, "Listing_2_Bookmark")
+#' # Example 1: return BOOKM when it is present
+#' df1 <- data.frame(
+#'   TTL1 = "Table 2. Subject Disposition",
+#'   PGMNAME = "t_disp",
+#'   BOOKM = "Table_2_Subject_Disposition",
+#'   stringsAsFactors = FALSE
 #' )
 #'
-#' get_bookm(df, pname = "ae_list")
-#' get_bookm(df, tnumber = "2")
+#' get_bookm(df1, pname = "t_disp")
+#' get_bookm(df1, tnumber = "Table 2. Subject Disposition")
 #'
-#' # BOOKM is NA, so the function falls back to get_title()
-#' get_bookm(df, pname = "adsl_summary")
+#' # Example 2: fall back to title text when BOOKM is missing
+#' df2 <- data.frame(
+#'   TTL1 = "Adverse Events",
+#'   TTL2 = "Safety Population",
+#'   PGMNAME = "t_ae",
+#'   BOOKM = NA,
+#'   stringsAsFactors = FALSE
+#' )
 #'
-#' \donttest{
-#'   # Example using an external abbreviation file
-#'   get_bookm(df, pname = "adsl_summary", abbrev_file = "st_abbrev.xlsx")
-#' }
+#' get_bookm(df2, pname = "t_ae")
+#'
+#' # Example 3: invalid characters are removed
+#' df3 <- data.frame(
+#'   TTL1 = "Listing 3. Laboratory Results",
+#'   PGMNAME = "l_lab",
+#'   BOOKM = "Lab: ALT/AST * Overview?",
+#'   stringsAsFactors = FALSE
+#' )
+#'
+#' get_bookm(df3, pname = "l_lab")
 #'
 #' @export
 get_bookm <- function(df,
