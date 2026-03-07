@@ -2,9 +2,7 @@
 % Please edit documentation in R/read_tfile.R
 \name{read_tfile}
 \alias{read_tfile}
-\title{Reads metadata from an Excel (\code{.xlsx}, \code{.xls}) or CSV (\code{.csv}) file and
-standardizes column names to uppercase. The function also validates that
-required metadata columns are present in the input file.}
+\title{Read metadata from an Excel or CSV file}
 \usage{
 read_tfile(filename, sheetname = NULL, validate = TRUE, ...)
 }
@@ -13,46 +11,67 @@ read_tfile(filename, sheetname = NULL, validate = TRUE, ...)
 Supported formats are \code{.xlsx}, \code{.xls}, and \code{.csv}.}
 
 \item{sheetname}{For Excel files, the name or index of the worksheet to read.
-Ignored when reading CSV files. Default is \code{NULL}, which uses the first
-sheet.}
+Ignored for CSV files. If \code{NULL} (default), the first worksheet is used.}
 
-\item{validate}{Logical. If \code{TRUE} (default), the function checks that required
-metadata columns are present.}
+\item{validate}{Logical. If \code{TRUE} (default), the function checks that
+required metadata columns are present.}
 
-\item{...}{Additional arguments passed to \code{\link[readxl:read_excel]{readxl::read_excel()}}.
-For CSV files, ... is ignored.}
+\item{...}{Additional arguments passed to
+\code{\link[readxl:read_excel]{readxl::read_excel}} for Excel files.
+Ignored for CSV files.}
 }
 \value{
-A data frame containing the metadata with column names converted
-to uppercase.
+A data frame containing the imported metadata, with column names
+converted to uppercase.
 }
 \description{
-Reads metadata from an Excel (\code{.xlsx}, \code{.xls}) or CSV (\code{.csv}) file and
-standardizes column names to uppercase. The function also validates that
-required metadata columns are present in the input file.
+Reads metadata from an Excel (\code{.xlsx}, \code{.xls}) or CSV (\code{.csv}) file,
+standardizes column names to uppercase, and optionally validates that
+required metadata columns are present.
 }
 \details{
-The input metadata file must contain the following required columns:
+Column names in the returned data frame are converted to uppercase.
+
+If \code{validate = TRUE}, the input metadata must contain the following
+required columns:
 \describe{
-\item{PGMNAME}{Program name associated with the TFL output.}
+\item{PGMNAME}{Program name associated with the output.}
 \item{TTL1}{Primary title text.}
 \item{FOOT1}{Primary footnote text.}
 \item{SOURCE}{Source description for the output.}
 }
 
-If \code{validate = TRUE} and any required column is missing, the function
-stops with an error.
+If any required column is missing, the function stops with an error.
 }
 \examples{
-\dontrun{
-filename <- system.file(
-   "extdata",
-   "st_titles.xls",
-   package = "tflmetaR"
- )
-# Read from the 'header' sheet
-data <- read_tfile(filename, sheetname = "header")
-}
+# Example 1: read a CSV metadata file
+csv_file <- tempfile(fileext = ".csv")
+write.csv(
+  data.frame(
+    pgmname = "t_dm",
+    ttl1 = "Table 1. Demographics",
+    foot1 = "Source: ADSL",
+    foot2 = "*: Baseline record",
+    source = "ADSL"
+  ),
+  csv_file,
+  row.names = FALSE
+)
 
+read_tfile(csv_file)
+
+# Example 2: read an Excel metadata file
+xlsx_file <- tempfile(fileext = ".xlsx")
+writexl::write_xlsx(
+  data.frame(
+    pgmname = "t_ae",
+    ttl1 = "Table 2. Adverse Events",
+    foot1 = "Source: ADAE",
+    source = "ADAE"
+  ),
+  xlsx_file
+)
+
+read_tfile(xlsx_file)
 
 }
