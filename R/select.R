@@ -63,7 +63,7 @@ select_row <- function(data, by_column, by_value, oid=NULL) {
 #'   If `select_type` matches a column name exactly, that column is returned.
 #'   Otherwise, columns whose names start with `select_type` are returned.
 #' @param add_footr_tstamp Logical or a function. If `TRUE`, a function named `add_footr_tstamp()`
-#' is called to append timestamps to footnotes. Defaults to `TRUE`.
+#' is called to append timestamps to footnotes. Defaults to `FALSE`.
 #'
 #' @return A list of selected columns from the input data, with `NA` values removed.
 #'
@@ -75,7 +75,7 @@ select_row <- function(data, by_column, by_value, oid=NULL) {
 #' }
 #'
 #' @noRd
-select_cols <- function(data, select_type, add_footr_tstamp = TRUE) {
+select_cols <- function(data, select_type, add_footr_tstamp = FALSE) {
   stopifnot(is.data.frame(data))
   cols <- NULL
 
@@ -109,7 +109,7 @@ select_cols <- function(data, select_type, add_footr_tstamp = TRUE) {
   cols[!vapply(cols, function(x) all(is.na(x)), logical(1))]
 }
 
-#' Helper
+
 #' @noRd
 include_footr_tstamp <- function(pgmname_str, src_str) {
   stopifnot(is.character(pgmname_str), length(pgmname_str) == 1)
