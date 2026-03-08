@@ -24,8 +24,9 @@ in \code{OID}. Use this when multiple rows match the program name.}
 A named list containing non-missing title-related metadata fields.
 }
 \description{
-Retrieves title-related fields (for example, \code{TTL1}, \code{TTL2}) from a TFL
-metadata data frame for a specified program name or table number.
+Retrieves title-related fields (columns beginning with \code{"TTL"}, such as
+\code{TTL1}, \code{TTL2}, and \code{POPULATION} if available) from a TFL metadata data
+frame for a specified program name or table number.
 }
 \examples{
 meta <- data.frame(

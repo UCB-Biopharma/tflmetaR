@@ -33,8 +33,9 @@ information as the last footnote line. Defaults to \code{TRUE}.}
 A named list of non-missing footnote-related metadata fields.
 }
 \description{
-Retrieves footnote-related fields (for example, \code{FOOT1}, \code{FOOT2}) from a TFL
-metadata data frame for a specified program name or TFL number.
+Retrieves footnote-related fields (columns beginning with \code{"FOOT"},
+such as \code{FOOT1} and \code{FOOT2}) from a TFL metadata frame for a
+specified program name or TFL number.
 }
 \examples{
 meta <- data.frame(

@@ -1,7 +1,8 @@
 #' Get Title Metadata
 #'
-#' Retrieves title-related fields (for example, `TTL1`, `TTL2`) from a TFL
-#' metadata data frame for a specified program name or table number.
+#' Retrieves title-related fields (columns beginning with `"TTL"`, such as
+#' `TTL1`, `TTL2`, and `POPULATION` if available) from a TFL metadata data
+#' frame for a specified program name or table number.
 #'
 #' @param df A data frame containing TFL metadata.
 #' @param tnumber An optional character string specifying the TFL number
@@ -51,8 +52,9 @@ get_title <- function(df,
 
 #' Get Footnote Metadata
 #'
-#' Retrieves footnote-related fields (for example, `FOOT1`, `FOOT2`) from a TFL
-#' metadata data frame for a specified program name or TFL number.
+#' Retrieves footnote-related fields (columns beginning with `"FOOT"`,
+#' such as `FOOT1` and `FOOT2`) from a TFL metadata frame for a
+#' specified program name or TFL number.
 #'
 #' @inheritParams get_title
 #' @param add_footr_tstamp Logical. If `TRUE`, append timestamp and source
@@ -98,7 +100,8 @@ get_footnote <- function(df,
 
 #' Get Upper-Left Header Text
 #'
-#' Retrieves upper-left header fields (for example, `UL1`, `UL2`) from metadata.
+#' Retrieves upper-left header fields (columns beginning with `"UL"`,
+#' such as `UL1` and `UL2`) from metadata.
 #'
 #' @param df A data frame containing metadata.
 #'
@@ -122,7 +125,8 @@ get_ulheader <- function(df) {
 
 #' Get Upper-Right Header Text
 #'
-#' Retrieves upper-right header fields (for example, `UR1`, `UR2`) from metadata.
+#' Retrieves upper-right header fields (columns beginning with `"UR"`,
+#' such as `UR1` and `UR2`) from metadata.
 #'
 #' @inheritParams get_ulheader
 #'
@@ -146,8 +150,8 @@ get_urheader <- function(df) {
 
 #' Get Population Metadata
 #'
-#' Retrieves the population field from a TFL metadata data frame for a specified
-#' program name or TFL number.
+#' Retrieves the population field `POPULATION` from a TFL metadata data frame
+#' for a specified program name or TFL number.
 #'
 #' @inheritParams get_title
 #'

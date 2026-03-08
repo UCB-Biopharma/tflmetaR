@@ -21,11 +21,10 @@ tflmetaR(
 \item{sheetname}{For Excel files, the worksheet name or index to read.
 Ignored for CSV files. If \code{NULL} (default), the first worksheet is used.}
 
-\item{by_column}{Column name used to filter the desired metadata row.
-The column name is matched case-insensitively against the metadata.
-Default is \code{"PGMNAME"} (program name).}
+\item{by_column}{Name of the metadata field used to filter the desired row.
+Matching is case-insensitive. Default is \code{"PGMNAME"} (program name).}
 
-\item{by_value}{Value in \code{by_column} used to identify the desired row.
+\item{by_value}{Value of \code{by_column} used to identify the desired row.
 For example, \code{by_column = "PGMNAME"} and \code{by_value = "t_dm.R"}
 retrieves the row where \code{PGMNAME == "t_dm.R"}.}
 
@@ -34,13 +33,14 @@ retrieves the row where \code{PGMNAME == "t_dm.R"}.}
 \item{annotation}{Type of metadata to return:
 \itemize{
 \item \code{NULL}: return the full filtered row.
-\item \code{"TITLE"}: return title-related columns (columns
-beginning with \code{"TTL"} and \code{POPULATION} if available).
-\item \code{"FOOTR"}: return footnote columns (columns beginning with \code{"FOOT"}).
+\item \code{"TITLE"}: return title-related metadata (fields beginning with
+\code{"TTL"}, such as \code{TTL1}, \code{TTL2}, and \code{POPULATION} if available).
+\item \code{"FOOTR"}: return footnote metadata (fields beginning with \code{"FOOT"}).
 If \code{add_footr_tstamp = TRUE}, a timestamp/source line may be appended.
-\item \code{"SOURCE"}: return columns beginning with \code{"SOURCE"}.
-\item \code{"BYLINE"}: return columns beginning with \code{"BYLINE"}.
-\item Any other value: return the specified column, or matching columns
+\item \code{"SOURCE"}: return metadata fields beginning with \code{"SOURCE"}.
+\item \code{"BYLINE"}: return metadata fields beginning with \code{"BYLINE"}.
+\item \code{"POPULATION"}: return the \code{POPULATION} field.
+\item Any other value: return the specified field, or matching fields
 when applicable.
 }}
 

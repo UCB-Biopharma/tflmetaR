@@ -24,8 +24,8 @@ in \code{OID}. Use this when multiple rows match the program name.}
 A named list containing the non-missing population field.
 }
 \description{
-Retrieves the population field from a TFL metadata data frame for a specified
-program name or TFL number.
+Retrieves the population field \code{POPULATION} from a TFL metadata data frame
+for a specified program name or TFL number.
 }
 \examples{
 meta <- data.frame(

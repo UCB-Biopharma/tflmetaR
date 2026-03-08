@@ -8,23 +8,23 @@
 #'   `.xls`, `.xlsx`, and `.csv`.
 #' @param sheetname For Excel files, the worksheet name or index to read.
 #'   Ignored for CSV files. If `NULL` (default), the first worksheet is used.
-#' @param by_column Column name used to filter the desired metadata row.
-#'   The column name is matched case-insensitively against the metadata.
-#'   Default is `"PGMNAME"` (program name).
-#' @param by_value Value in `by_column` used to identify the desired row.
+#' @param by_column Name of the metadata field used to filter the desired row.
+#'   Matching is case-insensitive. Default is `"PGMNAME"` (program name).
+#' @param by_value Value of `by_column` used to identify the desired row.
 #'   For example, `by_column = "PGMNAME"` and `by_value = "t_dm.R"`
 #'   retrieves the row where `PGMNAME == "t_dm.R"`.
 #' @param oid Optional object identifier used for additional filtering.
 #' @param annotation Type of metadata to return:
 #'   \itemize{
 #'     \item `NULL`: return the full filtered row.
-#'     \item `"TITLE"`: return title-related columns (columns
-#'       beginning with `"TTL"` and `POPULATION` if available).
-#'     \item `"FOOTR"`: return footnote columns (columns beginning with `"FOOT"`).
+#'     \item `"TITLE"`: return title-related metadata (fields beginning with
+#'       `"TTL"`, such as `TTL1`, `TTL2`, and `POPULATION` if available).
+#'     \item `"FOOTR"`: return footnote metadata (fields beginning with `"FOOT"`).
 #'       If `add_footr_tstamp = TRUE`, a timestamp/source line may be appended.
-#'     \item `"SOURCE"`: return columns beginning with `"SOURCE"`.
-#'     \item `"BYLINE"`: return columns beginning with `"BYLINE"`.
-#'     \item Any other value: return the specified column, or matching columns
+#'     \item `"SOURCE"`: return metadata fields beginning with `"SOURCE"`.
+#'     \item `"BYLINE"`: return metadata fields beginning with `"BYLINE"`.
+#'     \item `"POPULATION"`: return the `POPULATION` field.
+#'     \item Any other value: return the specified field, or matching fields
 #'       when applicable.
 #'   }
 #' @param add_footr_tstamp Logical. If `TRUE`, append timestamp/source

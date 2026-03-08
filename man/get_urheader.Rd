@@ -13,7 +13,8 @@ get_urheader(df)
 A named list of non-missing upper-right header metadata fields.
 }
 \description{
-Retrieves upper-right header fields (for example, \code{UR1}, \code{UR2}) from metadata.
+Retrieves upper-right header fields (columns beginning with \code{"UR"},
+such as \code{UR1} and \code{UR2}) from metadata.
 }
 \examples{
 meta <- data.frame(

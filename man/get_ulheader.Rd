@@ -13,7 +13,8 @@ get_ulheader(df)
 A named list of non-missing Upper-Left header metadata fields.
 }
 \description{
-Retrieves upper-left header fields (for example, \code{UL1}, \code{UL2}) from metadata.
+Retrieves upper-left header fields (columns beginning with \code{"UL"},
+such as \code{UL1} and \code{UL2}) from metadata.
 }
 \examples{
 meta <- data.frame(
