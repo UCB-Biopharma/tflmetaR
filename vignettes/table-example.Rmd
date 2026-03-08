@@ -14,10 +14,6 @@ knitr::opts_chunk$set(
   message = FALSE,
   warning = FALSE
 )
-# Load required packages
-library(tflmetaR)
-library(gt)
-library(dplyr)
 ```
 
 ## Introduction
@@ -35,12 +31,18 @@ This vignette demonstrates how to integrate `tflmetaR` with the `gt` package to 
 
 ---
 
+## Loading Required Packages
+```{r load-packages, message=FALSE, warning=FALSE}
+library(tflmetaR)
+library(gt)
+library(dplyr)
+```
+
+---
+
 ## Loading Table Metadata
 
-The first step in using `tflmetaR` is loading the metadata file that contains your table annotations. The package supports both Excel (`.xlsx`, `.xls`) and CSV formats through dedicated functions:
-
-- `read_tfile()`: Reads metadata from Excel files with optional sheet specification
-- `read_tfile_csv()`: Reads metadata from CSV files
+The first step in using `tflmetaR` is loading the metadata file that contains your table annotations. The package supports both Excel (`.xlsx`, `.xls`) and CSV (`.csv`) formats through the `read_tfile()` function, with an optional sheet name for Excel files. 
 
 The metadata file should contain standardized columns including `PGMNAME` (program name), `TTL1` (primary title), `FOOT1` (first footnote), and `SOURCE` (data source). Additional columns for subtitles (`TTL2`, `TTL3`, ...), additional footnotes (`FOOT2`, `FOOT3`, ...), population definitions, and bylines are also supported.
 
@@ -187,8 +189,7 @@ When combined with modern table rendering packages like `gt`, `tflmetaR` enables
 
 | Function | Purpose |
 |----------|---------|
-| `read_tfile()` | Load metadata from Excel |
-| `read_tfile_csv()` | Load metadata from CSV |
+| `read_tfile()` | Load metadata from Excel or CSV |
 | `get_title()` | Extract titles and subtitles |
 | `get_footnote()` | Extract footnotes |
 | `get_source()` | Extract data source |
