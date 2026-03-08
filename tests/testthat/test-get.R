@@ -88,27 +88,9 @@ test_that("get_footnote filters out NA footnote columns", {
 })
 
 # test get_ulheader
-test_that("get_ulheader returns a data.frame when by_list = TRUE", {
-  df <- data.frame(UL1 = "Header1", UL2 = "Header2", OTHER = "Ignore")
-  result <- get_ulheader(df, by_list = TRUE)
-
-  expect_true(is.data.frame(result))
-  expect_named(result, c("UL1", "UL2"))
-})
-
-test_that("get_ulheader returns a string when by_list = FALSE", {
-  df <- data.frame(UL1 = "Header1", UL2 = "Header2")
-  result <- get_ulheader(df, by_list = FALSE)
-
-  expect_true(is.character(result))
-  #expect_true(grepl("Header1", result))
-  #expect_true(grepl("Header2", result))
-  expect_true(grepl("\n", result))
-})
-
 test_that("get_ulheader filters out NA columns", {
   df <- data.frame(UL1 = "Header1", UL2 = NA, UL3 = "Header3")
-  result <- get_ulheader(df, by_list = TRUE)
+  result <- get_ulheader(df)
 
   expect_named(result, c("UL1", "UL3"))
   expect_false("UL2" %in% names(result))
@@ -116,33 +98,14 @@ test_that("get_ulheader filters out NA columns", {
 
 test_that("get_ulheader handles no UL columns gracefully", {
   df <- data.frame(A = "X", B = "Y")
-  result <- get_ulheader(df, by_list = TRUE)
+  result <- get_ulheader(df)
 
   expect_equal(ncol(result), 0)
 })
 
-# test get_urheader
-test_that("get_urheader returns a data.frame when by_list = TRUE", {
-  df <- data.frame(UR1 = "Header1", UR2 = "Header2", OTHER = "Ignore")
-  result <- get_urheader(df, by_list = TRUE)
-
-  expect_true(is.data.frame(result))
-  expect_named(result, c("UR1", "UR2"))
-})
-
-test_that("get_urheader returns a string when by_list = FALSE", {
-  df <- data.frame(UR1 = "Header1", UR2 = "Header2")
-  result <- get_urheader(df, by_list = FALSE)
-
-  expect_true(is.character(result))
-  #expect_true(grepl("Header1", result))
-  #expect_true(grepl("Header2", result))
-  expect_true(grepl("\n", result))
-})
-
 test_that("get_urheader filters out NA columns", {
   df <- data.frame(UR1 = "Header1", UR2 = NA, UR3 = "Header3")
-  result <- get_urheader(df, by_list = TRUE)
+  result <- get_urheader(df)
 
   expect_named(result, c("UR1", "UR3"))
   expect_false("UR2" %in% names(result))
@@ -150,7 +113,7 @@ test_that("get_urheader filters out NA columns", {
 
 test_that("get_urheader handles no UR columns gracefully", {
   df <- data.frame(A = "X", B = "Y")
-  result <- get_urheader(df, by_list = TRUE)
+  result <- get_urheader(df)
 
   expect_equal(ncol(result), 0)
 })

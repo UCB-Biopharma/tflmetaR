@@ -4,17 +4,13 @@
 \alias{get_urheader}
 \title{Get Upper-Right Header Text}
 \usage{
-get_urheader(df, by_list = TRUE)
+get_urheader(df)
 }
 \arguments{
 \item{df}{A data frame containing metadata.}
-
-\item{by_list}{Logical. If \code{TRUE}, returns a list of non-missing values.
-If \code{FALSE}, returns a single collapsed character string.}
 }
 \value{
-A list of header values or a single character string depending on
-the value of \code{by_list}.
+A named list of non-missing upper-right header metadata fields.
 }
 \description{
 Retrieves upper-right header fields (for example, \code{UR1}, \code{UR2}) from metadata.
@@ -28,6 +24,5 @@ meta <- data.frame(
 )
 
 get_urheader(meta)
-get_urheader(meta, by_list = FALSE)
 
 }

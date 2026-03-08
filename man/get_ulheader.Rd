@@ -4,17 +4,13 @@
 \alias{get_ulheader}
 \title{Get Upper-Left Header Text}
 \usage{
-get_ulheader(df, by_list = TRUE)
+get_ulheader(df)
 }
 \arguments{
 \item{df}{A data frame containing metadata.}
-
-\item{by_list}{Logical. If \code{TRUE}, returns a list of non-missing values.
-If \code{FALSE}, returns a single collapsed character string.}
 }
 \value{
-A list of header values or a single character string depending on
-the value of \code{by_list}.
+A named list of non-missing Upper-Left header metadata fields.
 }
 \description{
 Retrieves upper-left header fields (for example, \code{UL1}, \code{UL2}) from metadata.
@@ -28,6 +24,5 @@ meta <- data.frame(
 )
 
 get_ulheader(meta)
-get_ulheader(meta, by_list = FALSE)
 
 }

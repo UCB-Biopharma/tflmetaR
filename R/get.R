@@ -101,11 +101,8 @@ get_footnote <- function(df,
 #' Retrieves upper-left header fields (for example, `UL1`, `UL2`) from metadata.
 #'
 #' @param df A data frame containing metadata.
-#' @param by_list Logical. If `TRUE`, returns a list of non-missing values.
-#'   If `FALSE`, returns a single collapsed character string.
 #'
-#' @return A list of header values or a single character string depending on
-#'   the value of `by_list`.
+#' @return A named list of non-missing Upper-Left header metadata fields.
 #'
 #' @examples
 #' meta <- data.frame(
@@ -116,11 +113,10 @@ get_footnote <- function(df,
 #' )
 #'
 #' get_ulheader(meta)
-#' get_ulheader(meta, by_list = FALSE)
 #'
 #' @export
-get_ulheader <- function(df, by_list = TRUE) {
-  get_header_by_prefix(df, "UL", by_list = by_list)
+get_ulheader <- function(df) {
+  select_cols(df, select_type = "UL")
 }
 
 
@@ -130,8 +126,7 @@ get_ulheader <- function(df, by_list = TRUE) {
 #'
 #' @inheritParams get_ulheader
 #'
-#' @return A list of header values or a single character string depending on
-#'   the value of `by_list`.
+#' @return A named list of non-missing upper-right header metadata fields.
 #'
 #' @examples
 #' meta <- data.frame(
@@ -142,24 +137,10 @@ get_ulheader <- function(df, by_list = TRUE) {
 #' )
 #'
 #' get_urheader(meta)
-#' get_urheader(meta, by_list = FALSE)
 #'
 #' @export
-get_urheader <- function(df, by_list = TRUE) {
-  get_header_by_prefix(df, "UR", by_list = by_list)
-}
-
-
-#' @noRd
-get_header_by_prefix <- function(df, prefix, by_list = TRUE) {
-  x <- select_starts_with(df, prefix)
-  x <- Filter(function(y) !is.na(y), x)
-
-  if (by_list) {
-    x
-  } else {
-    paste(unlist(x, use.names = FALSE), collapse = "\n")
-  }
+get_urheader <- function(df) {
+  select_cols(df, select_type = "UR")
 }
 
 
