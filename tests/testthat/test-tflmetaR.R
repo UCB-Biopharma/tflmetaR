@@ -23,7 +23,7 @@ testthat::test_that("tflmetaR() dispatches and selects correctly for CSV and Exc
   res_csv_foot <- tflmetaR(
     file = csv_path,
     by_value = "t_dm",
-    select_type = "FOOTR",
+    annotation = "FOOTR",
     add_footr_tstamp = FALSE
   )
 
@@ -40,7 +40,7 @@ testthat::test_that("tflmetaR() dispatches and selects correctly for CSV and Exc
     file = xlsx_path,
     sheet = "Sheet1",
     by_value = "t_dm",
-    select_type = "TITLE",
+    annotation = "TITLE",
     add_footr_tstamp = FALSE
   )
 
@@ -54,7 +54,7 @@ testthat::test_that("tflmetaR() dispatches and selects correctly for CSV and Exc
     file = xlsx_path,
     sheet = "Sheet1",
     by_value = "t_dm",
-    select_type = "FOOTR",
+    annotation = "FOOTR",
     add_footr_tstamp = TRUE
   )
 
@@ -69,7 +69,7 @@ testthat::test_that("tflmetaR() dispatches and selects correctly for CSV and Exc
     file = xlsx_path,
     sheet = "Sheet1",
     by_value = "t_dm",
-    select_type = "SOURCE"
+    annotation = "SOURCE"
   )
 
   testthat::expect_s3_class(res_xls_source, "data.frame")
@@ -144,7 +144,7 @@ test_that("tflmetaR reads metadata from CSV in extdata", {
   res_title <- tflmetaR(
     file = csv_path,
     by_value = "t_dm",
-    select_type = "TITLE"
+    annotation = "TITLE"
   )
 
   expect_s3_class(res_title, "data.frame")
@@ -155,7 +155,7 @@ test_that("tflmetaR reads metadata from CSV in extdata", {
   res_foot <- tflmetaR(
     file = csv_path,
     by_value = "t_dm",
-    select_type = "FOOTR"
+    annotation = "FOOTR"
   )
 
   expect_s3_class(res_foot, "data.frame")
@@ -166,7 +166,7 @@ test_that("tflmetaR reads metadata from CSV in extdata", {
   res_source <- tflmetaR(
     file = csv_path,
     by_value = "t_dm",
-    select_type = "SOURCE"
+    annotation = "SOURCE"
   )
 
   expect_s3_class(res_source, "data.frame")
@@ -202,7 +202,7 @@ test_that("tflmetaR errors when by_value is missing", {
 
 })
 
-test_that("tflmetaR treats FOOTR select_type case-insensitively", {
+test_that("tflmetaR treats FOOTR annotation case-insensitively", {
   csv_file <- tempfile(fileext = ".csv")
 
   write.csv(
@@ -222,14 +222,14 @@ test_that("tflmetaR treats FOOTR select_type case-insensitively", {
   result_upper <- tflmetaR(
     filename = csv_file,
     by_value = "t_dm",
-    select_type = "FOOTR",
+    annotation = "FOOTR",
     add_footr_tstamp = FALSE
   )
 
   result_mixed <- tflmetaR(
     filename = csv_file,
     by_value = "t_dm",
-    select_type = "footr",
+    annotation = "footr",
     add_footr_tstamp = FALSE
   )
 

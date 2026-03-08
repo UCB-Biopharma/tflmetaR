@@ -10,7 +10,7 @@ tflmetaR(
   by_column = "PGMNAME",
   by_value,
   oid = NULL,
-  select_type = NULL,
+  annotation = NULL,
   add_footr_tstamp = TRUE
 )
 }
@@ -25,39 +25,44 @@ Ignored for CSV files. If \code{NULL} (default), the first worksheet is used.}
 The column name is matched case-insensitively against the metadata.
 Default is \code{"PGMNAME"} (program name).}
 
-\item{by_value}{Value in \code{by_column} used to select the desired row.}
+\item{by_value}{Value in \code{by_column} used to identify the desired row.
+For example, \code{by_column = "PGMNAME"} and \code{by_value = "t_dm.R"}
+retrieves the row where \code{PGMNAME == "t_dm.R"}.}
 
 \item{oid}{Optional object identifier used for additional filtering.}
 
-\item{select_type}{Type of metadata to return:
+\item{annotation}{Type of metadata to return:
 \itemize{
-\item \code{NULL}: return the full selected row.
-\item \code{"TITLE"}: return title columns (for example, columns beginning
-with \code{"TTL"}) and related title metadata.
-\item \code{"FOOTR"}: return footnote columns (for example, columns beginning
-with \code{"FOOT"}). If \code{add_footr_tstamp = TRUE}, a timestamp/source line
-may be appended.
-\item otherwise: return the specified column or set of matching columns.
+\item \code{NULL}: return the full filtered row.
+\item \code{"TITLE"}: return title-related columns (columns
+beginning with \code{"TTL"} and \code{POPULATION} if available).
+\item \code{"FOOTR"}: return footnote columns (columns beginning with \code{"FOOT"}).
+If \code{add_footr_tstamp = TRUE}, a timestamp/source line may be appended.
+\item \code{"SOURCE"}: return columns beginning with \code{"SOURCE"}.
+\item \code{"BYLINE"}: return columns beginning with \code{"BYLINE"}.
+\item Any other value: return the specified column, or matching columns
+when applicable.
 }}
 
 \item{add_footr_tstamp}{Logical. If \code{TRUE}, append timestamp/source
-information when \code{select_type = "FOOTR"}. Ignored otherwise.}
+information when \code{annotation = "FOOTR"}. Ignored otherwise.}
 }
 \value{
-A data frame containing the selected row or columns.
+A data frame containing the filtered row or selected metadata
+columns.
 }
 \description{
 Reads annotation metadata from an Excel (\code{.xls}, \code{.xlsx}) or CSV (\code{.csv})
 file, filters to a single row using \code{by_column}, \code{by_value}, and optional
-\code{oid}, and returns the requested columns based on \code{select_type}.
+\code{oid}, and returns the requested metadata based on \code{annotation}.
 }
 \details{
 This function provides a simple interface for retrieving titles,
-footnotes, or other annotation metadata from a structured metadata file.
+footnotes, sources, and other annotation metadata from a structured
+metadata file.
 
-Internally, the metadata file is read using \code{\link[=read_tfile]{read_tfile()}}, after which
-the appropriate row and columns are extracted based on the supplied
-filtering and selection arguments.
+Internally, the metadata file is read using \code{\link[=read_tfile]{read_tfile()}}, then filtered
+to a single row and reduced to the requested columns.
 }
 \examples{
 # Create a small example metadata file
@@ -78,14 +83,14 @@ write.csv(
 tflmetaR(
   filename = csv_file,
   by_value = "t_dm",
-  select_type = "TITLE"
+  annotation = "TITLE"
 )
 
 # Return footnote-related columns
 tflmetaR(
   filename = csv_file,
   by_value = "t_dm",
-  select_type = "FOOTR",
+  annotation = "FOOTR",
   add_footr_tstamp = FALSE
 )
 
@@ -93,7 +98,7 @@ tflmetaR(
 tflmetaR(
   filename = csv_file,
   by_value = "t_dm",
-  select_type = "SOURCE"
+  annotation = "SOURCE"
 )
 
 # Return the full selected row

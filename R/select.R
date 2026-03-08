@@ -52,16 +52,16 @@ select_row <- function(data, by_column, by_value, oid=NULL) {
 
 #' Internal Helper to Select Metadata Columns Based on Filtering Criteria
 #'
-#' Selects specific columns from a metadata data frame based on the type of content desired
+#' Selects specific columns from a metadata data frame based on the annotation desired
 #' (e.g., titles, footnotes, or a named column). Optionally appends a timestamp to footnotes.
 #'
 #' @param data A data frame containing metadata (e.g., titles, footnotes, sources).
-#' @param select_type A character string indicating which columns to return.
+#' @param annotation A character string indicating which columns to return.
 #'   If `NULL`, all columns are returned.
 #'   If `"TITLE"`, columns starting with `"TTL"` and `"POPULATION"` are returned.
 #'   If `"FOOTR"`, columns starting with `"FOOT"` are returned.
-#'   If `select_type` matches a column name exactly, that column is returned.
-#'   Otherwise, columns whose names start with `select_type` are returned.
+#'   If `annotation` matches a column name exactly, that column is returned.
+#'   Otherwise, columns whose names start with `annotation` are returned.
 #' @param add_footr_tstamp Logical or a function. If `TRUE`, a function named `add_footr_tstamp()`
 #' is called to append timestamps to footnotes. Defaults to `FALSE`.
 #'
@@ -69,26 +69,26 @@ select_row <- function(data, by_column, by_value, oid=NULL) {
 #'
 #' @examples
 #' \dontrun{
-#' select_cols(data, select_type = "TITLE")
-#' select_cols(data, select_type = "FOOTR")
-#' select_cols(data, select_type = "PGMNAME")
+#' select_cols(data, annotation = "TITLE")
+#' select_cols(data, annotation = "FOOTR")
+#' select_cols(data, annotation = "PGMNAME")
 #' }
 #'
 #' @noRd
-select_cols <- function(data, select_type, add_footr_tstamp = FALSE) {
+select_cols <- function(data, annotation, add_footr_tstamp = FALSE) {
   stopifnot(is.data.frame(data))
   cols <- NULL
 
-  if (is.null(select_type)) {
+  if (is.null(annotation)) {
     cols <- data
 
   } else {
-    type <- toupper(select_type)
+    annotation <- toupper(annotation)
 
-    if (type == "TITLE") {
+    if (annotation == "TITLE") {
       cols <- select_starts_with(data, "TTL", keep_cols = "POPULATION")
 
-    } else if (type == "FOOTR") {
+    } else if (annotation == "FOOTR") {
       cols <- select_starts_with(data, "FOOT")
 
       if (isTRUE(add_footr_tstamp)) {
@@ -98,11 +98,11 @@ select_cols <- function(data, select_type, add_footr_tstamp = FALSE) {
         cols$source <- include_footr_tstamp(pgmname, src)
       }
 
-    } else if (type %in% names(data)) {
-      cols <- data[type]
+    } else if (annotation %in% names(data)) {
+      cols <- data[annotation]
 
     } else {
-      cols <- select_starts_with(data, type)
+      cols <- select_starts_with(data, annotation)
     }
   }
 

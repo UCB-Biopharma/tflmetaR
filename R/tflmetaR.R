@@ -2,7 +2,7 @@
 #'
 #' Reads annotation metadata from an Excel (`.xls`, `.xlsx`) or CSV (`.csv`)
 #' file, filters to a single row using `by_column`, `by_value`, and optional
-#' `oid`, and returns the requested columns based on `select_type`.
+#' `oid`, and returns the requested metadata based on `annotation`.
 #'
 #' @param filename Path to the metadata file. Supported extensions are
 #'   `.xls`, `.xlsx`, and `.csv`.
@@ -11,30 +11,35 @@
 #' @param by_column Column name used to filter the desired metadata row.
 #'   The column name is matched case-insensitively against the metadata.
 #'   Default is `"PGMNAME"` (program name).
-#' @param by_value Value in `by_column` used to select the desired row.
+#' @param by_value Value in `by_column` used to identify the desired row.
+#'   For example, `by_column = "PGMNAME"` and `by_value = "t_dm.R"`
+#'   retrieves the row where `PGMNAME == "t_dm.R"`.
 #' @param oid Optional object identifier used for additional filtering.
-#' @param select_type Type of metadata to return:
+#' @param annotation Type of metadata to return:
 #'   \itemize{
-#'     \item `NULL`: return the full selected row.
-#'     \item `"TITLE"`: return title columns (for example, columns beginning
-#'       with `"TTL"`) and related title metadata.
-#'     \item `"FOOTR"`: return footnote columns (for example, columns beginning
-#'       with `"FOOT"`). If `add_footr_tstamp = TRUE`, a timestamp/source line
-#'       may be appended.
-#'     \item otherwise: return the specified column or set of matching columns.
+#'     \item `NULL`: return the full filtered row.
+#'     \item `"TITLE"`: return title-related columns (columns
+#'       beginning with `"TTL"` and `POPULATION` if available).
+#'     \item `"FOOTR"`: return footnote columns (columns beginning with `"FOOT"`).
+#'       If `add_footr_tstamp = TRUE`, a timestamp/source line may be appended.
+#'     \item `"SOURCE"`: return columns beginning with `"SOURCE"`.
+#'     \item `"BYLINE"`: return columns beginning with `"BYLINE"`.
+#'     \item Any other value: return the specified column, or matching columns
+#'       when applicable.
 #'   }
 #' @param add_footr_tstamp Logical. If `TRUE`, append timestamp/source
-#'   information when `select_type = "FOOTR"`. Ignored otherwise.
+#'   information when `annotation = "FOOTR"`. Ignored otherwise.
 #'
 #' @details
 #' This function provides a simple interface for retrieving titles,
-#' footnotes, or other annotation metadata from a structured metadata file.
+#' footnotes, sources, and other annotation metadata from a structured
+#' metadata file.
 #'
-#' Internally, the metadata file is read using [read_tfile()], after which
-#' the appropriate row and columns are extracted based on the supplied
-#' filtering and selection arguments.
+#' Internally, the metadata file is read using [read_tfile()], then filtered
+#' to a single row and reduced to the requested columns.
 #'
-#' @return A data frame containing the selected row or columns.
+#' @return A data frame containing the filtered row or selected metadata
+#'   columns.
 #'
 #' @examples
 #' # Create a small example metadata file
@@ -55,14 +60,14 @@
 #' tflmetaR(
 #'   filename = csv_file,
 #'   by_value = "t_dm",
-#'   select_type = "TITLE"
+#'   annotation = "TITLE"
 #' )
 #'
 #' # Return footnote-related columns
 #' tflmetaR(
 #'   filename = csv_file,
 #'   by_value = "t_dm",
-#'   select_type = "FOOTR",
+#'   annotation = "FOOTR",
 #'   add_footr_tstamp = FALSE
 #' )
 #'
@@ -70,7 +75,7 @@
 #' tflmetaR(
 #'   filename = csv_file,
 #'   by_value = "t_dm",
-#'   select_type = "SOURCE"
+#'   annotation = "SOURCE"
 #' )
 #'
 #' # Return the full selected row
@@ -85,7 +90,7 @@ tflmetaR <- function(filename,
                      by_column = "PGMNAME",
                      by_value,
                      oid = NULL,
-                     select_type = NULL,
+                     annotation = NULL,
                      add_footr_tstamp = TRUE) {
 
   if (missing(by_value)) {
@@ -94,6 +99,6 @@ tflmetaR <- function(filename,
 
   read_tfile(filename, sheetname = sheetname) |>
     select_row(by_column, by_value, oid) |>
-    select_cols(select_type, add_footr_tstamp)
+    select_cols(annotation, add_footr_tstamp)
 }
 

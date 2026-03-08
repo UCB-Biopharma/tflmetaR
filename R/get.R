@@ -46,7 +46,7 @@ get_title <- function(df,
   } else {
     title_list <- select_row(df, by_column = "TTL1", by_value = tnumber)
   }
-  select_cols(title_list, select_type = "TITLE")
+  select_cols(title_list, annotation = "TITLE")
 }
 
 #' Get Footnote Metadata
@@ -92,7 +92,7 @@ get_footnote <- function(df,
   } else {
     footnote_list <- select_row(df, by_column = "TTL1", by_value = tnumber)
   }
-  select_cols(footnote_list, select_type = "FOOTR", add_footr_tstamp = add_footr_tstamp)
+  select_cols(footnote_list, annotation = "FOOTR", add_footr_tstamp = add_footr_tstamp)
 }
 
 
@@ -116,7 +116,7 @@ get_footnote <- function(df,
 #'
 #' @export
 get_ulheader <- function(df) {
-  select_cols(df, select_type = "UL")
+  select_cols(df, annotation = "UL")
 }
 
 
@@ -140,7 +140,7 @@ get_ulheader <- function(df) {
 #'
 #' @export
 get_urheader <- function(df) {
-  select_cols(df, select_type = "UR")
+  select_cols(df, annotation = "UR")
 }
 
 
@@ -180,7 +180,7 @@ get_pop <- function(df,
   } else {
     pop_list <- select_row(df, by_column = "TTL1", by_value = tnumber)
   }
-  select_cols(pop_list, select_type = "POPULATION")
+  select_cols(pop_list, annotation = "POPULATION")
 }
 
 #' Get Byline Metadata
@@ -217,7 +217,7 @@ get_byline <- function(df,
   } else {
     byline_list <- select_row(df, by_column = "TTL1", by_value = tnumber)
   }
-  select_cols(byline_list, select_type = "BYLINE")
+  select_cols(byline_list, annotation = "BYLINE")
 }
 
 #' Get Program Name Metadata
@@ -252,7 +252,7 @@ get_pgmname <- function(df,
   } else {
     pgmname_list <- select_row(df, by_column = "TTL1", by_value = tnumber)
   }
-  select_cols(pgmname_list, select_type = "PGMNAME")
+  select_cols(pgmname_list, annotation = "PGMNAME")
 }
 
 #' Get Source Metadata
@@ -287,7 +287,7 @@ get_source <- function(df,
   } else {
     source_list <- select_row(df, by_column = "TTL1", by_value = tnumber)
   }
-  select_cols(source_list, select_type = "SOURCE")
+  select_cols(source_list, annotation = "SOURCE")
 }
 
 

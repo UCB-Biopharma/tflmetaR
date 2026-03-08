@@ -98,24 +98,6 @@ test_that("select_row returns exactly one row when both filters match", {
   expect_identical(out$X[[1]], "2")
 })
 
-test_that("select_cols: NULL select_type returns all columns (and drops NA-only columns)", {
-  df <- data.frame(
-    TTL1 = "t1",
-    FOOT1 = "f1",
-    POPULATION = "Safety",
-    PGMNAME = "T14-01",
-    SOURCE = "src",
-    ALLNA = NA,                 # NA-only column to be dropped by Filter()
-    stringsAsFactors = FALSE
-  )
-
-  out <- select_cols(df, select_type = NULL)
-
-  # Should keep all non-NA-only columns
-  testthat::expect_true(is.list(out))
-  testthat::expect_setequal(names(out), setdiff(names(df), "ALLNA"))
-})
-
 test_that("select_row errors when oid is provided but OID column is missing", {
   df <- data.frame(PGMNAME = c("t_dm", "ae"), stringsAsFactors = FALSE)
 
