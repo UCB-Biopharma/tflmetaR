@@ -67,7 +67,6 @@ test_that("get_footnote uses select_row when pname is provided", {
   result <- get_footnote(df = df, pname = "A", oid = NULL, add_footr_tstamp = FALSE)
   expect_true(is.data.frame(result))
   expect_named(result, "FOOT1")
-  # expect_equal(result$FOOT1, "Footnote")
 })
 
 test_that("get_footnote uses select_row when pname is NULL", {
@@ -318,7 +317,6 @@ test_that("get_source uses select_row when pname is provided", {
   result <- get_source(df = df, pname = "my_program", oid = NULL)
   expect_true(is.data.frame(result))
   expect_named(result, "SOURCE1")
-  # expect_equal(result$SOURCE1, "Source info")
 })
 
 test_that("get_source uses select_row when pname is NULL", {
