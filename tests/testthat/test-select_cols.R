@@ -1,14 +1,13 @@
-
 test_that("select_cols: TITLE selects TTL* and POPULATION", {
   df <- data.frame(
     TTL1 = "t1",
-    TTL2 = NA,                  # should be dropped by Filter() because NA-only (all NA)
+    TTL2 = NA, # should be dropped by Filter() because NA-only (all NA)
     FOOT1 = "f1",
     POPULATION = "Safety",
     SOURCE = "src",
     stringsAsFactors = FALSE
   )
-  df$TTL2 <- NA  # ensure it's all-NA column (length 1)
+  df$TTL2 <- NA # ensure it's all-NA column (length 1)
 
   out <- select_cols(df, annotation = "TITLE")
 
@@ -20,7 +19,7 @@ test_that("select_cols: TITLE selects TTL* and POPULATION", {
 test_that("select_cols: FOOTR selects FOOT* and does NOT add timestamp when add_footr_tstamp is FALSE", {
   df <- data.frame(
     FOOT1 = "f1",
-    FOOT2 = NA,          # all-NA column -> dropped
+    FOOT2 = NA, # all-NA column -> dropped
     SOURCE = "src",
     stringsAsFactors = FALSE
   )
@@ -45,7 +44,7 @@ test_that("select_cols: FOOTR adds `source` via include_footr_tstamp() when add_
     include_footr_tstamp = function(pgmname, src) {
       paste0("TS:", pgmname, ":", src)
     },
-    .env = asNamespace("tflmetaR")  # change if your package name differs
+    .env = asNamespace("tflmetaR") # change if your package name differs
   )
 
   out <- select_cols(df, annotation = "FOOTR", add_footr_tstamp = TRUE)
@@ -88,7 +87,7 @@ test_that("select_cols: annotation = NULL returns all columns (except all-NA col
 test_that("select_cols: drops columns that are entirely NA", {
   df <- data.frame(
     TTL1 = c("t1", "t2"),
-    TTL2 = c(NA, NA),            # all NA -> should be removed by Filter(!all(is.na(.)))
+    TTL2 = c(NA, NA), # all NA -> should be removed by Filter(!all(is.na(.)))
     POPULATION = c("Safety", "Safety"),
     stringsAsFactors = FALSE
   )
@@ -102,7 +101,7 @@ test_that("select_cols: drops columns that are entirely NA", {
 
 test_that("select_cols: keeps columns that are partially NA", {
   df <- data.frame(
-    TTL1 = c("t1", NA),          # partial NA -> should be kept
+    TTL1 = c("t1", NA), # partial NA -> should be kept
     POPULATION = c("Safety", "Safety"),
     stringsAsFactors = FALSE
   )
@@ -141,7 +140,7 @@ test_that("select_cols: FOOTR handles missing SOURCE and/or PGMNAME defensively"
 
   out1 <- select_cols(df1, annotation = "FOOTR", add_footr_tstamp = TRUE)
   expect_true("FOOT1" %in% names(out1))
-  expect_true("source" %in% names(out1))  # your function adds it even if src is ""
+  expect_true("source" %in% names(out1)) # your function adds it even if src is ""
   expect_identical(unlist(out1$source), "TS")
 
   # Missing PGMNAME
@@ -164,7 +163,7 @@ test_that("select_cols: NULL annotation returns all columns (and drops NA-only c
     POPULATION = "Safety",
     PGMNAME = "T14-01",
     SOURCE = "src",
-    ALLNA = NA,                 # NA-only column to be dropped by Filter()
+    ALLNA = NA, # NA-only column to be dropped by Filter()
     stringsAsFactors = FALSE
   )
 

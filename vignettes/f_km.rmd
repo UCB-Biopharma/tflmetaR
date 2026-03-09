@@ -53,7 +53,7 @@ The Analysis Dataset for Time-to-Event (ADTTE) follows CDISC ADaM standards. Her
 # get addtte data ----
 # synthetic adtte for oncology therapeutic area from CDISC
 
-adtte <- read_xpt(system.file("extdata", "adam_adtte.xpt", package="tflmetaR"))
+adtte <- read_xpt(system.file("extdata", "adam_adtte.xpt", package = "tflmetaR"))
 ```
 
 ### Data Transformation

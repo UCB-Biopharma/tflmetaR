@@ -1,4 +1,3 @@
-
 # ---- 1) EXPLICIT CALL: map_excel_headers() file -> file ----
 test_that("alias_mapping() maps headers and preserves data", {
   input_xlsx <- system.file(
@@ -23,7 +22,7 @@ test_that("alias_mapping() maps headers and preserves data", {
 
   change_colname(input_xlsx, output_xlsx, config_path)
 
-  actual   <- readxl::read_excel(output_xlsx)
+  actual <- readxl::read_excel(output_xlsx)
   expected <- readxl::read_excel(exp_path)
 
   # Compare column names
@@ -35,7 +34,8 @@ test_that("alias_mapping() maps headers and preserves data", {
   # Compare content as character to avoid Excel type quirks
   to_char <- function(df) {
     data.frame(lapply(df, function(col) as.character(col)),
-               check.names = FALSE, stringsAsFactors = FALSE)
+      check.names = FALSE, stringsAsFactors = FALSE
+    )
   }
   expect_identical(to_char(actual), to_char(expected))
 })
@@ -44,7 +44,7 @@ test_that("alias_mapping() maps headers and preserves data", {
 test_that("map_dataframe_headers() maps TTL1 and preserves unmapped", {
   # Minimal in-memory example
   df <- data.frame(
-    "Title 1"         = c("A", "B"),
+    "Title 1" = c("A", "B"),
     "Some_New_Header" = c(1, 2),
     check.names = FALSE
   )
@@ -79,7 +79,7 @@ test_that("Duplicate canonical collisions become unique", {
 
   expect_equal(names(df_map)[1], "TTL1")
   expect_equal(names(df_map)[2], "TTL1.1")
-  expect_identical(df_map$TTL1,   c("x", "y"))
+  expect_identical(df_map$TTL1, c("x", "y"))
   expect_identical(df_map$`TTL1.1`, c("p", "q"))
 })
 

@@ -1,17 +1,18 @@
-
 test_that("multiplication works", {
   expect_equal(2 * 2, 4)
 })
 
 test_that("get_title throws error on NULL df", {
   expect_error(get_title(df = NULL),
-               regexp = "`df` must be provided")
+    regexp = "`df` must be provided"
+  )
 })
 
 test_that("get_title throws error when neither pname nor tnumber is provided", {
   df <- data.frame(PGMNAME = "A", TTL1 = "Title", POPULATION = "Test")
   expect_error(get_title(df = df),
-               regexp = "Either `pname` or `tnumber` must be provided")
+    regexp = "Either `pname` or `tnumber` must be provided"
+  )
 })
 
 test_that("get_title uses select_row when pname is provided", {
@@ -44,16 +45,18 @@ test_that("get_title filters out NA columns", {
   expect_false("TTL2" %in% names(result))
 })
 
-#test get_footnote
+# test get_footnote
 test_that("get_footnote throws error on NULL df", {
   expect_error(get_footnote(df = NULL),
-               regexp = "`df` must be provided")
+    regexp = "`df` must be provided"
+  )
 })
 
 test_that("get_footnote throws error when neither pname nor tnumber is provided", {
   df <- data.frame(PGMNAME = "A", FOOT1 = "Footnote")
   expect_error(get_footnote(df = df),
-               regexp = "Either `pname` or `tnumber` must be provided")
+    regexp = "Either `pname` or `tnumber` must be provided"
+  )
 })
 
 test_that("get_footnote uses select_row when pname is provided", {
@@ -61,10 +64,10 @@ test_that("get_footnote uses select_row when pname is provided", {
   mock_select_row <- mockery::mock(df)
   mockery::stub(get_footnote, "select_row", mock_select_row)
 
-  result <- get_footnote(df = df, pname = "A", oid = NULL, add_footr_tstamp=FALSE)
+  result <- get_footnote(df = df, pname = "A", oid = NULL, add_footr_tstamp = FALSE)
   expect_true(is.data.frame(result))
   expect_named(result, "FOOT1")
-  #expect_equal(result$FOOT1, "Footnote")
+  # expect_equal(result$FOOT1, "Footnote")
 })
 
 test_that("get_footnote uses select_row when pname is NULL", {
@@ -72,7 +75,7 @@ test_that("get_footnote uses select_row when pname is NULL", {
   mock_select_row <- mockery::mock(df)
   mockery::stub(get_footnote, "select_row", mock_select_row)
 
-  result <- get_footnote(df = df, tnumber = "001", add_footr_tstamp=FALSE)
+  result <- get_footnote(df = df, tnumber = "001", add_footr_tstamp = FALSE)
   expect_true(is.data.frame(result))
   expect_named(result, c("FOOT1", "FOOT2"))
 })
@@ -82,7 +85,7 @@ test_that("get_footnote filters out NA footnote columns", {
   mock_select_row <- mockery::mock(df)
   mockery::stub(get_footnote, "select_row", mock_select_row)
 
-  result <- get_footnote(df = df, tnumber = "X", add_footr_tstamp=FALSE)
+  result <- get_footnote(df = df, tnumber = "X", add_footr_tstamp = FALSE)
   expect_true("FOOT1" %in% names(result))
   expect_false("FOOT2" %in% names(result))
 })
@@ -121,13 +124,15 @@ test_that("get_urheader handles no UR columns gracefully", {
 # test get_pop
 test_that("get_pop throws error on NULL df", {
   expect_error(get_pop(df = NULL),
-               regexp = "`df` must be provided")
+    regexp = "`df` must be provided"
+  )
 })
 
 test_that("get_pop throws error when neither pname nor tnumber is provided", {
   df <- data.frame(PGMNAME = "A", POPULATION = "Test Population")
   expect_error(get_pop(df = df),
-               regexp = "Either `pname` or `tnumber` must be provided")
+    regexp = "Either `pname` or `tnumber` must be provided"
+  )
 })
 
 test_that("get_pop uses select_row when pname is provided", {
@@ -174,13 +179,15 @@ test_that("get_pop filters out NA population", {
 # test get_byline
 test_that("get_byline throws error on NULL df", {
   expect_error(get_byline(df = NULL),
-               regexp = "`df` must be provided")
+    regexp = "`df` must be provided"
+  )
 })
 
 test_that("get_byline throws error when neither pname nor tnumber is provided", {
   df <- data.frame(PGMNAME = "A", BYLINE1 = "Author Name")
   expect_error(get_byline(df = df),
-               regexp = "Either `pname` or `tnumber` must be provide")
+    regexp = "Either `pname` or `tnumber` must be provide"
+  )
 })
 
 test_that("get_byline uses select_row when pname is provided", {
@@ -237,13 +244,15 @@ test_that("get_byline handles no BYLINE columns gracefully", {
 # test get_pgmname
 test_that("get_pgmname throws error on NULL df", {
   expect_error(get_pgmname(df = NULL),
-               regexp = "`df` must be provided")
+    regexp = "`df` must be provided"
+  )
 })
 
 test_that("get_pgmname throws error when neither pname nor tnumber is provided", {
   df <- data.frame(PGMNAME = "t_dm", TTL1 = "Title")
   expect_error(get_pgmname(df = df),
-               regexp = "Either `pname` or `tnumber` must be provide")
+    regexp = "Either `pname` or `tnumber` must be provide"
+  )
 })
 
 test_that("get_pgmname uses select_row when pname is provided", {
@@ -290,13 +299,15 @@ test_that("get_pgmname filters out NA program names", {
 # test get_source
 test_that("get_source throws error on NULL df", {
   expect_error(get_source(df = NULL),
-               regexp = "`df` must be provided")
+    regexp = "`df` must be provided"
+  )
 })
 
 test_that("get_source throws error when neither pname nor tnumber is provided", {
   df <- data.frame(SOURCE1 = "Internal")
   expect_error(get_source(df = df),
-               regexp = "Either `pname` or `tnumber` must be provide")
+    regexp = "Either `pname` or `tnumber` must be provide"
+  )
 })
 
 test_that("get_source uses select_row when pname is provided", {
@@ -307,7 +318,7 @@ test_that("get_source uses select_row when pname is provided", {
   result <- get_source(df = df, pname = "my_program", oid = NULL)
   expect_true(is.data.frame(result))
   expect_named(result, "SOURCE1")
-  #expect_equal(result$SOURCE1, "Source info")
+  # expect_equal(result$SOURCE1, "Source info")
 })
 
 test_that("get_source uses select_row when pname is NULL", {
@@ -329,5 +340,3 @@ test_that("get_source filters out NA source columns", {
   expect_named(result, c("SOURCE1", "SOURCE3"))
   expect_false("SOURCE2" %in% names(result))
 })
-
-

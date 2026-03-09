@@ -22,7 +22,7 @@
 #' }
 #'
 #' @noRd
-select_row <- function(data, by_column, by_value, oid=NULL) {
+select_row <- function(data, by_column, by_value, oid = NULL) {
   if (!is.character(by_column) || length(by_column) != 1) {
     stop("`by_column` must be a single character string", call. = FALSE)
   }
@@ -81,13 +81,11 @@ select_cols <- function(data, annotation, add_footr_tstamp = FALSE) {
 
   if (is.null(annotation)) {
     cols <- data
-
   } else {
     annotation <- toupper(annotation)
 
     if (annotation == "TITLE") {
       cols <- select_starts_with(data, "TTL", keep_cols = "POPULATION")
-
     } else if (annotation == "FOOTR") {
       cols <- select_starts_with(data, "FOOT")
 
@@ -97,10 +95,8 @@ select_cols <- function(data, annotation, add_footr_tstamp = FALSE) {
 
         cols$source <- include_footr_tstamp(pgmname, src)
       }
-
     } else if (annotation %in% names(data)) {
       cols <- data[annotation]
-
     } else {
       cols <- select_starts_with(data, annotation)
     }

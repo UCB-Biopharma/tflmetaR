@@ -2,7 +2,7 @@ test_that("select_starts_with selects columns with given prefix", {
   df <- data.frame(
     BYLINE1 = "A",
     BYLINE2 = "B",
-    TITLE   = "T",
+    TITLE = "T",
     stringsAsFactors = FALSE
   )
 
@@ -16,8 +16,8 @@ test_that("select_starts_with keeps additional specified columns", {
   df <- data.frame(
     BYLINE1 = "A",
     BYLINE2 = "B",
-    TITLE   = "T",
-    OID     = "T001",
+    TITLE = "T",
+    OID = "T001",
     stringsAsFactors = FALSE
   )
 
@@ -43,7 +43,7 @@ test_that("select_starts_with ignores keep_cols not in data", {
 test_that("select_starts_with returns empty data frame if no columns match", {
   df <- data.frame(
     TITLE = "T",
-    OID   = "T001",
+    OID = "T001",
     stringsAsFactors = FALSE
   )
 
@@ -57,7 +57,7 @@ test_that("select_starts_with handles overlapping prefix and keep_cols", {
   df <- data.frame(
     BYLINE1 = "A",
     BYLINE2 = "B",
-    OID     = "T001",
+    OID = "T001",
     stringsAsFactors = FALSE
   )
 

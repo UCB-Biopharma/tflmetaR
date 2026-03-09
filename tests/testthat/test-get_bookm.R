@@ -1,9 +1,8 @@
-
 test_that("get_bookm() returns bookm when present", {
   df <- data.frame(
     TTL1 = c("1"),
-    PGMNAME   = c("prog1"),
-    BOOKM   = c("MyBookmark"),
+    PGMNAME = c("prog1"),
+    BOOKM = c("MyBookmark"),
     stringsAsFactors = FALSE
   )
 
@@ -14,8 +13,8 @@ test_that("get_bookm() returns bookm when present", {
 test_that("get_bookm() falls back to get_title() when bookm is missing", {
   df <- data.frame(
     TTL1 = c("1"),
-    PGMNAME   = c("prog1"),
-    BOOKM   = NA,
+    PGMNAME = c("prog1"),
+    BOOKM = NA,
     stringsAsFactors = FALSE
   )
   local_mocked_bindings(
@@ -28,8 +27,8 @@ test_that("get_bookm() falls back to get_title() when bookm is missing", {
 test_that("get_bookm() sanitizes invalid characters", {
   df <- data.frame(
     TTL1 = c("1"),
-    PGMNAME   = c("prog1"),
-    BOOKM   = "My/Invalid:Bookmark*?",
+    PGMNAME = c("prog1"),
+    BOOKM = "My/Invalid:Bookmark*?",
     stringsAsFactors = FALSE
   )
 
@@ -42,8 +41,8 @@ test_that("get_bookm() applies abbreviation lookup if >128 chars", {
 
   df <- data.frame(
     TTL1 = c("1"),
-    PGMNAME   = c("prog1"),
-    BOOKM   = long_text,
+    PGMNAME = c("prog1"),
+    BOOKM = long_text,
     stringsAsFactors = FALSE
   )
 
@@ -66,8 +65,8 @@ test_that("get_bookm() errors when df is NULL", {
 test_that("get_bookm() errors when pname and tnumber are both NULL", {
   df <- data.frame(
     TTL1 = c("1"),
-    PGMNAME   = c("prog1"),
-    BOOKM   = "Bookmark",
+    PGMNAME = c("prog1"),
+    BOOKM = "Bookmark",
     stringsAsFactors = FALSE
   )
 
@@ -77,8 +76,8 @@ test_that("get_bookm() errors when pname and tnumber are both NULL", {
 test_that("get_bookm() errors when multiple rows match", {
   df <- data.frame(
     TTL1 = c("1", "1"),
-    PGMNAME   = c("prog1", "prog1"),
-    BOOKM   = c("Bookmark1", "Bookmark2"),
+    PGMNAME = c("prog1", "prog1"),
+    BOOKM = c("Bookmark1", "Bookmark2"),
     stringsAsFactors = FALSE
   )
 
@@ -90,8 +89,8 @@ test_that("get_bookm() truncates to 180 chars or less if still too long", {
 
   df <- data.frame(
     TTL1 = c("1"),
-    PGMNAME   = c("prog1"),
-    BOOKM   = long_text,
+    PGMNAME = c("prog1"),
+    BOOKM = long_text,
     stringsAsFactors = FALSE
   )
 
@@ -106,7 +105,7 @@ test_that("get_bookm() falls back to get_title() when BOOKM column is absent", {
   )
 
   local_mocked_bindings(
-    get_title =   function(...) list("Title A", "Title B")
+    get_title = function(...) list("Title A", "Title B")
   )
 
   result <- get_bookm(df = df, pname = "prog1")
@@ -122,7 +121,7 @@ test_that("get_bookm() falls back to get_title() when BOOKM is empty string", {
   )
 
   local_mocked_bindings(
-    get_title =   function(...) list("Title A", "Title B")
+    get_title = function(...) list("Title A", "Title B")
   )
 
   result <- get_bookm(df = df, pname = "prog1")

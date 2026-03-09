@@ -293,6 +293,3 @@ get_source <- function(df,
   }
   select_cols(source_list, annotation = "SOURCE")
 }
-
-
-

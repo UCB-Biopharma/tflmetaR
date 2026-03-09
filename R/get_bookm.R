@@ -122,7 +122,6 @@ get_bookm <- function(df,
       }
     }
     result
-
   } else {
     bookm
   }

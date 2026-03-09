@@ -92,7 +92,6 @@ tflmetaR <- function(filename,
                      oid = NULL,
                      annotation = NULL,
                      add_footr_tstamp = TRUE) {
-
   if (missing(by_value)) {
     stop("`by_value` must be provided.", call. = FALSE)
   }
@@ -101,4 +100,3 @@ tflmetaR <- function(filename,
     select_row(by_column, by_value, oid) |>
     select_cols(annotation, add_footr_tstamp)
 }
-

@@ -1,4 +1,3 @@
-
 test_that("include_footr_tstamp returns a single character string", {
   result <- include_footr_tstamp("t_dm", "ADSL")
 

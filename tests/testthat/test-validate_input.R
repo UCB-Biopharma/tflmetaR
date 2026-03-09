@@ -1,4 +1,3 @@
-
 test_that("validate_input errors when df is NULL", {
   expect_error(
     validate_input(df = NULL, pname = "t_dm", tnumber = NULL),

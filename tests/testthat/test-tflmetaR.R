@@ -1,15 +1,14 @@
 testthat::test_that("tflmetaR() dispatches and selects correctly for CSV and Excel", {
-
   # ---- Create a minimal metadata table ----
   meta <- data.frame(
-    PGMNAME     = c("t_dm", "t_ae"),
-    OID         = c("A", "A"),
-    TTL1        = c("Demographics", "Adverse Events"),
-    TTL2        = c("Safety Set", "Safety Set"),
-    POPULATION  = c("SAF", "SAF"),
-    FOOT1       = c("*: baseline record.", "All AEs included."),
-    FOOT2       = c("Source: dummy", "Source: dummy"),
-    SOURCE      = c("ADSL", "ADAE"),
+    PGMNAME = c("t_dm", "t_ae"),
+    OID = c("A", "A"),
+    TTL1 = c("Demographics", "Adverse Events"),
+    TTL2 = c("Safety Set", "Safety Set"),
+    POPULATION = c("SAF", "SAF"),
+    FOOT1 = c("*: baseline record.", "All AEs included."),
+    FOOT2 = c("Source: dummy", "Source: dummy"),
+    SOURCE = c("ADSL", "ADAE"),
     stringsAsFactors = FALSE
   )
 
@@ -91,7 +90,6 @@ testthat::test_that("tflmetaR() dispatches and selects correctly for CSV and Exc
 })
 
 testthat::test_that("tflmetaR() errors clearly for missing files and unsupported extensions", {
-
   # missing file
   testthat::expect_error(
     tflmetaR(file = file.path(tempdir(), "no_such_file.xlsx"), by_value = "t_dm"),
@@ -130,7 +128,6 @@ test_that("tflmetaR errors when required columns are missing", {
 })
 
 test_that("tflmetaR reads metadata from CSV in extdata", {
-
   csv_path <- system.file(
     "extdata",
     "sample_titles.csv",
@@ -183,7 +180,6 @@ test_that("tflmetaR reads metadata from CSV in extdata", {
 })
 
 test_that("tflmetaR errors when by_value is missing", {
-
   df <- data.frame(
     PGMNAME = "t_dm",
     TTL1 = "Title",
@@ -199,7 +195,6 @@ test_that("tflmetaR errors when by_value is missing", {
     tflmetaR(file),
     "`by_value` must be provided."
   )
-
 })
 
 test_that("tflmetaR treats FOOTR annotation case-insensitively", {

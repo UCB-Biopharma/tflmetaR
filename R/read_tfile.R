@@ -124,4 +124,3 @@ check_required_cols <- function(data, required_cols) {
   }
   invisible(TRUE)
 }
-
