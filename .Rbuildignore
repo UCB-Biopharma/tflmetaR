@@ -1,5 +1,6 @@
 ^tflmetaR\.Rproj$
 ^\.Rproj\.user$
-^LICENSE\.md$
+^\.lintr$
+^README\.Rmd$
 ^doc$
 ^Meta$
