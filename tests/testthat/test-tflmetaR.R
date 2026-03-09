@@ -124,7 +124,7 @@ test_that("tflmetaR errors when required columns are missing", {
 
   expect_error(
     tflmetaR(file = p, by_value = "t_dm"),
-    "required column\\(s\\) missing",
+    "missing required column",
     ignore.case = TRUE
   )
 })

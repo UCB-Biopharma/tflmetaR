@@ -88,8 +88,8 @@ test_that("read_tfile() errors when required columns are missing (validate=TRUE)
 
   expect_error(
     read_tfile(f, validate = TRUE),
-    "Input metadata file has required column(s) missing:",
-    fixed = TRUE
+    "missing required column",
+    ignore.case = TRUE
   )
 })
 

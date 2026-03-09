@@ -33,21 +33,21 @@ select_row <- function(data, by_column, by_value, oid=NULL) {
     stop("Column `", by_column, "` is not present in `data`", call. = FALSE)
   }
 
-  df <- data[data[[by_column]] %in% by_value, , drop = FALSE]
+  row <- data[data[[by_column]] %in% by_value, , drop = FALSE]
 
   if (!is.null(oid)) {
-    if (!"OID" %in% names(df)) {
+    if (!"OID" %in% names(row)) {
       stop("`oid` was supplied but column `OID` is missing from `data`", call. = FALSE)
     }
-    df <- df[df[["OID"]] == oid, , drop = FALSE]
+    row <- row[row[["OID"]] == oid, , drop = FALSE]
   }
 
-  if (nrow(df) == 0) {
+  if (nrow(row) == 0) {
     stop("No rows match the specified criteria", call. = FALSE)
-  } else if (nrow(df) > 1) {
-    stop("Expected exactly one matching row, but found ", nrow(df), call. = FALSE)
+  } else if (nrow(row) > 1) {
+    stop("Expected exactly one matching row, but found ", nrow(row), call. = FALSE)
   }
-  df
+  row
 }
 
 #' Internal Helper to Select Metadata Columns Based on Filtering Criteria

@@ -73,20 +73,20 @@ read_tfile <- function(filename, sheetname = NULL, validate = TRUE, ...) {
   }
 
   ext <- tolower(tools::file_ext(filename))
-  required_cols <- c("PGMNAME", "TTL1", "FOOT1", "SOURCE")
 
-  data <- switch(
-    ext,
-    "xlsx" = readxl::read_excel(filename, sheet = sheetname, ...),
-    "xls"  = readxl::read_excel(filename, sheet = sheetname, ...),
-    "csv"  = read_tfile_csv(filename),
+  if (ext %in% c("xlsx", "xls")) {
+    data <- readxl::read_excel(filename, sheet = sheetname, ...)
+  } else if (ext == "csv") {
+    data <- read_tfile_csv(filename)
+  } else {
     stop("Unsupported file type. Only .xlsx, .xls, and .csv are allowed.", call. = FALSE)
-  )
+  }
 
   # Standardize column names to uppercase
   names(data) <- toupper(names(data))
 
   if (isTRUE(validate)) {
+    required_cols <- c("PGMNAME", "TTL1", "FOOT1", "SOURCE")
     check_required_cols(data, required_cols)
   }
 
@@ -117,7 +117,7 @@ check_required_cols <- function(data, required_cols) {
 
   if (length(missing_cols) > 0) {
     stop(
-      "Input metadata file has required column(s) missing: ",
+      "Input metadata is missing required column(s): ",
       paste(missing_cols, collapse = ", "),
       call. = FALSE
     )
