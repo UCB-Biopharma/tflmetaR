@@ -1,6 +1,6 @@
 Package: tflmetaR
 Title: Manage Annotation Metadata in Statistical Outputs
-Version: 0.1.1
+Version: 0.1.2
 Authors@R: c(
     person("Gary", "Cao", , "gary.cao@ucb.com", role = c("aut", "cre")),
     person("Amber", "Wu", , "amber.wu2@ucb.com", role = "aut"),
