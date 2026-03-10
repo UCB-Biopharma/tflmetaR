@@ -1,117 +1,574 @@
-# tflmetaR <a href="https://github.com/Cassinic/tflmetaR/"><img src="man/figure/logo.png" alt="tflmetaR logo" align="right" height="140"></a>
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+# tflmetaR <img src="man/figure/logo.png" alt="tflmetaR logo" align="right" height="auto" width="200" />
 
 <!-- badges: start -->
-[![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/tflmetaR)](https://CRAN.R-project.org/package=tflmetaR)
-[![Total Downloads](http://cranlogs.r-pkg.org/badges/grand-total/tflmetaR)](https://CRAN.R-project.org/package=tflmetaR)
-[![Monthly Downloads](http://cranlogs.r-pkg.org/badges/tflmetaR)](https://CRAN.R-project.org/package=tflmetaR)
-[![R-CMD-check](https://github.com/Cassinic/tflmetaR/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/Cassinic/tflmetaR/actions)
+<!-- [awu TOD] add GITHUB CI check, Codecov coverage after publish on GitHub; add CRAN version after CRAN release -->
 <!-- badges: end -->
 
-## 📌 Overview
+## Overview
 
-`tflmetaR` is an R package designed to simplify the management and application of titles, subtitles, and footnotes in clinical study report (CSR) deliverable. It provides a structured interface for separating content metadata (like table headers and footers) from the code that generates the actual tables or figures.
+`tflmetaR` provides a simple interface for retrieving titles, headers,
+and footnotes for tables, listings, and figures (TFLs) in clinical study
+reports (CSRs) from a metadata file.
 
-This approach aligns with best practices in software design by supporting **separation of data and code**, improving maintainability, re-usability, and reducing the risk of hard-coded text in analysis scripts.
+Best practices in programming recommend separating code from metadata to
+improve readability, maintainability, and scalability. However, many R
+scripts used for clinical reporting still hardcode titles, headers, and
+footnotes, making the codebase difficult to manage and extend.
 
----
+`tflmetaR` bridges this gap. Although independent and self-contained, it
+is compatible with the `{gridify}` package and integrates with the
+Pharmaverse ecosystem for generating submission-ready statistical
+deliverables.
 
-## ✨ Features
+The package supports both a simple single-function interface and a more
+flexible helper-function workflow.
 
-- Read and validate title/footnote metadata from Excel or CSV files
-- Select entries by program name or TFL number
-- Return metadata as lists for integration with table packages (e.g., `flextable`) and plotting tools (e.g., `ggplot2`)
-- Supports upper-left (UL) and upper-right (UR) headers, titles, subtitles, populations, footnotes, and data sources
+## Installation
 
----
+You can install the newest release version from CRAN:
 
-## 🔧 Installation
-
-You can install the development version of `tflmetaR` from GitHub:
-
-```r
-# Install devtools if you don't have it
-install.packages("devtools")
-
-# Install tflmetaR from GitHub
-devtools::install_github("..../tflmetaR")
+``` r
+install.packages("tflmetaR")
 ```
 
----
+## Basic Workflow
 
-## 📚 Getting Started
+1.  **Create a TFL object**  
+    Generate a table, listing, or figure using tools such as `{gt}`,
+    `{flextable}`, or `{ggplot2}`.
 
-```r
+2.  **Annotate the TFL object using `tflmetaR`**  
+    Annotation metadata can be retrieved in two ways:
+
+    **Option 1: Single-function interface**  
+    Use `tflmetaR()` to retrieve the required metadata in a single call.
+
+    **Option 2: Helper-function workflow (recommended)**  
+    First read the metadata file using `read_tfile()`, then retrieve the
+    required metadata using helper functions (e.g., `get_*()`). This
+    workflow returns the same results as Option 1 but avoids repeated
+    I/O operations.
+
+## Example
+
+The following example creates a table using `{gt}` and adds titles and
+footnotes retrieved from a metadata file using `{tflmetaR}`.
+
+``` r
 library(tflmetaR)
-
-# Read metadata from a CSV file
-meta <- read_tfile_csv("metadata/titles_footnotes.csv")
-or
-meta <- read_tfile("metadata/titles_footnotes.xls")
-
-# Extract title, population, footnote, byline, and program name for a specific table
-title <- get_title(meta, tnumber = "Table 1.1")
-population <- get_pop(meta, tnumber = "Table 1.1")
-footnotes <- get_footnote(meta, tnumber = "Table 1.1")
-byline <- get_byline(meta, tnumber = "Table 1.1")
-pgmname <- get_pgmname(meta, tnumber = "Table 1.1")
-
-# Use with flextable (example)
-library(flextable)
-flextable(iris) |>  
-  set_caption(title$TTL1) |> 
-  add_footer_lines(values = footnotes)
+library(gt)
+library(dplyr)
 ```
 
----
+``` r
+# Locate example metadata file
+path <- system.file("extdata", "sample_titles.xlsx", package = "tflmetaR")
+pgmname <- "t_dm"
 
-## 🧪 Vignettes
+# ---- Retrieve annotation metadata ----
 
-Check out the vignettes for detailed usage and advanced features:
+# Option 1: Single-function interface
+title_info <- tflmetaR(
+  path,
+  by_value = pgmname,
+  annotation = "TITLE",
+  add_footr_tstamp = FALSE
+)
 
-```r
-browseVignettes("tflmetaR")
+footnotes <- tflmetaR(
+  path,
+  by_value = pgmname,
+  annotation = "FOOTR",
+  add_footr_tstamp = FALSE
+)
+
+# Option 2: Helper-function workflow
+meta <- read_tfile(filename = path)
+
+title_info <- get_title(meta, pname = pgmname)
+
+footnotes <- get_footnote(
+  meta,
+  pname = pgmname,
+  add_footr_tstamp = FALSE
+)
+
+# ---- Create the annotated gt table ----
+
+tbl <- mtcars |>
+  head(5) |>
+  dplyr::select(mpg, cyl, hp, wt) |>
+  dplyr::mutate(across(everything(), ~ round(.x, 1))) |>
+  gt::gt() |>
+  gt::tab_header(
+    title = title_info$TTL1[[1]],
+    subtitle = gt::html(title_info$TTL2[[1]])
+  ) |>
+  gt::tab_footnote(
+    footnote = footnotes$FOOT1[[1]],
+    locations = gt::cells_column_labels(columns = mpg)
+  ) |>
+  gt::tab_footnote(
+    footnote = footnotes$FOOT2[[1]],
+    locations = gt::cells_column_labels(columns = cyl)
+  ) |>
+  gt::tab_options(
+    table.width = gt::pct(80)
+  )
+
+tbl
 ```
 
----
+<div id="cfdkyswvqg" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#cfdkyswvqg table {
+  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+&#10;#cfdkyswvqg thead, #cfdkyswvqg tbody, #cfdkyswvqg tfoot, #cfdkyswvqg tr, #cfdkyswvqg td, #cfdkyswvqg th {
+  border-style: none;
+}
+&#10;#cfdkyswvqg p {
+  margin: 0;
+  padding: 0;
+}
+&#10;#cfdkyswvqg .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: 80%;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+&#10;#cfdkyswvqg .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+&#10;#cfdkyswvqg .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+&#10;#cfdkyswvqg .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+&#10;#cfdkyswvqg .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+&#10;#cfdkyswvqg .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+&#10;#cfdkyswvqg .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+&#10;#cfdkyswvqg .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+&#10;#cfdkyswvqg .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+&#10;#cfdkyswvqg .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+&#10;#cfdkyswvqg .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+&#10;#cfdkyswvqg .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+&#10;#cfdkyswvqg .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+&#10;#cfdkyswvqg .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+&#10;#cfdkyswvqg .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+&#10;#cfdkyswvqg .gt_from_md > :first-child {
+  margin-top: 0;
+}
+&#10;#cfdkyswvqg .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+&#10;#cfdkyswvqg .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+&#10;#cfdkyswvqg .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+&#10;#cfdkyswvqg .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+&#10;#cfdkyswvqg .gt_row_group_first td {
+  border-top-width: 2px;
+}
+&#10;#cfdkyswvqg .gt_row_group_first th {
+  border-top-width: 2px;
+}
+&#10;#cfdkyswvqg .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+&#10;#cfdkyswvqg .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+&#10;#cfdkyswvqg .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+&#10;#cfdkyswvqg .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+&#10;#cfdkyswvqg .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+&#10;#cfdkyswvqg .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+&#10;#cfdkyswvqg .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+&#10;#cfdkyswvqg .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+&#10;#cfdkyswvqg .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+&#10;#cfdkyswvqg .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+&#10;#cfdkyswvqg .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+&#10;#cfdkyswvqg .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+&#10;#cfdkyswvqg .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+&#10;#cfdkyswvqg .gt_left {
+  text-align: left;
+}
+&#10;#cfdkyswvqg .gt_center {
+  text-align: center;
+}
+&#10;#cfdkyswvqg .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+&#10;#cfdkyswvqg .gt_font_normal {
+  font-weight: normal;
+}
+&#10;#cfdkyswvqg .gt_font_bold {
+  font-weight: bold;
+}
+&#10;#cfdkyswvqg .gt_font_italic {
+  font-style: italic;
+}
+&#10;#cfdkyswvqg .gt_super {
+  font-size: 65%;
+}
+&#10;#cfdkyswvqg .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+&#10;#cfdkyswvqg .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+&#10;#cfdkyswvqg .gt_indent_1 {
+  text-indent: 5px;
+}
+&#10;#cfdkyswvqg .gt_indent_2 {
+  text-indent: 10px;
+}
+&#10;#cfdkyswvqg .gt_indent_3 {
+  text-indent: 15px;
+}
+&#10;#cfdkyswvqg .gt_indent_4 {
+  text-indent: 20px;
+}
+&#10;#cfdkyswvqg .gt_indent_5 {
+  text-indent: 25px;
+}
+&#10;#cfdkyswvqg .katex-display {
+  display: inline-flex !important;
+  margin-bottom: 0.75em !important;
+}
+&#10;#cfdkyswvqg div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+  height: 0px !important;
+}
+</style>
+<table class="gt_table" data-quarto-disable-processing="false" data-quarto-bootstrap="false">
+  <thead>
+    <tr class="gt_heading">
+      <td colspan="4" class="gt_heading gt_title gt_font_normal" style>Table 2.1</td>
+    </tr>
+    <tr class="gt_heading">
+      <td colspan="4" class="gt_heading gt_subtitle gt_font_normal gt_bottom_border" style>Sample Table with Penguin Data</td>
+    </tr>
+    <tr class="gt_col_headings">
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="mpg">mpg<span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;line-height:0;"><sup>1</sup></span></th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="cyl">cyl<span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;line-height:0;"><sup>2</sup></span></th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="hp">hp</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col" id="wt">wt</th>
+    </tr>
+  </thead>
+  <tbody class="gt_table_body">
+    <tr><td headers="mpg" class="gt_row gt_right">21.0</td>
+<td headers="cyl" class="gt_row gt_right">6</td>
+<td headers="hp" class="gt_row gt_right">110</td>
+<td headers="wt" class="gt_row gt_right">2.6</td></tr>
+    <tr><td headers="mpg" class="gt_row gt_right">21.0</td>
+<td headers="cyl" class="gt_row gt_right">6</td>
+<td headers="hp" class="gt_row gt_right">110</td>
+<td headers="wt" class="gt_row gt_right">2.9</td></tr>
+    <tr><td headers="mpg" class="gt_row gt_right">22.8</td>
+<td headers="cyl" class="gt_row gt_right">4</td>
+<td headers="hp" class="gt_row gt_right">93</td>
+<td headers="wt" class="gt_row gt_right">2.3</td></tr>
+    <tr><td headers="mpg" class="gt_row gt_right">21.4</td>
+<td headers="cyl" class="gt_row gt_right">6</td>
+<td headers="hp" class="gt_row gt_right">110</td>
+<td headers="wt" class="gt_row gt_right">3.2</td></tr>
+    <tr><td headers="mpg" class="gt_row gt_right">18.7</td>
+<td headers="cyl" class="gt_row gt_right">8</td>
+<td headers="hp" class="gt_row gt_right">175</td>
+<td headers="wt" class="gt_row gt_right">3.4</td></tr>
+  </tbody>
+  <tfoot>
+    <tr class="gt_footnotes">
+      <td class="gt_footnote" colspan="4"><span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;line-height:0;"><sup>1</sup></span> ES = Enrolled Set</td>
+    </tr>
+    <tr class="gt_footnotes">
+      <td class="gt_footnote" colspan="4"><span class="gt_footnote_marks" style="white-space:nowrap;font-style:italic;font-weight:normal;line-height:0;"><sup>2</sup></span> Reference: Listing 2.1</td>
+    </tr>
+  </tfoot>
+</table>
+</div>
 
-## 💡 Why `tflmetaR`?
+## Acknowledgments
 
-In many industries — especially pharmaceutical clinical reporting — table titles and footnotes are often buried inside code files. This makes updates tedious and error-prone. `tflmetaR` addresses this by:
+Along with the authors and contributors, thanks to the following people
+for their support:
 
-- Centralizing and externalizing metadata
-- Enabling quick updates without touching source code
-- Supporting audit-friendly workflows
-
----
-
-## 📄 License
-
-This package is licensed under the MIT License. See [LICENSE](LICENSE) for more information.
-
----
-
-## 🤝 Contributing
-
-Contributions are welcome! If you'd like to report a bug, request a feature, or submit a pull request, please visit the [GitHub issues page](https://github.com/Cassinic/tflmetaR/issues).
-
----
-
-## 🔗 Related Packages
-
-- [`flextable`](https://davidgohel.github.io/flextable/)
-- [`ggplot2`](https://ggplot2.tidyverse.org/)
-- [`readxl`](https://readxl.tidyverse.org/)
-- [`readr`](https://readr.tidyverse.org/)
-
----
-
-## 📬 Contact
-
-For questions, suggestions, or collaboration ideas, feel free to reach out via GitHub or open an issue.
-
-```
-
----
-
-
-
+Alberto Montironi, Maciej Nasinski

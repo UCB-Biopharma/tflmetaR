@@ -1,0 +1,144 @@
+---
+  output: github_document
+---
+  
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+  
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "100%"
+)
+```
+
+# tflmetaR <img src="man/figure/logo.png" alt="tflmetaR logo" align="right" height="auto" width="200" />
+
+<!-- badges: start -->
+<!-- [awu TOD] add GITHUB CI check, Codecov coverage after publish on GitHub; add CRAN version after CRAN release -->
+<!-- badges: end -->
+  
+## Overview
+
+`tflmetaR` provides a simple interface for retrieving titles, headers, and
+footnotes for tables, listings, and figures (TFLs) in clinical study reports
+(CSRs) from a metadata file.
+
+Best practices in programming recommend separating code from metadata to
+improve readability, maintainability, and scalability. However, many R scripts
+used for clinical reporting still hardcode titles, headers, and footnotes,
+making the codebase difficult to manage and extend.
+
+`tflmetaR` bridges this gap. Although independent and self-contained, it is
+compatible with the `{gridify}` package and integrates with the Pharmaverse
+ecosystem for generating submission-ready statistical deliverables.
+
+The package supports both a simple single-function interface and a more
+flexible helper-function workflow.
+
+## Installation
+
+You can install the newest release version from CRAN:
+  
+```r
+install.packages("tflmetaR")
+
+```
+
+## Basic Workflow
+
+1. **Create a TFL object**  
+   Generate a table, listing, or figure using tools such as `{gt}`,
+   `{flextable}`, or `{ggplot2}`.
+
+2. **Annotate the TFL object using `tflmetaR`**  
+   Annotation metadata can be retrieved in two ways:
+
+   **Option 1: Single-function interface**  
+   Use `tflmetaR()` to retrieve the required metadata in a single call.
+
+   **Option 2: Helper-function workflow (recommended)**  
+   First read the metadata file using `read_tfile()`, then retrieve the required
+   metadata using helper functions (e.g., `get_*()`). This workflow returns the
+   same results as Option 1 but avoids repeated I/O operations. 
+
+
+## Example
+
+The following example creates a table using `{gt}` and adds titles and
+footnotes retrieved from a metadata file using `{tflmetaR}`.
+
+```{r load-package, message=FALSE, warning=FALSE}
+library(tflmetaR)
+library(gt)
+library(dplyr)
+```
+
+```{r example}
+# Locate example metadata file
+path <- system.file("extdata", "sample_titles.xlsx", package = "tflmetaR")
+pgmname <- "t_dm"
+
+# ---- Retrieve annotation metadata ----
+
+# Option 1: Single-function interface
+title_info <- tflmetaR(
+  path,
+  by_value = pgmname,
+  annotation = "TITLE",
+  add_footr_tstamp = FALSE
+)
+
+footnotes <- tflmetaR(
+  path,
+  by_value = pgmname,
+  annotation = "FOOTR",
+  add_footr_tstamp = FALSE
+)
+
+# Option 2: Helper-function workflow
+meta <- read_tfile(filename = path)
+
+title_info <- get_title(meta, pname = pgmname)
+
+footnotes <- get_footnote(
+  meta,
+  pname = pgmname,
+  add_footr_tstamp = FALSE
+)
+
+# ---- Create the annotated gt table ----
+
+tbl <- mtcars |>
+  head(5) |>
+  dplyr::select(mpg, cyl, hp, wt) |>
+  dplyr::mutate(across(everything(), ~ round(.x, 1))) |>
+  gt::gt() |>
+  gt::tab_header(
+    title = title_info$TTL1[[1]],
+    subtitle = gt::html(title_info$TTL2[[1]])
+  ) |>
+  gt::tab_footnote(
+    footnote = footnotes$FOOT1[[1]],
+    locations = gt::cells_column_labels(columns = mpg)
+  ) |>
+  gt::tab_footnote(
+    footnote = footnotes$FOOT2[[1]],
+    locations = gt::cells_column_labels(columns = cyl)
+  ) |>
+  gt::tab_options(
+    table.width = gt::pct(80)
+  )
+
+tbl
+```
+
+## Acknowledgments
+
+Along with the authors and contributors, thanks to the following people for their support:
+
+Alberto Montironi, Maciej Nasinski
+
+
+
