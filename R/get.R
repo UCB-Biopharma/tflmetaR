@@ -40,14 +40,7 @@ get_title <- function(df,
                       tnumber = NULL,
                       pname = NULL,
                       oid = NULL) {
-  validate_input(df, pname, tnumber)
-
-  if (!is.null(pname)) {
-    title_list <- select_row(df, by_column = "PGMNAME", by_value = pname, oid = oid)
-  } else {
-    title_list <- select_row(df, by_column = "TTL1", by_value = tnumber)
-  }
-  select_cols(title_list, annotation = "TITLE")
+  get_annotation(df, tnumber, pname, oid, annotation = "TITLE")
 }
 
 #' Get Footnote Metadata
@@ -87,14 +80,10 @@ get_footnote <- function(df,
                          pname = NULL,
                          oid = NULL,
                          add_footr_tstamp = TRUE) {
-  validate_input(df, pname, tnumber)
-
-  if (!is.null(pname)) {
-    footnote_list <- select_row(df, by_column = "PGMNAME", by_value = pname, oid = oid)
-  } else {
-    footnote_list <- select_row(df, by_column = "TTL1", by_value = tnumber)
-  }
-  select_cols(footnote_list, annotation = "FOOTR", add_footr_tstamp = add_footr_tstamp)
+  get_annotation(df, tnumber, pname, oid,
+    annotation = "FOOTR",
+    add_footr_tstamp = add_footr_tstamp
+  )
 }
 
 
@@ -177,14 +166,7 @@ get_pop <- function(df,
                     tnumber = NULL,
                     pname = NULL,
                     oid = NULL) {
-  validate_input(df, pname, tnumber)
-
-  if (!is.null(pname)) {
-    pop_list <- select_row(df, by_column = "PGMNAME", by_value = pname, oid = oid)
-  } else {
-    pop_list <- select_row(df, by_column = "TTL1", by_value = tnumber)
-  }
-  select_cols(pop_list, annotation = "POPULATION")
+  get_annotation(df, tnumber, pname, oid, annotation = "POPULATION")
 }
 
 #' Get Byline Metadata
@@ -214,14 +196,7 @@ get_byline <- function(df,
                        tnumber = NULL,
                        pname = NULL,
                        oid = NULL) {
-  validate_input(df, pname, tnumber)
-
-  if (!is.null(pname)) {
-    byline_list <- select_row(df, by_column = "PGMNAME", by_value = pname, oid = oid)
-  } else {
-    byline_list <- select_row(df, by_column = "TTL1", by_value = tnumber)
-  }
-  select_cols(byline_list, annotation = "BYLINE")
+  get_annotation(df, tnumber, pname, oid, annotation = "BYLINE")
 }
 
 #' Get Program Name Metadata
@@ -249,14 +224,7 @@ get_pgmname <- function(df,
                         tnumber = NULL,
                         pname = NULL,
                         oid = NULL) {
-  validate_input(df, pname, tnumber)
-
-  if (!is.null(pname)) {
-    pgmname_list <- select_row(df, by_column = "PGMNAME", by_value = pname, oid = oid)
-  } else {
-    pgmname_list <- select_row(df, by_column = "TTL1", by_value = tnumber)
-  }
-  select_cols(pgmname_list, annotation = "PGMNAME")
+  get_annotation(df, tnumber, pname, oid, annotation = "PGMNAME")
 }
 
 #' Get Source Metadata
@@ -284,12 +252,32 @@ get_source <- function(df,
                        tnumber = NULL,
                        pname = NULL,
                        oid = NULL) {
+  get_annotation(df, tnumber, pname, oid, annotation = "SOURCE")
+}
+
+
+#' @noRd
+get_annotation <- function(df, tnumber, pname, oid, annotation, ...) {
   validate_input(df, pname, tnumber)
 
-  if (!is.null(pname)) {
-    source_list <- select_row(df, by_column = "PGMNAME", by_value = pname, oid = oid)
-  } else {
-    source_list <- select_row(df, by_column = "TTL1", by_value = tnumber)
+  by_column <- if (!is.null(pname)) "PGMNAME" else "TTL1"
+  by_value <- if (!is.null(pname)) pname else tnumber
+
+  select_row(df, by_column = by_column, by_value = by_value, oid = oid) |>
+    select_cols(annotation = annotation, ...)
+}
+
+
+#' @noRd
+validate_input <- function(df, pname, tnumber) {
+  if (is.null(df)) {
+    stop("`df` must be provided.", call. = FALSE)
   }
-  select_cols(source_list, annotation = "SOURCE")
+  if (is.null(pname) && is.null(tnumber)) {
+    stop("Either `pname` or `tnumber` must be provided.", call. = FALSE)
+  }
+  if (!is.null(pname) && !is.null(tnumber)) {
+    stop("Only one of `pname` or `tnumber` should be supplied.", call. = FALSE)
+  }
+  invisible(TRUE)
 }

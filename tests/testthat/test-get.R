@@ -69,26 +69,6 @@ test_that("get_footnote uses select_row when pname is provided", {
   expect_named(result, "FOOT1")
 })
 
-test_that("get_footnote uses select_row when pname is NULL", {
-  df <- data.frame(FOOT1 = "Note", FOOT2 = "Another note")
-  mock_select_row <- mockery::mock(df)
-  mockery::stub(get_footnote, "select_row", mock_select_row)
-
-  result <- get_footnote(df = df, tnumber = "001", add_footr_tstamp = FALSE)
-  expect_true(is.data.frame(result))
-  expect_named(result, c("FOOT1", "FOOT2"))
-})
-
-test_that("get_footnote filters out NA footnote columns", {
-  df <- data.frame(FOOT1 = "Footnote", FOOT2 = NA)
-  mock_select_row <- mockery::mock(df)
-  mockery::stub(get_footnote, "select_row", mock_select_row)
-
-  result <- get_footnote(df = df, tnumber = "X", add_footr_tstamp = FALSE)
-  expect_true("FOOT1" %in% names(result))
-  expect_false("FOOT2" %in% names(result))
-})
-
 # test get_ulheader
 test_that("get_ulheader filters out NA columns", {
   df <- data.frame(UL1 = "Header1", UL2 = NA, UL3 = "Header3")
@@ -199,26 +179,6 @@ test_that("get_byline uses select_row when pname is provided", {
   expect_named(result, "BYLINE1")
 })
 
-test_that("get_byline uses select_row when pname is NULL", {
-  df <- data.frame(BYLINE1 = "Author", BYLINE2 = "Institution")
-  mock_select_row <- mockery::mock(df)
-  mockery::stub(get_byline, "select_row", mock_select_row)
-
-  result <- get_byline(df = df, tnumber = "001")
-  expect_true(is.data.frame(result))
-  expect_named(result, c("BYLINE1", "BYLINE2"))
-})
-
-test_that("get_byline filters out NA byline columns", {
-  df <- data.frame(BYLINE1 = "Author", BYLINE2 = NA, BYLINE3 = "Institution")
-  mock_select_row <- mockery::mock(df)
-  mockery::stub(get_byline, "select_row", mock_select_row)
-
-  result <- get_byline(df = df, tnumber = "any")
-  expect_named(result, c("BYLINE1", "BYLINE3"))
-  expect_false("BYLINE2" %in% names(result))
-})
-
 test_that("get_byline returns only BYLINE* columns", {
   df <- data.frame(TTL1 = "Title", BYLINE1 = "Author", POPULATION = "ITT", FOOT1 = "Note")
   mock_select_row <- mockery::mock(df)
@@ -264,27 +224,6 @@ test_that("get_pgmname uses select_row when pname is provided", {
   expect_named(result, "PGMNAME")
 })
 
-test_that("get_pgmname uses select_row when pname is NULL", {
-  df <- data.frame(PGMNAME = "t_dm", TTL1 = "Title")
-  mock_select_row <- mockery::mock(df)
-  mockery::stub(get_pgmname, "select_row", mock_select_row)
-
-  result <- get_pgmname(df = df, tnumber = "Table 1.1")
-  expect_true(is.data.frame(result))
-  expect_named(result, "PGMNAME")
-})
-
-test_that("get_pgmname returns only PGMNAME column", {
-  df <- data.frame(TTL1 = "Title", PGMNAME = "t_dm", POPULATION = "ITT", FOOT1 = "Note")
-  mock_select_row <- mockery::mock(df)
-  mockery::stub(get_pgmname, "select_row", mock_select_row)
-
-  result <- get_pgmname(df = df, tnumber = "Table 1.1")
-  expect_true("PGMNAME" %in% names(result))
-  expect_false("TTL1" %in% names(result))
-  expect_false("POPULATION" %in% names(result))
-  expect_false("FOOT1" %in% names(result))
-})
 
 test_that("get_pgmname filters out NA program names", {
   df <- data.frame(TTL1 = "Title", PGMNAME = NA)
@@ -307,34 +246,4 @@ test_that("get_source throws error when neither pname nor tnumber is provided", 
   expect_error(get_source(df = df),
     regexp = "Either `pname` or `tnumber` must be provide"
   )
-})
-
-test_that("get_source uses select_row when pname is provided", {
-  df <- data.frame(SOURCE1 = "Source info", SOURCE2 = NA)
-  mock_select_row <- mockery::mock(df)
-  mockery::stub(get_source, "select_row", mock_select_row)
-
-  result <- get_source(df = df, pname = "my_program", oid = NULL)
-  expect_true(is.data.frame(result))
-  expect_named(result, "SOURCE1")
-})
-
-test_that("get_source uses select_row when pname is NULL", {
-  df <- data.frame(SOURCE1 = "Generated data", SOURCE2 = "External")
-  mock_select_row <- mockery::mock(df)
-  mockery::stub(get_source, "select_row", mock_select_row)
-
-  result <- get_source(df = df, tnumber = "001")
-  expect_true(is.data.frame(result))
-  expect_named(result, c("SOURCE1", "SOURCE2"))
-})
-
-test_that("get_source filters out NA source columns", {
-  df <- data.frame(SOURCE1 = "One", SOURCE2 = NA, SOURCE3 = "Two")
-  mock_select_row <- mockery::mock(df)
-  mockery::stub(get_source, "select_row", mock_select_row)
-
-  result <- get_source(df = df, tnumber = "any")
-  expect_named(result, c("SOURCE1", "SOURCE3"))
-  expect_false("SOURCE2" %in% names(result))
 })

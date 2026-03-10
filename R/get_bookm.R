@@ -64,16 +64,9 @@ get_bookm <- function(df,
                       oid = NULL,
                       abbrev_file = NULL,
                       max_length = 180) {
-  validate_input(df, pname, tnumber)
+  annotation <- get_annotation(df, tnumber, pname, oid, annotation = "BOOKM")
 
-  if (!is.null(pname)) {
-    row <- select_row(df, by_column = "PGMNAME", by_value = pname, oid = oid)
-  } else {
-    row <- select_row(df, by_column = "TTL1", by_value = tnumber)
-  }
-
-  # Extract bookm
-  bookm <- if ("BOOKM" %in% names(row)) row$BOOKM[1] else NA_character_
+  bookm <- annotation$BOOKM[1]
 
   # Fallback if bookm is missing
   if (is.null(bookm) || is.na(bookm) || bookm == "") {

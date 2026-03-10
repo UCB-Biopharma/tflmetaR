@@ -137,18 +137,3 @@ select_starts_with <- function(data, prefix, keep_cols = NULL) {
 
   data[, cols, drop = FALSE]
 }
-
-
-#' @noRd
-validate_input <- function(df, pname, tnumber) {
-  if (is.null(df)) {
-    stop("`df` must be provided.", call. = FALSE)
-  }
-  if (is.null(pname) && is.null(tnumber)) {
-    stop("Either `pname` or `tnumber` must be provided.", call. = FALSE)
-  }
-  if (!is.null(pname) && !is.null(tnumber)) {
-    stop("Only one of `pname` or `tnumber` should be supplied.", call. = FALSE)
-  }
-  invisible(TRUE)
-}
