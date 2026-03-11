@@ -14,10 +14,6 @@ knitr::opts_chunk$set(
 ```
 
 # tflmetaR <img src="man/figure/logo.png" alt="tflmetaR logo" align="right" height="auto" width="200" />
-
-<!-- badges: start -->
-<!-- [awu TOD] add GITHUB CI check, Codecov coverage after publish on GitHub; add CRAN version after CRAN release -->
-<!-- badges: end -->
   
 ## Overview
 
@@ -27,15 +23,12 @@ footnotes for tables, listings, and figures (TFLs) in clinical study reports
 
 Best practices in programming recommend separating code from metadata to
 improve readability, maintainability, and scalability. However, many R scripts
-used for clinical reporting still hardcode titles, headers, and footnotes,
-making the codebase difficult to manage and extend.
+used for clinical reporting still hardcode TFL annotations directly in the programs, making codebases difficult to manage and extend.
 
 `tflmetaR` bridges this gap. Although independent and self-contained, it is
-compatible with the `{gridify}` package and integrates with the Pharmaverse
-ecosystem for generating submission-ready statistical deliverables.
+compatible with the [`{gridify}`](https://CRAN.R-project.org/package=gridify) and integrates with the [Pharmaverse](https://pharmaverse.org/) ecosystem for generating submission-ready statistical deliverables.
 
-The package supports both a simple single-function interface and a more
-flexible helper-function workflow.
+`tflmetaR` supports two workflows: a concise single-function interface and a more flexible helper-function workflow.
 
 ## Installation
 
@@ -46,92 +39,92 @@ install.packages("tflmetaR")
 
 ```
 
+## Metadata File
+
+The metadata file can be an Excel file (`.xlsx`, `.xls`) or a CSV file (`.csv`), with standardized column names. Required columns are `PGMNAME` (program name), `TTL1` (primary title), `FOOT1` (first footnote), and `SOURCE` (data source). Additional columns for subtitles (`TTL2`, `TTL3`, …), further footnotes (`FOOT2`, `FOOT3`, …), population definitions, book mark and bylines are also supported. If your file uses different column names, use `change_colname()` to remap them to the expected names before passing the file to any `tflmetaR` function.
+
+
 ## Basic Workflow
 
-1. **Create a TFL object**  
-   Generate a table, listing, or figure using tools such as `{gt}`,
-   `{flextable}`, or `{ggplot2}`.
+The typical workflow is to retrieve annotation metadata from a metadata file and apply it to a TFL object created with a package such as [`{gt}`](https://gt.rstudio.com/), [`{flextable}`](https://ardata-fr.github.io/flextable-book/), or [`{ggplot2}`](https://ggplot2.tidyverse.org/). Metadata can be retrieved in two ways.
 
-2. **Annotate the TFL object using `tflmetaR`**  
-   Annotation metadata can be retrieved in two ways:
+**Option 1: Single-function interface**  
 
-   **Option 1: Single-function interface**  
-   Use `tflmetaR()` to retrieve the required metadata in a single call.
+Use `tflmetaR()` to retrieve the required metadata in a single call:
 
-   **Option 2: Helper-function workflow (recommended)**  
-   First read the metadata file using `read_tfile()`, then retrieve the required
-   metadata using helper functions (e.g., `get_*()`). This workflow returns the
-   same results as Option 1 but avoids repeated I/O operations. 
+```r
+path    <- system.file("extdata", "sample_titles.xlsx", package = "tflmetaR")
+pgmname <- "t_dm"
 
+title_info <- tflmetaR(
+  path,
+  by_value         = pgmname,
+  annotation       = "TITLE",
+  add_footr_tstamp = FALSE
+)
+
+footnotes  <- tflmetaR(
+  path,
+  by_value         = pgmname,
+  annotation       = "FOOTR",
+  add_footr_tstamp = FALSE
+)
+```
+
+**Option 2: Helper-function workflow (recommended)**  
+   
+Read the metadata file once with `read_tfile()`, then retrieve the required metadata with the `get_*()` helper functions. This avoids repeated I/O operations when annotating multiple fields:
+
+```r
+meta       <- read_tfile(filename = path)
+title_info <- get_title(meta, pname = pgmname)
+footnotes  <- get_footnote(meta, pname = pgmname, add_footr_tstamp = FALSE)
+```
 
 ## Example
 
-The following example creates a table using `{gt}` and adds titles and
+The following example creates a table using `{gt}` and annotates it with titles and
 footnotes retrieved from a metadata file using `{tflmetaR}`.
 
-```{r load-package, message=FALSE, warning=FALSE}
+```{r example}
 library(tflmetaR)
 library(gt)
-library(dplyr)
-```
 
-```{r example}
 # Locate example metadata file
 path <- system.file("extdata", "sample_titles.xlsx", package = "tflmetaR")
 pgmname <- "t_dm"
 
-# ---- Retrieve annotation metadata ----
-
-# Option 1: Single-function interface
-title_info <- tflmetaR(
-  path,
-  by_value = pgmname,
-  annotation = "TITLE",
-  add_footr_tstamp = FALSE
-)
-
-footnotes <- tflmetaR(
-  path,
-  by_value = pgmname,
-  annotation = "FOOTR",
-  add_footr_tstamp = FALSE
-)
-
-# Option 2: Helper-function workflow
+# Retrieve annotation metadata (Option 2: helper-function workflow)
 meta <- read_tfile(filename = path)
-
 title_info <- get_title(meta, pname = pgmname)
+footnotes <- get_footnote(meta, pname = pgmname, add_footr_tstamp = FALSE)
 
-footnotes <- get_footnote(
-  meta,
-  pname = pgmname,
-  add_footr_tstamp = FALSE
-)
-
-# ---- Create the annotated gt table ----
-
+# Create the annotated gt table
 tbl <- mtcars |>
   head(5) |>
-  dplyr::select(mpg, cyl, hp, wt) |>
-  dplyr::mutate(across(everything(), ~ round(.x, 1))) |>
   gt::gt() |>
   gt::tab_header(
     title = title_info$TTL1[[1]],
     subtitle = gt::html(title_info$TTL2[[1]])
   ) |>
-  gt::tab_footnote(
-    footnote = footnotes$FOOT1[[1]],
-    locations = gt::cells_column_labels(columns = mpg)
-  ) |>
-  gt::tab_footnote(
-    footnote = footnotes$FOOT2[[1]],
-    locations = gt::cells_column_labels(columns = cyl)
-  ) |>
-  gt::tab_options(
-    table.width = gt::pct(80)
-  )
+  gt::tab_footnote(footnote = footnotes$FOOT1[[1]]) |>
+  gt::tab_footnote(footnote = footnotes$FOOT2[[1]])
 
 tbl
+```
+
+## Related Packages
+`tflmetaR` is designed to work alongside:
+
+- [`{gridify}`](https://CRAN.R-project.org/package=gridify) — for composing and rendering annotated TFLs
+- [Pharmaverse](https://pharmaverse.org/) — a curated collection of R packages for clinical reporting
+
+## Getting Help
+
+For usage questions, please refer to the package vignettes:
+
+```r
+browseVignettes("tflmetaR")
 ```
 
 ## Acknowledgments
