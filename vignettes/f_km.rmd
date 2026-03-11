@@ -312,10 +312,10 @@ By combining these tools, organizations can produce regulatory-compliant figures
 
 | Function | Description |
 |----------|-------------|
-| `read_tfile()` | Load metadata from Excel files |
-| `get_title()` | Extract titles and subtitles |
-| `get_footnote()` | Extract footnotes |
-| `get_ulheader()` | Extract upper-left header content |
-| `get_urheader()` | Extract upper-right header content |
+| `read_tfile()` | Read metadata from Excel or CSV |
+| `get_title()` | Retrieve titles and subtitles |
+| `get_footnote()` | Retrieve footnotes |
+| `get_ulheader()` | Retrieve upper-left header content |
+| `get_urheader()` | Retrieve upper-right header content |
 
 ---

@@ -189,12 +189,12 @@ When combined with modern table rendering packages like `gt`, `tflmetaR` enables
 
 | Function | Purpose |
 |----------|---------|
-| `read_tfile()` | Load metadata from Excel or CSV |
-| `get_title()` | Extract titles and subtitles |
-| `get_footnote()` | Extract footnotes |
-| `get_source()` | Extract data source |
-| `get_pop()` | Extract population |
-| `get_byline()` | Extract bylines |
-| `get_pgmname()` | Extract program name |
+| `read_tfile()` | Read metadata from Excel or CSV |
+| `get_title()` | Retrieve titles and subtitles |
+| `get_footnote()` | Retrieve footnotes |
+| `get_source()` | Retrieve data source |
+| `get_pop()` | Retrieve population |
+| `get_byline()` | Retrieve bylines |
+| `get_pgmname()` | Retrieve program name |
 
 ---
