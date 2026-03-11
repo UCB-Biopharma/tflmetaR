@@ -113,6 +113,22 @@ tbl <- mtcars |>
 tbl
 ```
 
+## Functions
+
+- `tflmetaR()` — Retrieve metadata for a table, listing, or figure
+- `read_tfile()` — Read metadata from Excel or CSV
+- `get_title()` — Retrieve titles and subtitles
+- `get_footnote()` — Retrieve footnotes
+- `get_source()` — Retrieve data source
+- `get_pop()` — Retrieve population
+- `get_byline()` — Retrieve bylines
+- `get_pgmname()` — Retrieve program name
+- `get_ulheader()` — Retrieve upper-left header content
+- `get_urheader()` — Retrieve upper-right header content
+- `get_bookm()` — Retrieve bookmark
+- `change_colname()` — Standardize column names in the metadata file using a JSON mapping configuration
+
+
 ## Related Packages
 `tflmetaR` is designed to work alongside:
 
