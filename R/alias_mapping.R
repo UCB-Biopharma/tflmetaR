@@ -1,35 +1,36 @@
-#' Rename Excel columns using a JSON header-mapping configuration
+#' Standardize column names in the metadata file
 #'
-#' Reads an Excel worksheet, maps its column names to canonical field names
-#' defined in a JSON configuration file, and writes the renamed data to a new
-#' Excel file.
+#' Reads an Excel metadata file, standardizes its column names to the expected
+#' field names using a JSON mapping configuration, and writes the result to a
+#' new Excel file.
 #'
 #' @param input_xlsx Path to the input Excel file.
 #' @param output_xlsx Path to the output Excel file to create.
-#' @param config_path Path to a JSON configuration file containing an
-#'   alias-to-canonical-name mapping.
+#' @param config_path Path to a JSON configuration file containing the
+#'   column name mapping.
 #' @param sheet Sheet index or name passed to
 #'   \code{\link[readxl:read_excel]{readxl::read_excel}}.
 #'   If \code{NULL} (default), the first worksheet in the Excel file is used.
 #'
 #' @details
-#' The JSON configuration file must contain an \code{aliases} field, which is
-#' a named list mapping each canonical field name to a character vector of
-#' acceptable input column-name variants.
+#' The JSON configuration file must contain an `aliases` field, which is a named
+#' list mapping each canonical field name to a character vector of acceptable
+#' input column name variants. For example:
 #'
-#' Before matching, input column names and aliases are normalized by:
-#' \itemize{
-#'   \item converting to lowercase,
-#'   \item trimming leading and trailing whitespace, and
-#'   \item replacing underscores with spaces.
+#' ```json
+#' {
+#'   "aliases": {
+#'     "TTL1": ["Title 1", "Title_1"],
+#'     "PGMNAME": ["Program Name", "program_name"]
+#'   }
 #' }
+#' ```
 #'
-#' After normalization, each input column name is matched against the alias
-#' lookup table. Matching columns are renamed to their canonical field names.
-#' Columns that do not match any alias are preserved unchanged.
-#'
-#' If multiple input columns map to the same canonical field, output names are
-#' made unique using \code{\link[base:make.unique]{base::make.unique}}.
+#' Before matching, input column names and aliases are normalized by converting
+#' to lowercase, trimming whitespace, and replacing underscores with spaces.
+#' Columns that do not match any alias are preserved unchanged. If multiple
+#' input columns map to the same canonical field name, output names are made
+#' unique via [base::make.unique()].
 #'
 #' @return Invisibly returns the path to the output Excel file.
 #'
@@ -66,10 +67,7 @@
 #' readxl::read_excel(output_file)
 #'
 #' @seealso
-#' \code{\link[readxl:read_excel]{readxl::read_excel}},
-#' \code{\link[writexl:write_xlsx]{writexl::write_xlsx}},
-#' \code{\link[jsonlite:fromJSON]{jsonlite::fromJSON}},
-#' \code{\link[base:make.unique]{base::make.unique}}
+#'   [read_tfile()] to read the standardized metadata file.
 #'
 #' @export
 change_colname <- function(input_xlsx,

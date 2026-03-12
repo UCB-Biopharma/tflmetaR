@@ -2,7 +2,7 @@
 % Please edit documentation in R/alias_mapping.R
 \name{change_colname}
 \alias{change_colname}
-\title{Rename Excel columns using a JSON header-mapping configuration}
+\title{Standardize column names in the metadata file}
 \usage{
 change_colname(input_xlsx, output_xlsx, config_path, sheet = NULL)
 }
@@ -11,8 +11,8 @@ change_colname(input_xlsx, output_xlsx, config_path, sheet = NULL)
 
 \item{output_xlsx}{Path to the output Excel file to create.}
 
-\item{config_path}{Path to a JSON configuration file containing an
-alias-to-canonical-name mapping.}
+\item{config_path}{Path to a JSON configuration file containing the
+column name mapping.}
 
 \item{sheet}{Sheet index or name passed to
 \code{\link[readxl:read_excel]{readxl::read_excel}}.
@@ -22,28 +22,28 @@ If \code{NULL} (default), the first worksheet in the Excel file is used.}
 Invisibly returns the path to the output Excel file.
 }
 \description{
-Reads an Excel worksheet, maps its column names to canonical field names
-defined in a JSON configuration file, and writes the renamed data to a new
-Excel file.
+Reads an Excel metadata file, standardizes its column names to the expected
+field names using a JSON mapping configuration, and writes the result to a
+new Excel file.
 }
 \details{
-The JSON configuration file must contain an \code{aliases} field, which is
-a named list mapping each canonical field name to a character vector of
-acceptable input column-name variants.
+The JSON configuration file must contain an \code{aliases} field, which is a named
+list mapping each canonical field name to a character vector of acceptable
+input column name variants. For example:
 
-Before matching, input column names and aliases are normalized by:
-\itemize{
-\item converting to lowercase,
-\item trimming leading and trailing whitespace, and
-\item replacing underscores with spaces.
-}
+\if{html}{\out{<div class="sourceCode json">}}\preformatted{\{
+  "aliases": \{
+    "TTL1": ["Title 1", "Title_1"],
+    "PGMNAME": ["Program Name", "program_name"]
+  \}
+\}
+}\if{html}{\out{</div>}}
 
-After normalization, each input column name is matched against the alias
-lookup table. Matching columns are renamed to their canonical field names.
-Columns that do not match any alias are preserved unchanged.
-
-If multiple input columns map to the same canonical field, output names are
-made unique using \code{\link[base:make.unique]{base::make.unique}}.
+Before matching, input column names and aliases are normalized by converting
+to lowercase, trimming whitespace, and replacing underscores with spaces.
+Columns that do not match any alias are preserved unchanged. If multiple
+input columns map to the same canonical field name, output names are made
+unique via \code{\link[base:make.unique]{base::make.unique()}}.
 }
 \examples{
 input_file <- tempfile(fileext = ".xlsx")
@@ -79,8 +79,5 @@ readxl::read_excel(output_file)
 
 }
 \seealso{
-\code{\link[readxl:read_excel]{readxl::read_excel}},
-\code{\link[writexl:write_xlsx]{writexl::write_xlsx}},
-\code{\link[jsonlite:fromJSON]{jsonlite::fromJSON}},
-\code{\link[base:make.unique]{base::make.unique}}
+\code{\link[=read_tfile]{read_tfile()}} to read the standardized metadata file.
 }

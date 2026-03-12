@@ -1,45 +1,47 @@
-#' Retrieve metadata for a table, listing, or figure
+#' Single-call interface for retrieving annotation metadata
 #'
 #' Reads annotation metadata from an Excel (`.xls`, `.xlsx`) or CSV (`.csv`)
-#' file, filters to a single row using `by_column`, `by_value`, and optional
-#' `oid`, and returns the requested metadata based on `annotation`.
+#' file and returns the requested metadata based on `annotation`.
 #'
-#' @param filename Path to the metadata file. Supported extensions are
+#' @param filename Path to the metadata file. Supported formats are
 #'   `.xls`, `.xlsx`, and `.csv`.
 #' @param sheetname For Excel files, the worksheet name or index to read.
 #'   Ignored for CSV files. If `NULL` (default), the first worksheet is used.
-#' @param by_column Name of the metadata field used to filter the desired row.
-#'   Matching is case-insensitive. Default is `"PGMNAME"` (program name).
+#' @param by_column Name of the column used to identify the desired row.
+#'   Matching is case-insensitive. Defaults to `"PGMNAME"` (program name).
 #' @param by_value Value of `by_column` used to identify the desired row.
 #'   For example, `by_column = "PGMNAME"` and `by_value = "t_dm.R"`
 #'   retrieves the row where `PGMNAME == "t_dm.R"`.
-#' @param oid Optional object identifier used for additional filtering.
-#' @param annotation Type of metadata to return:
+#' @param oid Optional object identifier for additional row filtering.
+#' @param annotation Type of annotation metadata to return:
 #'   \itemize{
-#'     \item `NULL`: return the full filtered row.
+#'     \item `NULL` (default): return the full filtered row.
 #'     \item `"TITLE"`: return title-related metadata (fields beginning with
 #'       `"TTL"`, such as `TTL1`, `TTL2`, and `POPULATION` if available).
 #'     \item `"FOOTR"`: return footnote metadata (fields beginning with `"FOOT"`).
-#'       If `add_footr_tstamp = TRUE`, a timestamp/source line may be appended.
+#'       If `add_footr_tstamp = TRUE`, a timestamp line may be appended.
 #'     \item `"SOURCE"`: return metadata fields beginning with `"SOURCE"`.
 #'     \item `"BYLINE"`: return metadata fields beginning with `"BYLINE"`.
 #'     \item `"POPULATION"`: return the `POPULATION` field.
-#'     \item Any other value: return the specified field, or matching fields
-#'       when applicable.
+#'     \item Any other string: return the matching field(s) by name.
 #'   }
-#' @param add_footr_tstamp Logical. If `TRUE`, append timestamp/source
-#'   information when `annotation = "FOOTR"`. Ignored otherwise.
+#' @param add_footr_tstamp Logical. If `TRUE` (default), appends a
+#'   timestamp line to footnote output when `annotation = "FOOTR"`.
 #'
 #' @details
-#' This function provides a simple interface for retrieving titles,
-#' footnotes, sources, and other annotation metadata from a structured
-#' metadata file.
+#' `tflmetaR()` provides a concise single-call interface for retrieving
+#' annotation metadata. The metadata file is filtered to a single row by
+#' matching `by_value` against `by_column` (default: `"PGMNAME"`). When
+#' multiple rows share the same `by_column` value, `oid` can be used for
+#' additional filtering. The returned metadata is then reduced to the columns
+#' specified by `annotation`.
 #'
-#' Internally, the metadata file is read using [read_tfile()], then filtered
-#' to a single row and reduced to the requested columns.
+#' For scripts that annotate multiple fields, the helper-function workflow is
+#' recommended to avoid repeated file I/O: read the metadata file once with
+#' [read_tfile()], then retrieve individual annotations with [get_title()],
+#' [get_footnote()], and related helpers.
 #'
-#' @return A data frame containing the filtered row or selected metadata
-#'   columns.
+#' @return A data frame containing the selected metadata.
 #'
 #' @examples
 #' # Create a small example metadata file
@@ -83,6 +85,15 @@
 #'   filename = csv_file,
 #'   by_value = "t_dm"
 #' )
+#'
+#' @seealso
+#'   [read_tfile()] to read metadata from Excel or CSV;
+#'
+#'   [get_title()], [get_footnote()], [get_source()], [get_pop()],
+#'   [get_byline()], [get_pgmname()], [get_ulheader()], [get_urheader()],
+#'   and [get_bookm()] for retrieving individual annotation fields;
+#'
+#'   [change_colname()] to standardize column names in the metadata file.
 #'
 #' @export
 tflmetaR <- function(filename,

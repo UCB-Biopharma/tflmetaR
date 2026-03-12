@@ -21,7 +21,7 @@ Exactly one of \code{tnumber} or \code{pname} must be supplied.}
 in \code{OID}. Use this when multiple rows match the program name.}
 }
 \value{
-A named list containing the non-missing source fields.
+A data frame of the non-missing source fields.
 }
 \description{
 Retrieves source-related fields (for example, \code{SOURCE}) from metadata for a
@@ -38,4 +38,13 @@ meta <- data.frame(
 get_source(meta, pname = "t_dm")
 get_source(meta, tnumber = "Table 14.3.1")
 
+}
+\seealso{
+\code{\link[=read_tfile]{read_tfile()}} to read metadata from Excel or CSV;
+
+\code{\link[=get_title]{get_title()}}, \code{\link[=get_footnote]{get_footnote()}}, \code{\link[=get_pop]{get_pop()}},
+\code{\link[=get_byline]{get_byline()}}, \code{\link[=get_pgmname]{get_pgmname()}}, \code{\link[=get_ulheader]{get_ulheader()}}, \code{\link[=get_urheader]{get_urheader()}},
+and \code{\link[=get_bookm]{get_bookm()}} for retrieving individual annotation fields;
+
+\code{\link[=tflmetaR]{tflmetaR()}} for a single-call alternative.
 }

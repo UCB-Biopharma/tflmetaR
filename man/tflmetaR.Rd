@@ -2,7 +2,7 @@
 % Please edit documentation in R/tflmetaR.R
 \name{tflmetaR}
 \alias{tflmetaR}
-\title{Retrieve metadata for a table, listing, or figure}
+\title{Single-call interface for retrieving annotation metadata}
 \usage{
 tflmetaR(
   filename,
@@ -15,54 +15,56 @@ tflmetaR(
 )
 }
 \arguments{
-\item{filename}{Path to the metadata file. Supported extensions are
+\item{filename}{Path to the metadata file. Supported formats are
 \code{.xls}, \code{.xlsx}, and \code{.csv}.}
 
 \item{sheetname}{For Excel files, the worksheet name or index to read.
 Ignored for CSV files. If \code{NULL} (default), the first worksheet is used.}
 
-\item{by_column}{Name of the metadata field used to filter the desired row.
-Matching is case-insensitive. Default is \code{"PGMNAME"} (program name).}
+\item{by_column}{Name of the column used to identify the desired row.
+Matching is case-insensitive. Defaults to \code{"PGMNAME"} (program name).}
 
 \item{by_value}{Value of \code{by_column} used to identify the desired row.
 For example, \code{by_column = "PGMNAME"} and \code{by_value = "t_dm.R"}
 retrieves the row where \code{PGMNAME == "t_dm.R"}.}
 
-\item{oid}{Optional object identifier used for additional filtering.}
+\item{oid}{Optional object identifier for additional row filtering.}
 
-\item{annotation}{Type of metadata to return:
+\item{annotation}{Type of annotation metadata to return:
 \itemize{
-\item \code{NULL}: return the full filtered row.
+\item \code{NULL} (default): return the full filtered row.
 \item \code{"TITLE"}: return title-related metadata (fields beginning with
 \code{"TTL"}, such as \code{TTL1}, \code{TTL2}, and \code{POPULATION} if available).
 \item \code{"FOOTR"}: return footnote metadata (fields beginning with \code{"FOOT"}).
-If \code{add_footr_tstamp = TRUE}, a timestamp/source line may be appended.
+If \code{add_footr_tstamp = TRUE}, a timestamp line may be appended.
 \item \code{"SOURCE"}: return metadata fields beginning with \code{"SOURCE"}.
 \item \code{"BYLINE"}: return metadata fields beginning with \code{"BYLINE"}.
 \item \code{"POPULATION"}: return the \code{POPULATION} field.
-\item Any other value: return the specified field, or matching fields
-when applicable.
+\item Any other string: return the matching field(s) by name.
 }}
 
-\item{add_footr_tstamp}{Logical. If \code{TRUE}, append timestamp/source
-information when \code{annotation = "FOOTR"}. Ignored otherwise.}
+\item{add_footr_tstamp}{Logical. If \code{TRUE} (default), appends a
+timestamp line to footnote output when \code{annotation = "FOOTR"}.}
 }
 \value{
-A data frame containing the filtered row or selected metadata
-columns.
+A data frame containing the selected metadata.
 }
 \description{
 Reads annotation metadata from an Excel (\code{.xls}, \code{.xlsx}) or CSV (\code{.csv})
-file, filters to a single row using \code{by_column}, \code{by_value}, and optional
-\code{oid}, and returns the requested metadata based on \code{annotation}.
+file and returns the requested metadata based on \code{annotation}.
 }
 \details{
-This function provides a simple interface for retrieving titles,
-footnotes, sources, and other annotation metadata from a structured
-metadata file.
+\code{tflmetaR()} provides a concise single-call interface for retrieving
+annotation metadata. The metadata file is filtered to a single row by
+matching \code{by_value} against \code{by_column} (default: \code{"PGMNAME"}). When
+multiple rows share the same \code{by_column} value, \code{oid} can be used for
+additional filtering. The returned metadata is then reduced to the columns
+specified by \code{annotation}.
 
-Internally, the metadata file is read using \code{\link[=read_tfile]{read_tfile()}}, then filtered
-to a single row and reduced to the requested columns.
+For scripts that annotate multiple fields, the helper-function workflow is
+recommended to avoid repeated file I/O: read the metadata file once with
+\code{\link[=read_tfile]{read_tfile()}}, then retrieve individual annotations with \code{\link[=get_title]{get_title()}},
+\code{\link[=get_footnote]{get_footnote()}}, and related helpers.
 }
 \examples{
 # Create a small example metadata file
@@ -107,4 +109,13 @@ tflmetaR(
   by_value = "t_dm"
 )
 
+}
+\seealso{
+\code{\link[=read_tfile]{read_tfile()}} to read metadata from Excel or CSV;
+
+\code{\link[=get_title]{get_title()}}, \code{\link[=get_footnote]{get_footnote()}}, \code{\link[=get_source]{get_source()}}, \code{\link[=get_pop]{get_pop()}},
+\code{\link[=get_byline]{get_byline()}}, \code{\link[=get_pgmname]{get_pgmname()}}, \code{\link[=get_ulheader]{get_ulheader()}}, \code{\link[=get_urheader]{get_urheader()}},
+and \code{\link[=get_bookm]{get_bookm()}} for retrieving individual annotation fields;
+
+\code{\link[=change_colname]{change_colname()}} to standardize column names in the metadata file.
 }

@@ -57,6 +57,15 @@
 #'
 #' get_bookm(df3, pname = "l_lab")
 #'
+#' @seealso
+#'   [read_tfile()] to read metadata from Excel or CSV;
+#'
+#'   [get_title()], [get_footnote()], [get_source()], [get_pop()],
+#'   [get_byline()], [get_pgmname()], [get_ulheader()], and [get_urheader()]
+#'   for retrieving individual annotation fields;
+#'
+#'   [change_colname()] to standardize column names in the metadata file.
+#'
 #' @export
 get_bookm <- function(df,
                       tnumber = NULL,

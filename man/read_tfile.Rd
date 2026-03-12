@@ -75,3 +75,12 @@ writexl::write_xlsx(
 read_tfile(xlsx_file)
 
 }
+\seealso{
+\code{\link[=get_title]{get_title()}}, \code{\link[=get_footnote]{get_footnote()}}, \code{\link[=get_source]{get_source()}}, \code{\link[=get_pop]{get_pop()}},
+\code{\link[=get_byline]{get_byline()}}, \code{\link[=get_pgmname]{get_pgmname()}}, \code{\link[=get_ulheader]{get_ulheader()}}, \code{\link[=get_urheader]{get_urheader()}},
+and \code{\link[=get_bookm]{get_bookm()}} for retrieving individual annotation fields;
+
+\code{\link[=tflmetaR]{tflmetaR()}} for a single-call alternative.
+
+\code{\link[=change_colname]{change_colname()}} to standardize column names in the metadata file.
+}

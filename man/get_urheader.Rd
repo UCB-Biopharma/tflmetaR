@@ -10,7 +10,7 @@ get_urheader(df)
 \item{df}{A data frame containing metadata.}
 }
 \value{
-A named list of non-missing upper-right header metadata fields.
+A data frame of the non-missing upper-right header metadata fields.
 }
 \description{
 Retrieves upper-right header fields (columns beginning with \code{"UR"},
@@ -26,4 +26,13 @@ meta <- data.frame(
 
 get_urheader(meta)
 
+}
+\seealso{
+\code{\link[=read_tfile]{read_tfile()}} to read metadata from Excel or CSV;
+
+\code{\link[=get_title]{get_title()}}, \code{\link[=get_footnote]{get_footnote()}}, \code{\link[=get_source]{get_source()}}, \code{\link[=get_pop]{get_pop()}},
+\code{\link[=get_byline]{get_byline()}}, \code{\link[=get_pgmname]{get_pgmname()}}, \code{\link[=get_ulheader]{get_ulheader()}},
+and \code{\link[=get_bookm]{get_bookm()}} for retrieving individual annotation fields;
+
+\code{\link[=change_colname]{change_colname()}} to standardize column names in the metadata file.
 }

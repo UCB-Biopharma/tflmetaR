@@ -14,7 +14,7 @@
 #' @param oid An optional character string specifying the object ID stored
 #'   in `OID`. Use this when multiple rows match the program name.
 #'
-#' @return A named list containing non-missing title-related metadata fields.
+#' @return A data frame of the non-missing title-related metadata fields
 #'
 #' @examples
 #' meta <- data.frame(
@@ -35,6 +35,15 @@
 #' get_title(meta, pname = "t_dm")
 #' get_title(meta, tnumber = "Table 14.3.1")
 #'
+#' @seealso
+#'   [read_tfile()] to read metadata from Excel or CSV;
+#'
+#'   [get_footnote()], [get_source()], [get_pop()],
+#'   [get_byline()], [get_pgmname()], [get_ulheader()], [get_urheader()],
+#'   and [get_bookm()] for retrieving individual annotation fields;
+#'
+#'   [tflmetaR()] for a single-call alternative.
+#'
 #' @export
 get_title <- function(df,
                       tnumber = NULL,
@@ -53,7 +62,7 @@ get_title <- function(df,
 #' @param add_footr_tstamp Logical. If `TRUE`, append timestamp and source
 #'   information as the last footnote line. Defaults to `TRUE`.
 #'
-#' @return A named list of non-missing footnote-related metadata fields.
+#' @return A data frame of the non-missing footnote-related metadata fields.
 #'
 #' @examples
 #' meta <- data.frame(
@@ -73,6 +82,15 @@ get_title <- function(df,
 #'
 #' get_footnote(meta, pname = "t_dm", add_footr_tstamp = FALSE)
 #' get_footnote(meta, tnumber = "Table 14.3.1", add_footr_tstamp = FALSE)
+#'
+#' @seealso
+#'   [read_tfile()] to read metadata from Excel or CSV;
+#'
+#'   [get_title()], [get_source()], [get_pop()],
+#'   [get_byline()], [get_pgmname()], [get_ulheader()], [get_urheader()],
+#'   and [get_bookm()] for retrieving individual annotation fields;
+#'
+#'   [tflmetaR()] for a single-call alternative.
 #'
 #' @export
 get_footnote <- function(df,
@@ -94,7 +112,7 @@ get_footnote <- function(df,
 #'
 #' @param df A data frame containing metadata.
 #'
-#' @return A named list of non-missing Upper-Left header metadata fields.
+#' @return A data frame of the non-missing Upper-Left header metadata fields.
 #'
 #' @examples
 #' meta <- data.frame(
@@ -105,6 +123,15 @@ get_footnote <- function(df,
 #' )
 #'
 #' get_ulheader(meta)
+#'
+#' @seealso
+#'   [read_tfile()] to read metadata from Excel or CSV;
+#'
+#'   [get_title()], [get_footnote()], [get_source()], [get_pop()],
+#'   [get_byline()], [get_pgmname()], [get_urheader()],
+#'   and [get_bookm()] for retrieving individual annotation fields;
+#'
+#'   [change_colname()] to standardize column names in the metadata file.
 #'
 #' @export
 get_ulheader <- function(df) {
@@ -119,7 +146,7 @@ get_ulheader <- function(df) {
 #'
 #' @inheritParams get_ulheader
 #'
-#' @return A named list of non-missing upper-right header metadata fields.
+#' @return A data frame of the non-missing upper-right header metadata fields.
 #'
 #' @examples
 #' meta <- data.frame(
@@ -130,6 +157,15 @@ get_ulheader <- function(df) {
 #' )
 #'
 #' get_urheader(meta)
+#'
+#' @seealso
+#'   [read_tfile()] to read metadata from Excel or CSV;
+#'
+#'   [get_title()], [get_footnote()], [get_source()], [get_pop()],
+#'   [get_byline()], [get_pgmname()], [get_ulheader()],
+#'   and [get_bookm()] for retrieving individual annotation fields;
+#'
+#'   [change_colname()] to standardize column names in the metadata file.
 #'
 #' @export
 get_urheader <- function(df) {
@@ -144,7 +180,7 @@ get_urheader <- function(df) {
 #'
 #' @inheritParams get_title
 #'
-#' @return A named list containing the non-missing population field.
+#' @return A data frame of the non-missing population field.
 #'
 #' @examples
 #' meta <- data.frame(
@@ -161,6 +197,15 @@ get_urheader <- function(df) {
 #' get_pop(meta, pname = "t_dm")
 #' get_pop(meta, tnumber = "Table 14.3.1")
 #'
+#' @seealso
+#'   [read_tfile()] to read metadata from Excel or CSV;
+#'
+#'   [get_title()], [get_footnote()], [get_source()],
+#'   [get_byline()], [get_pgmname()], [get_ulheader()], [get_urheader()],
+#'   and [get_bookm()] for retrieving individual annotation fields;
+#'
+#'   [change_colname()] to standardize column names in the metadata file.
+#'
 #' @export
 get_pop <- function(df,
                     tnumber = NULL,
@@ -176,7 +221,7 @@ get_pop <- function(df,
 #'
 #' @inheritParams get_title
 #'
-#' @return A named list containing the non-missing byline fields.
+#' @return A data frame of the non-missing byline fields.
 #'
 #' @examples
 #' meta <- data.frame(
@@ -190,6 +235,15 @@ get_pop <- function(df,
 #'
 #' get_byline(meta, pname = "t_dm")
 #' get_byline(meta, tnumber = "Table 14.3.1")
+#'
+#' @seealso
+#'   [read_tfile()] to read metadata from Excel or CSV;
+#'
+#'   [get_title()], [get_footnote()], [get_source()], [get_pop()],
+#'   [get_pgmname()], [get_ulheader()], [get_urheader()],
+#'   and [get_bookm()] for retrieving individual annotation fields;
+#'
+#'   [change_colname()] to standardize column names in the metadata file.
 #'
 #' @export
 get_byline <- function(df,
@@ -206,7 +260,7 @@ get_byline <- function(df,
 #'
 #' @inheritParams get_title
 #'
-#' @return A named list containing the non-missing program name field.
+#' @return A data frame of the non-missing program name field.
 #'
 #' @examples
 #' meta <- data.frame(
@@ -218,6 +272,15 @@ get_byline <- function(df,
 #'
 #' get_pgmname(meta, pname = "t_dm")
 #' get_pgmname(meta, tnumber = "Table 14.3.1")
+#'
+#' @seealso
+#'   [read_tfile()] to read metadata from Excel or CSV;
+#'
+#'   [get_title()], [get_footnote()], [get_source()], [get_pop()],
+#'   [get_byline()], [get_ulheader()], [get_urheader()],
+#'   and [get_bookm()] for retrieving individual annotation fields;
+#'
+#'   [change_colname()] to standardize column names in the metadata file.
 #'
 #' @export
 get_pgmname <- function(df,
@@ -234,7 +297,7 @@ get_pgmname <- function(df,
 #'
 #' @inheritParams get_title
 #'
-#' @return A named list containing the non-missing source fields.
+#' @return A data frame of the non-missing source fields.
 #'
 #' @examples
 #' meta <- data.frame(
@@ -246,6 +309,15 @@ get_pgmname <- function(df,
 #'
 #' get_source(meta, pname = "t_dm")
 #' get_source(meta, tnumber = "Table 14.3.1")
+#'
+#' @seealso
+#'   [read_tfile()] to read metadata from Excel or CSV;
+#'
+#'   [get_title()], [get_footnote()], [get_pop()],
+#'   [get_byline()], [get_pgmname()], [get_ulheader()], [get_urheader()],
+#'   and [get_bookm()] for retrieving individual annotation fields;
+#'
+#'   [tflmetaR()] for a single-call alternative.
 #'
 #' @export
 get_source <- function(df,

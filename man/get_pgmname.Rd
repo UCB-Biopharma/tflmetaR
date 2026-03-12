@@ -21,7 +21,7 @@ Exactly one of \code{tnumber} or \code{pname} must be supplied.}
 in \code{OID}. Use this when multiple rows match the program name.}
 }
 \value{
-A named list containing the non-missing program name field.
+A data frame of the non-missing program name field.
 }
 \description{
 Retrieves the program name field (\code{PGMNAME}) from metadata for a specified
@@ -38,4 +38,13 @@ meta <- data.frame(
 get_pgmname(meta, pname = "t_dm")
 get_pgmname(meta, tnumber = "Table 14.3.1")
 
+}
+\seealso{
+\code{\link[=read_tfile]{read_tfile()}} to read metadata from Excel or CSV;
+
+\code{\link[=get_title]{get_title()}}, \code{\link[=get_footnote]{get_footnote()}}, \code{\link[=get_source]{get_source()}}, \code{\link[=get_pop]{get_pop()}},
+\code{\link[=get_byline]{get_byline()}}, \code{\link[=get_ulheader]{get_ulheader()}}, \code{\link[=get_urheader]{get_urheader()}},
+and \code{\link[=get_bookm]{get_bookm()}} for retrieving individual annotation fields;
+
+\code{\link[=change_colname]{change_colname()}} to standardize column names in the metadata file.
 }

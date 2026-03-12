@@ -62,6 +62,15 @@
 #'
 #' read_tfile(xlsx_file)
 #'
+#' @seealso
+#'   [get_title()], [get_footnote()], [get_source()], [get_pop()],
+#'   [get_byline()], [get_pgmname()], [get_ulheader()], [get_urheader()],
+#'   and [get_bookm()] for retrieving individual annotation fields;
+#'
+#'   [tflmetaR()] for a single-call alternative.
+#'
+#'   [change_colname()] to standardize column names in the metadata file.
+#'
 #' @export
 read_tfile <- function(filename, sheetname = NULL, validate = TRUE, ...) {
   if (!is.character(filename) || length(filename) != 1L || is.na(filename) || filename == "") {

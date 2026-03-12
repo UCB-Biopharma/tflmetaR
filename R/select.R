@@ -65,7 +65,8 @@ select_row <- function(data, by_column, by_value, oid = NULL) {
 #' @param add_footr_tstamp Logical or a function. If `TRUE`, a function named `add_footr_tstamp()`
 #' is called to append timestamps to footnotes. Defaults to `FALSE`.
 #'
-#' @return A list of selected columns from the input data, with `NA` values removed.
+#' @return A data frame containing the requested annotation columns. Columns
+#'   with all values missing are excluded from the result.
 #'
 #' @examples
 #' \dontrun{

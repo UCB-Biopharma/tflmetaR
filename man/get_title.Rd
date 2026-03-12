@@ -21,7 +21,7 @@ Exactly one of \code{tnumber} or \code{pname} must be supplied.}
 in \code{OID}. Use this when multiple rows match the program name.}
 }
 \value{
-A named list containing non-missing title-related metadata fields.
+A data frame of the non-missing title-related metadata fields
 }
 \description{
 Retrieves title-related fields (columns beginning with \code{"TTL"}, such as
@@ -47,4 +47,13 @@ meta <- data.frame(
 get_title(meta, pname = "t_dm")
 get_title(meta, tnumber = "Table 14.3.1")
 
+}
+\seealso{
+\code{\link[=read_tfile]{read_tfile()}} to read metadata from Excel or CSV;
+
+\code{\link[=get_footnote]{get_footnote()}}, \code{\link[=get_source]{get_source()}}, \code{\link[=get_pop]{get_pop()}},
+\code{\link[=get_byline]{get_byline()}}, \code{\link[=get_pgmname]{get_pgmname()}}, \code{\link[=get_ulheader]{get_ulheader()}}, \code{\link[=get_urheader]{get_urheader()}},
+and \code{\link[=get_bookm]{get_bookm()}} for retrieving individual annotation fields;
+
+\code{\link[=tflmetaR]{tflmetaR()}} for a single-call alternative.
 }

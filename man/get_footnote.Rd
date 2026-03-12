@@ -30,7 +30,7 @@ in \code{OID}. Use this when multiple rows match the program name.}
 information as the last footnote line. Defaults to \code{TRUE}.}
 }
 \value{
-A named list of non-missing footnote-related metadata fields.
+A data frame of the non-missing footnote-related metadata fields.
 }
 \description{
 Retrieves footnote-related fields (columns beginning with \code{"FOOT"},
@@ -56,4 +56,13 @@ meta <- data.frame(
 get_footnote(meta, pname = "t_dm", add_footr_tstamp = FALSE)
 get_footnote(meta, tnumber = "Table 14.3.1", add_footr_tstamp = FALSE)
 
+}
+\seealso{
+\code{\link[=read_tfile]{read_tfile()}} to read metadata from Excel or CSV;
+
+\code{\link[=get_title]{get_title()}}, \code{\link[=get_source]{get_source()}}, \code{\link[=get_pop]{get_pop()}},
+\code{\link[=get_byline]{get_byline()}}, \code{\link[=get_pgmname]{get_pgmname()}}, \code{\link[=get_ulheader]{get_ulheader()}}, \code{\link[=get_urheader]{get_urheader()}},
+and \code{\link[=get_bookm]{get_bookm()}} for retrieving individual annotation fields;
+
+\code{\link[=tflmetaR]{tflmetaR()}} for a single-call alternative.
 }
