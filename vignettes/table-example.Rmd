@@ -69,12 +69,12 @@ Once metadata is loaded, `tflmetaR` provides a suite of accessor functions to re
 
 | Function | Description | Returns |
 |-------|-------------|---------|
-| `get_title()` | Retrieves title-related fields (TTL1, TTL2, etc.) from the metadata | Named list of non-missing title fields |
-| `get_footnote()` | Retrieves footnote fields (FOOT1, FOOT2, etc.) from the metadata | Named list of non-missing footnote fields |
-| `get_source()` | Retrieves source fields (e.g., SOURCE1) from the metadata | Named list of non-missing source fields |
-| `get_pop()` | Retrieves population field from the metadata | Named list containing the population field |
-| `get_byline()` | Retrieves byline fields (BYLINE1, BYLINE2, etc.) from the metadata | Named list of non-missing byline fields |
-| `get_pgmname()` | Retrieves program name field (PGMNAME) from the metadata | Named list containing the program name field |
+| `get_title()` | Retrieves title-related fields (TTL1, TTL2, etc.) from the metadata | A data frame of non-missing title related fields |
+| `get_footnote()` | Retrieves footnote fields (FOOT1, FOOT2, etc.) from the metadata | A data frame of non-missing footnote fields |
+| `get_source()` | Retrieves source fields (e.g., SOURCE1) from the metadata | A data frame of non-missing source fields |
+| `get_pop()` | Retrieves population field from the metadata | A data frame of the population field |
+| `get_byline()` | Retrieves byline fields (BYLINE1, BYLINE2, etc.) from the metadata | A data frame of non-missing byline fields |
+| `get_pgmname()` | Retrieves program name field (PGMNAME) from the metadata | A data frame of the program name field |
 
 ```{r select-entry}
 # Extract metadata components for a specific table
