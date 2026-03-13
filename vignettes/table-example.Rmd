@@ -93,7 +93,7 @@ cat("Population:", unlist(population), "\n")
 cat("Program:", unlist(pgm_name), "\n")
 ```
 
-Each function returns a named list containing the non-missing fields, allowing flexible integration with various table rendering packages.
+Each function returns a data frame of the non-missing fields, allowing flexible integration with various table rendering packages.
 
 ---
 
