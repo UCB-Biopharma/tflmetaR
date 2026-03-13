@@ -13,13 +13,13 @@ knitr::opts_chunk$set(
 )
 ```
 
-# tflmetaR <img src="man/figure/logo.png" alt="tflmetaR logo" align="right" height="auto" width="200" />
-  
+# tflmetaR <img src="man/figure/logo.png" align="right" height="200" alt="tflmetaR logo" />
+
 ## Overview
 
 `tflmetaR` provides a simple interface for retrieving titles, headers, and
 footnotes for tables, listings, and figures (TFLs) in clinical study reports
-(CSRs) from a metadata file.
+(CSRs) or other formal deliverables from a metadata file.
 
 Best practices in programming recommend separating code from metadata to
 improve readability, maintainability, and scalability. However, many R scripts
@@ -44,9 +44,9 @@ install.packages("tflmetaR")
 The metadata file can be an Excel file (`.xlsx`, `.xls`) or a CSV file (`.csv`), with standardized column names. Required columns are `PGMNAME` (program name), `TTL1` (primary title), `FOOT1` (first footnote), and `SOURCE` (data source). Additional columns for subtitles (`TTL2`, `TTL3`, …), further footnotes (`FOOT2`, `FOOT3`, …), population definitions, book mark and bylines are also supported. If your file uses different column names, use `change_colname()` to remap them to the expected names before passing the file to any `tflmetaR` function.
 
 
-## Basic Workflow
+## Workflow
 
-The typical workflow is to retrieve annotation metadata from a metadata file and apply it to a TFL object created with a package such as [`{gt}`](https://gt.rstudio.com/), [`{flextable}`](https://ardata-fr.github.io/flextable-book/), or [`{ggplot2}`](https://ggplot2.tidyverse.org/). Metadata can be retrieved in two ways.
+The typical workflow is to retrieve annotation metadata from a metadata file and apply it to a TFL object created with packages such as [`{gt}`](https://gt.rstudio.com/), [`{flextable}`](https://davidgohel.github.io/flextable/), or [`{ggplot2}`](https://ggplot2.tidyverse.org/), or with lower-level grid tools such as `grob` or `gtable`. Metadata can be retrieved in two ways.
 
 **Option 1: Single-function interface**  
 
@@ -96,7 +96,7 @@ pgmname <- "t_dm"
 
 # Retrieve annotation metadata (Option 2: helper-function workflow)
 meta <- read_tfile(filename = path)
-title_info <- get_title(meta, pname = pgmname)
+titles <- get_title(meta, pname = pgmname)
 footnotes <- get_footnote(meta, pname = pgmname, add_footr_tstamp = FALSE)
 
 # Create the annotated gt table
@@ -104,18 +104,19 @@ tbl <- mtcars |>
   head(5) |>
   gt::gt() |>
   gt::tab_header(
-    title = title_info$TTL1[[1]],
-    subtitle = gt::html(title_info$TTL2[[1]])
+    title    = titles$TTL1[[1]],
+    subtitle = gt::html(titles$TTL2[[1]])
   ) |>
   gt::tab_footnote(footnote = footnotes$FOOT1[[1]]) |>
-  gt::tab_footnote(footnote = footnotes$FOOT2[[1]])
+  gt::tab_footnote(footnote = footnotes$FOOT2[[1]]) |>
+  gt::tab_options(table.width = gt::pct(80))
 
 tbl
 ```
 
 ## Functions
 
-- `tflmetaR()` — Retrieve metadata for a table, listing, or figure
+- `tflmetaR()` — Single-call interface for retrieving annotation metadata
 - `read_tfile()` — Read metadata from Excel or CSV
 - `get_title()` — Retrieve titles and subtitles
 - `get_footnote()` — Retrieve footnotes
@@ -123,25 +124,26 @@ tbl
 - `get_pop()` — Retrieve population
 - `get_byline()` — Retrieve bylines
 - `get_pgmname()` — Retrieve program name
+- `get_bookm()` — Retrieve bookmark
 - `get_ulheader()` — Retrieve upper-left header content
 - `get_urheader()` — Retrieve upper-right header content
-- `get_bookm()` — Retrieve bookmark
-- `change_colname()` — Standardize column names in the metadata file using a JSON mapping configuration
+- `change_colname()` — Standardize column names in the metadata file
 
 
 ## Related Packages
 `tflmetaR` is designed to work alongside:
 
-- [`{gridify}`](https://CRAN.R-project.org/package=gridify) — for composing and rendering annotated TFLs
+- [`{gridify}`](https://CRAN.R-project.org/package=gridify) — for layout and rendering annotated TFLs
 - [Pharmaverse](https://pharmaverse.org/) — a curated collection of R packages for clinical reporting
 
 ## Getting Help
 
-For usage questions, please refer to the package vignettes:
+For more information please visit the following vignettes:
 
-```r
-browseVignettes("tflmetaR")
-```
+- **Table Example**
+  `vignette("table-example", package = "tflmetaR")` - Using `tflmetaR` with `gt` for Professional Tables.
+- **Figure Example**
+  `vignette("f_km", package = "tflmetaR")` - Creating Kaplan-Meier Survival Plots with `tflmetaR` and `gridify`.
 
 ## Acknowledgments
 

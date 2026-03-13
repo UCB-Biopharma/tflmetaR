@@ -1,13 +1,13 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# tflmetaR <img src="man/figure/logo.png" alt="tflmetaR logo" align="right" height="auto" width="200" />
+# tflmetaR <img src="man/figure/logo.png" align="right" height="200" alt="tflmetaR logo" />
 
 ## Overview
 
 `tflmetaR` provides a simple interface for retrieving titles, headers,
 and footnotes for tables, listings, and figures (TFLs) in clinical study
-reports (CSRs) from a metadata file.
+reports (CSRs) or other formal deliverables from a metadata file.
 
 Best practices in programming recommend separating code from metadata to
 improve readability, maintainability, and scalability. However, many R
@@ -43,14 +43,14 @@ definitions, book mark and bylines are also supported. If your file uses
 different column names, use `change_colname()` to remap them to the
 expected names before passing the file to any `tflmetaR` function.
 
-## Basic Workflow
+## Workflow
 
 The typical workflow is to retrieve annotation metadata from a metadata
-file and apply it to a TFL object created with a package such as
+file and apply it to a TFL object created with packages such as
 [`{gt}`](https://gt.rstudio.com/),
-[`{flextable}`](https://ardata-fr.github.io/flextable-book/), or
-[`{ggplot2}`](https://ggplot2.tidyverse.org/). Metadata can be retrieved
-in two ways.
+[`{flextable}`](https://davidgohel.github.io/flextable/), or
+[`{ggplot2}`](https://ggplot2.tidyverse.org/), or with lower-level grid
+tools such as `grob` or `gtable`. Metadata can be retrieved in two ways.
 
 **Option 1: Single-function interface**
 
@@ -102,7 +102,7 @@ pgmname <- "t_dm"
 
 # Retrieve annotation metadata (Option 2: helper-function workflow)
 meta <- read_tfile(filename = path)
-title_info <- get_title(meta, pname = pgmname)
+titles <- get_title(meta, pname = pgmname)
 footnotes <- get_footnote(meta, pname = pgmname, add_footr_tstamp = FALSE)
 
 # Create the annotated gt table
@@ -110,29 +110,30 @@ tbl <- mtcars |>
   head(5) |>
   gt::gt() |>
   gt::tab_header(
-    title = title_info$TTL1[[1]],
-    subtitle = gt::html(title_info$TTL2[[1]])
+    title    = titles$TTL1[[1]],
+    subtitle = gt::html(titles$TTL2[[1]])
   ) |>
   gt::tab_footnote(footnote = footnotes$FOOT1[[1]]) |>
-  gt::tab_footnote(footnote = footnotes$FOOT2[[1]])
+  gt::tab_footnote(footnote = footnotes$FOOT2[[1]]) |>
+  gt::tab_options(table.width = gt::pct(80))
 
 tbl
 ```
 
-<div id="iqwdpzgxqt" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#iqwdpzgxqt table {
+<div id="zjbogwzvyx" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#zjbogwzvyx table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
-&#10;#iqwdpzgxqt thead, #iqwdpzgxqt tbody, #iqwdpzgxqt tfoot, #iqwdpzgxqt tr, #iqwdpzgxqt td, #iqwdpzgxqt th {
+&#10;#zjbogwzvyx thead, #zjbogwzvyx tbody, #zjbogwzvyx tfoot, #zjbogwzvyx tr, #zjbogwzvyx td, #zjbogwzvyx th {
   border-style: none;
 }
-&#10;#iqwdpzgxqt p {
+&#10;#zjbogwzvyx p {
   margin: 0;
   padding: 0;
 }
-&#10;#iqwdpzgxqt .gt_table {
+&#10;#zjbogwzvyx .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -143,7 +144,7 @@ tbl
   font-weight: normal;
   font-style: normal;
   background-color: #FFFFFF;
-  width: auto;
+  width: 80%;
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #A8A8A8;
@@ -157,11 +158,11 @@ tbl
   border-left-width: 2px;
   border-left-color: #D3D3D3;
 }
-&#10;#iqwdpzgxqt .gt_caption {
+&#10;#zjbogwzvyx .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
-&#10;#iqwdpzgxqt .gt_title {
+&#10;#zjbogwzvyx .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -172,7 +173,7 @@ tbl
   border-bottom-color: #FFFFFF;
   border-bottom-width: 0;
 }
-&#10;#iqwdpzgxqt .gt_subtitle {
+&#10;#zjbogwzvyx .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -183,7 +184,7 @@ tbl
   border-top-color: #FFFFFF;
   border-top-width: 0;
 }
-&#10;#iqwdpzgxqt .gt_heading {
+&#10;#zjbogwzvyx .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -194,12 +195,12 @@ tbl
   border-right-width: 1px;
   border-right-color: #D3D3D3;
 }
-&#10;#iqwdpzgxqt .gt_bottom_border {
+&#10;#zjbogwzvyx .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
-&#10;#iqwdpzgxqt .gt_col_headings {
+&#10;#zjbogwzvyx .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -213,7 +214,7 @@ tbl
   border-right-width: 1px;
   border-right-color: #D3D3D3;
 }
-&#10;#iqwdpzgxqt .gt_col_heading {
+&#10;#zjbogwzvyx .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -232,7 +233,7 @@ tbl
   padding-right: 5px;
   overflow-x: hidden;
 }
-&#10;#iqwdpzgxqt .gt_column_spanner_outer {
+&#10;#zjbogwzvyx .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -243,13 +244,13 @@ tbl
   padding-left: 4px;
   padding-right: 4px;
 }
-&#10;#iqwdpzgxqt .gt_column_spanner_outer:first-child {
+&#10;#zjbogwzvyx .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
-&#10;#iqwdpzgxqt .gt_column_spanner_outer:last-child {
+&#10;#zjbogwzvyx .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
-&#10;#iqwdpzgxqt .gt_column_spanner {
+&#10;#zjbogwzvyx .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -260,10 +261,10 @@ tbl
   display: inline-block;
   width: 100%;
 }
-&#10;#iqwdpzgxqt .gt_spanner_row {
+&#10;#zjbogwzvyx .gt_spanner_row {
   border-bottom-style: hidden;
 }
-&#10;#iqwdpzgxqt .gt_group_heading {
+&#10;#zjbogwzvyx .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -288,7 +289,7 @@ tbl
   vertical-align: middle;
   text-align: left;
 }
-&#10;#iqwdpzgxqt .gt_empty_group_heading {
+&#10;#zjbogwzvyx .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -302,13 +303,13 @@ tbl
   border-bottom-color: #D3D3D3;
   vertical-align: middle;
 }
-&#10;#iqwdpzgxqt .gt_from_md > :first-child {
+&#10;#zjbogwzvyx .gt_from_md > :first-child {
   margin-top: 0;
 }
-&#10;#iqwdpzgxqt .gt_from_md > :last-child {
+&#10;#zjbogwzvyx .gt_from_md > :last-child {
   margin-bottom: 0;
 }
-&#10;#iqwdpzgxqt .gt_row {
+&#10;#zjbogwzvyx .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -326,7 +327,7 @@ tbl
   vertical-align: middle;
   overflow-x: hidden;
 }
-&#10;#iqwdpzgxqt .gt_stub {
+&#10;#zjbogwzvyx .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -338,7 +339,7 @@ tbl
   padding-left: 5px;
   padding-right: 5px;
 }
-&#10;#iqwdpzgxqt .gt_stub_row_group {
+&#10;#zjbogwzvyx .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -351,13 +352,13 @@ tbl
   padding-right: 5px;
   vertical-align: top;
 }
-&#10;#iqwdpzgxqt .gt_row_group_first td {
+&#10;#zjbogwzvyx .gt_row_group_first td {
   border-top-width: 2px;
 }
-&#10;#iqwdpzgxqt .gt_row_group_first th {
+&#10;#zjbogwzvyx .gt_row_group_first th {
   border-top-width: 2px;
 }
-&#10;#iqwdpzgxqt .gt_summary_row {
+&#10;#zjbogwzvyx .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -366,14 +367,14 @@ tbl
   padding-left: 5px;
   padding-right: 5px;
 }
-&#10;#iqwdpzgxqt .gt_first_summary_row {
+&#10;#zjbogwzvyx .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
-&#10;#iqwdpzgxqt .gt_first_summary_row.thick {
+&#10;#zjbogwzvyx .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
-&#10;#iqwdpzgxqt .gt_last_summary_row {
+&#10;#zjbogwzvyx .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -382,7 +383,7 @@ tbl
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
-&#10;#iqwdpzgxqt .gt_grand_summary_row {
+&#10;#zjbogwzvyx .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -391,7 +392,7 @@ tbl
   padding-left: 5px;
   padding-right: 5px;
 }
-&#10;#iqwdpzgxqt .gt_first_grand_summary_row {
+&#10;#zjbogwzvyx .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -400,7 +401,7 @@ tbl
   border-top-width: 6px;
   border-top-color: #D3D3D3;
 }
-&#10;#iqwdpzgxqt .gt_last_grand_summary_row_top {
+&#10;#zjbogwzvyx .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -409,10 +410,10 @@ tbl
   border-bottom-width: 6px;
   border-bottom-color: #D3D3D3;
 }
-&#10;#iqwdpzgxqt .gt_striped {
+&#10;#zjbogwzvyx .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
-&#10;#iqwdpzgxqt .gt_table_body {
+&#10;#zjbogwzvyx .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -420,7 +421,7 @@ tbl
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
-&#10;#iqwdpzgxqt .gt_footnotes {
+&#10;#zjbogwzvyx .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -433,7 +434,7 @@ tbl
   border-right-width: 2px;
   border-right-color: #D3D3D3;
 }
-&#10;#iqwdpzgxqt .gt_footnote {
+&#10;#zjbogwzvyx .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -441,7 +442,7 @@ tbl
   padding-left: 5px;
   padding-right: 5px;
 }
-&#10;#iqwdpzgxqt .gt_sourcenotes {
+&#10;#zjbogwzvyx .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -454,64 +455,64 @@ tbl
   border-right-width: 2px;
   border-right-color: #D3D3D3;
 }
-&#10;#iqwdpzgxqt .gt_sourcenote {
+&#10;#zjbogwzvyx .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
   padding-left: 5px;
   padding-right: 5px;
 }
-&#10;#iqwdpzgxqt .gt_left {
+&#10;#zjbogwzvyx .gt_left {
   text-align: left;
 }
-&#10;#iqwdpzgxqt .gt_center {
+&#10;#zjbogwzvyx .gt_center {
   text-align: center;
 }
-&#10;#iqwdpzgxqt .gt_right {
+&#10;#zjbogwzvyx .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
-&#10;#iqwdpzgxqt .gt_font_normal {
+&#10;#zjbogwzvyx .gt_font_normal {
   font-weight: normal;
 }
-&#10;#iqwdpzgxqt .gt_font_bold {
+&#10;#zjbogwzvyx .gt_font_bold {
   font-weight: bold;
 }
-&#10;#iqwdpzgxqt .gt_font_italic {
+&#10;#zjbogwzvyx .gt_font_italic {
   font-style: italic;
 }
-&#10;#iqwdpzgxqt .gt_super {
+&#10;#zjbogwzvyx .gt_super {
   font-size: 65%;
 }
-&#10;#iqwdpzgxqt .gt_footnote_marks {
+&#10;#zjbogwzvyx .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
-&#10;#iqwdpzgxqt .gt_asterisk {
+&#10;#zjbogwzvyx .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
-&#10;#iqwdpzgxqt .gt_indent_1 {
+&#10;#zjbogwzvyx .gt_indent_1 {
   text-indent: 5px;
 }
-&#10;#iqwdpzgxqt .gt_indent_2 {
+&#10;#zjbogwzvyx .gt_indent_2 {
   text-indent: 10px;
 }
-&#10;#iqwdpzgxqt .gt_indent_3 {
+&#10;#zjbogwzvyx .gt_indent_3 {
   text-indent: 15px;
 }
-&#10;#iqwdpzgxqt .gt_indent_4 {
+&#10;#zjbogwzvyx .gt_indent_4 {
   text-indent: 20px;
 }
-&#10;#iqwdpzgxqt .gt_indent_5 {
+&#10;#zjbogwzvyx .gt_indent_5 {
   text-indent: 25px;
 }
-&#10;#iqwdpzgxqt .katex-display {
+&#10;#zjbogwzvyx .katex-display {
   display: inline-flex !important;
   margin-bottom: 0.75em !important;
 }
-&#10;#iqwdpzgxqt div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+&#10;#zjbogwzvyx div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
   height: 0px !important;
 }
 </style>
@@ -607,7 +608,8 @@ tbl
 
 ## Functions
 
-- `tflmetaR()` — Retrieve metadata for a table, listing, or figure
+- `tflmetaR()` — Single-call interface for retrieving annotation
+  metadata
 - `read_tfile()` — Read metadata from Excel or CSV
 - `get_title()` — Retrieve titles and subtitles
 - `get_footnote()` — Retrieve footnotes
@@ -615,28 +617,28 @@ tbl
 - `get_pop()` — Retrieve population
 - `get_byline()` — Retrieve bylines
 - `get_pgmname()` — Retrieve program name
+- `get_bookm()` — Retrieve bookmark
 - `get_ulheader()` — Retrieve upper-left header content
 - `get_urheader()` — Retrieve upper-right header content
-- `get_bookm()` — Retrieve bookmark
 - `change_colname()` — Standardize column names in the metadata file
-  using a JSON mapping configuration
 
 ## Related Packages
 
 `tflmetaR` is designed to work alongside:
 
-- [`{gridify}`](https://CRAN.R-project.org/package=gridify) — for
-  composing and rendering annotated TFLs
+- [`{gridify}`](https://CRAN.R-project.org/package=gridify) — for layout
+  and rendering annotated TFLs
 - [Pharmaverse](https://pharmaverse.org/) — a curated collection of R
   packages for clinical reporting
 
 ## Getting Help
 
-For usage questions, please refer to the package vignettes:
+For more information please visit the following vignettes:
 
-``` r
-browseVignettes("tflmetaR")
-```
+- **Table Example** `vignette("table-example", package = "tflmetaR")` -
+  Using `tflmetaR` with `gt` for Professional Tables.
+- **Figure Example** `vignette("f_km", package = "tflmetaR")` - Creating
+  Kaplan-Meier Survival Plots with `tflmetaR` and `gridify`.
 
 ## Acknowledgments
 
