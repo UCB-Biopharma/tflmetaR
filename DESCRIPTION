@@ -13,7 +13,7 @@ Description: Provides functions to retrieve headers, titles, and footnotes
     annotating tables, listings, and figures in clinical study reports
     (CSRs) or other formal deliverables. It supports separation of
     metadata from analysis code in clinical reporting workflows.
-License: Apache License (>= 2.0)
+License: Apache License (>= 2)
 Depends: 
     R (>= 4.1.0)
 Imports: 
@@ -36,6 +36,5 @@ VignetteBuilder:
 Config/testthat/edition: 3
 Encoding: UTF-8
 Language: en-US
-LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.3
