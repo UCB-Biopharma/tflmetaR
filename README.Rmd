@@ -15,6 +15,13 @@ knitr::opts_chunk$set(
 
 # tflmetaR <img src="man/figure/logo.png" align="right" height="200" alt="tflmetaR logo" />
 
+<!-- badges: start -->
+
+[![CRAN status](https://www.r-pkg.org/badges/version/tflmetaR)](https://CRAN.R-project.org/package=tflmetaR)
+[![Codecov test coverage](https://codecov.io/gh/amberuw/tflmetaR/graph/badge.svg?token=KPU9WJB88H)](https://app.codecov.io/gh/amberuw/tflmetaR)
+[![R-CMD-check](https://github.com/amberuw/tflmetaR/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/amberuw/tflmetaR/actions/workflows/R-CMD-check.yaml)
+<!-- badges: end -->
+
 ## Overview
 
 `tflmetaR` provides a simple interface for retrieving titles, headers, and
