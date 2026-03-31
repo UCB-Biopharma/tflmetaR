@@ -129,6 +129,8 @@ tbl <- mtcars |>
 
 <img src="man/figures/README-example.png" alt="Example of table output" width="100%" />
 
+Note: Get the image using `gt::gtsave(tbl, "tbl.png")`
+
 ## Functions
 
 - `tflmetaR()` — Single-call interface for retrieving annotation
