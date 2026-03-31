@@ -13,12 +13,12 @@ knitr::opts_chunk$set(
 )
 ```
 
-# tflmetaR <img src="man/figure/logo.png" align="right" height="200" alt="tflmetaR logo" />
+# tflmetaR <img src="man/figures/logo.png" align="right" height="200" alt="tflmetaR logo" />
 
 <!-- badges: start -->
 
 [![CRAN status](https://www.r-pkg.org/badges/version/tflmetaR)](https://CRAN.R-project.org/package=tflmetaR)
-[![Codecov test coverage](https://codecov.io/gh/amberuw/tflmetaR/graph/badge.svg?token=KPU9WJB88H)](https://app.codecov.io/gh/amberuw/tflmetaR)
+[![Codecov test coverage](https://codecov.io/gh/amberuw/tflmetaR/graph/badge.svg?token=DbGvMBEQMB)](https://app.codecov.io/gh/amberuw/tflmetaR)
 [![R-CMD-check](https://github.com/amberuw/tflmetaR/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/amberuw/tflmetaR/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
@@ -118,8 +118,9 @@ tbl <- mtcars |>
   gt::tab_footnote(footnote = footnotes$FOOT2[[1]]) |>
   gt::tab_options(table.width = gt::pct(80))
 
-tbl
 ```
+
+<img src="man/figures/README-example.png" alt="Example of table output" width="100%" />
 
 ## Functions
 
