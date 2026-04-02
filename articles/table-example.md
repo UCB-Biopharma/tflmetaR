@@ -1,0 +1,240 @@
+# Using tflmetaR with gt for Professional Tables
+
+## Introduction
+
+In clinical research and regulatory reporting, maintaining consistency
+and accuracy in table annotations—including titles, subtitles,
+footnotes, and data sources—is critical. Traditional approaches often
+embed these annotations directly within analysis scripts, leading to
+maintenance challenges, inconsistencies across outputs, and increased
+risk of errors during updates.
+
+The `tflmetaR` package addresses these challenges by implementing a
+**separation of metadata and code** design pattern. By externalizing
+table annotations into structured spreadsheets (Excel or CSV),
+`tflmetaR` enables:
+
+- **Centralized metadata management**: All titles, footnotes, and source
+  information are stored in a single location to support audit and
+  traceability
+- **Reduced code complexity**: Analysis scripts remain focused on data
+  processing and visualization
+- **Code stability**: Metadata changes do not require modifications to
+  validated code
+- **Regulatory compliance**: Supports audit-friendly workflows common in
+  pharmaceutical and clinical settings
+
+This vignette demonstrates how to integrate `tflmetaR` with the `gt`
+package to create publication-quality tables with externally managed
+annotations.
+
+------------------------------------------------------------------------
+
+## Loading Required Packages
+
+``` r
+library(tflmetaR)
+library(gt)
+library(dplyr)
+```
+
+------------------------------------------------------------------------
+
+## Loading Table Metadata
+
+The first step in using `tflmetaR` is loading the metadata file that
+contains your table annotations. The package supports both Excel
+(`.xlsx`, `.xls`) and CSV (`.csv`) formats through the
+[`read_tfile()`](../reference/read_tfile.md) function, with an optional
+sheet name for Excel files.
+
+The metadata file should contain standardized columns including
+`PGMNAME` (program name), `TTL1` (primary title), `FOOT1` (first
+footnote), and `SOURCE` (data source). Additional columns for subtitles
+(`TTL2`, `TTL3`, …), additional footnotes (`FOOT2`, `FOOT3`, …),
+population definitions, and bylines are also supported.
+
+``` r
+# Load the sample metadata file included with the package
+file_path <- system.file("extdata", "sample_titles.xlsx", package = "tflmetaR")
+
+# Read the metadata from the 'footer' sheet
+meta <- tflmetaR::read_tfile(filename = file_path, sheetname = "footer")
+
+# Preview the structure of the metadata
+cat("Metadata columns:", paste(names(meta), collapse = ", "))
+#> Metadata columns: TYPE, PGMNAME, OID, SOURCE, POPULATION, TTL1, TTL2, TTL3, BYLINE1, BYLINE2, BOOKM, FOOT1, FOOT2, FOOT3, FOOT4, FOOT5, FOOT6, FOOT7, FOOT8
+```
+
+The metadata file serves as a centralized repository for all table
+annotations, enabling consistent application across multiple outputs and
+facilitating updates without code modifications.
+
+------------------------------------------------------------------------
+
+## Extracting Table Annotations
+
+Once metadata is loaded, `tflmetaR` provides a suite of accessor
+functions to retrieve specific annotation components for a given table.
+Tables can be identified by their TFL number (`tnumber`) or program name
+(`pname`).
+
+### Core Accessor Functions
+
+| Function                                         | Description                                                         | Returns                                          |
+|--------------------------------------------------|---------------------------------------------------------------------|--------------------------------------------------|
+| [`get_title()`](../reference/get_title.md)       | Retrieves title-related fields (TTL1, TTL2, etc.) from the metadata | A data frame of non-missing title related fields |
+| [`get_footnote()`](../reference/get_footnote.md) | Retrieves footnote fields (FOOT1, FOOT2, etc.) from the metadata    | A data frame of non-missing footnote fields      |
+| [`get_source()`](../reference/get_source.md)     | Retrieves source fields (e.g., SOURCE1) from the metadata           | A data frame of non-missing source fields        |
+| [`get_pop()`](../reference/get_pop.md)           | Retrieves population field from the metadata                        | A data frame of the population field             |
+| [`get_byline()`](../reference/get_byline.md)     | Retrieves byline fields (BYLINE1, BYLINE2, etc.) from the metadata  | A data frame of non-missing byline fields        |
+| [`get_pgmname()`](../reference/get_pgmname.md)   | Retrieves program name field (PGMNAME) from the metadata            | A data frame of the program name field           |
+
+``` r
+# Extract metadata components for a specific table
+# Tables are identified by their TFL number (e.g., "Table 2.1")
+tfl_number <- "Table 2.1"
+
+title_info <- tflmetaR::get_title(meta, tnumber = tfl_number)
+footnotes <- tflmetaR::get_footnote(meta, tnumber = tfl_number, add_footr_tstamp = FALSE)
+source_info <- tflmetaR::get_source(meta, tnumber = tfl_number)
+population <- tflmetaR::get_pop(meta, tnumber = tfl_number)
+pgm_name <- tflmetaR::get_pgmname(meta, tnumber = tfl_number)
+
+# Display extracted metadata
+cat("Title:", unlist(title_info$TTL1), "\n")
+#> Title: Table 2.1
+cat("Population:", unlist(population), "\n")
+#> Population: Penguin Population
+cat("Program:", unlist(pgm_name), "\n")
+#> Program: t_dm
+```
+
+Each function returns a data frame of the non-missing fields, allowing
+flexible integration with various table rendering packages.
+
+------------------------------------------------------------------------
+
+## Creating Annotated Tables with gt
+
+The `gt` package provides a powerful framework for creating
+publication-quality tables in R. When combined with `tflmetaR`, you can
+seamlessly apply externally managed annotations to your tables.
+
+### Building a Basic Annotated Table
+
+The following example demonstrates how to create a table with title,
+subtitle, footnotes, and source notes using metadata extracted via
+`tflmetaR`:
+
+``` r
+# Prepare sample data
+sample_data <- mtcars |>
+  head(5) |>
+  select(mpg, cyl, hp, wt) |>
+  mutate(across(everything(), ~ round(.x, 1)))
+
+# Extract annotation text from metadata using [[1]] notation
+main_title <- title_info$TTL1[[1]]
+subtitle <- title_info$TTL2[[1]]
+pop_text <- population$POPULATION[[1]]
+
+# Extract multiple footnotes
+foot1 <- footnotes$FOOT1[[1]]
+foot2 <- footnotes$FOOT2[[1]]
+
+source_text <- source_info$SOURCE[[1]]
+
+# Create the annotated gt table
+sample_data |>
+  gt::gt() |>
+  gt::tab_header(
+    title = main_title,
+    subtitle = gt::html(paste0(subtitle, "<br>", pop_text))
+  ) |>
+  gt::tab_footnote(
+    footnote = foot1,
+    locations = gt::cells_column_labels(columns = mpg)
+  ) |>
+  gt::tab_footnote(
+    footnote = foot2,
+    locations = gt::cells_column_labels(columns = cyl)
+  ) |>
+  gt::tab_source_note(
+    source_note = paste("Source:", source_text)
+  ) |>
+  gt::cols_label(
+    mpg = "Miles/Gallon",
+    cyl = "Cylinders",
+    hp = "Horsepower",
+    wt = "Weight (1000 lbs)"
+  ) |>
+  gt::tab_options(
+    table.width = gt::pct(100),
+    table.font.size = gt::px(14),
+    heading.title.font.size = gt::px(16),
+    heading.subtitle.font.size = gt::px(14)
+  )
+```
+
+[TABLE]
+
+The `gt` package offers extensive customization options for table
+styling, including:
+
+- **[`tab_header()`](https://gt.rstudio.com/reference/tab_header.html)**:
+  Adds title and optional subtitle
+- **[`tab_footnote()`](https://gt.rstudio.com/reference/tab_footnote.html)**:
+  Adds footnotes with precise location targeting
+- **[`tab_source_note()`](https://gt.rstudio.com/reference/tab_source_note.html)**:
+  Adds source attribution at the table footer
+- **[`tab_options()`](https://gt.rstudio.com/reference/tab_options.html)**:
+  Controls global table styling options
+
+------------------------------------------------------------------------
+
+## Summary
+
+The `tflmetaR` package provides a robust solution for managing table
+annotations in clinical and regulatory reporting environments. By
+externalizing metadata to structured spreadsheets, organizations can:
+
+- **Streamline maintenance**: Update titles, footnotes, and source
+  information without modifying analysis code
+- **Ensure consistency**: Apply standardized annotations across all
+  Tables, Figures, and Listings (TFLs)
+- **Support compliance**: Maintain audit-ready documentation with clear
+  separation of data and presentation logic
+- **Enhance collaboration**: Allow non-programmers to review and update
+  table annotations directly
+
+When combined with modern table rendering packages like `gt`, `tflmetaR`
+enables the creation of publication-quality outputs that meet the
+demanding requirements of pharmaceutical and clinical research.
+
+------------------------------------------------------------------------
+
+## Related Resources
+
+### Compatible Table Packages
+
+- [`gt`](https://gt.rstudio.com/) - Publication-quality tables with
+  extensive customization
+- [`flextable`](https://davidgohel.github.io/flextable/) - Tables for
+  Word, PowerPoint, and HTML
+- [`huxtable`](https://hughjonesd.github.io/huxtable/) - Tables with a
+  simple, modern interface
+
+### tflmetaR Core Functions
+
+| Function                                         | Purpose                         |
+|--------------------------------------------------|---------------------------------|
+| [`read_tfile()`](../reference/read_tfile.md)     | Read metadata from Excel or CSV |
+| [`get_title()`](../reference/get_title.md)       | Retrieve titles and subtitles   |
+| [`get_footnote()`](../reference/get_footnote.md) | Retrieve footnotes              |
+| [`get_source()`](../reference/get_source.md)     | Retrieve data source            |
+| [`get_pop()`](../reference/get_pop.md)           | Retrieve population             |
+| [`get_byline()`](../reference/get_byline.md)     | Retrieve bylines                |
+| [`get_pgmname()`](../reference/get_pgmname.md)   | Retrieve program name           |
+
+------------------------------------------------------------------------
