@@ -8,8 +8,8 @@
 [![CRAN
 status](https://www.r-pkg.org/badges/version/tflmetaR)](https://CRAN.R-project.org/package=tflmetaR)
 [![Codecov test
-coverage](https://codecov.io/gh/amberuw/tflmetaR/graph/badge.svg?token=DbGvMBEQMB)](https://app.codecov.io/gh/amberuw/tflmetaR)
-[![R-CMD-check](https://github.com/amberuw/tflmetaR/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/amberuw/tflmetaR/actions/workflows/R-CMD-check.yaml)
+coverage](https://codecov.io/gh/UCB-Biopharma/tflmetaR/graph/badge.svg)](https://app.codecov.io/gh/UCB-Biopharma/tflmetaR)
+[![R-CMD-check](https://github.com/UCB-Biopharma/tflmetaR/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/UCB-Biopharma/tflmetaR/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
 ## Overview
