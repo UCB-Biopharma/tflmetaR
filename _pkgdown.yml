@@ -1,4 +1,9 @@
-url: ~
+url: https://ucb-biopharma.github.io/tflmetaR/
 template:
   bootstrap: 5
 
+repo:
+  url:
+    home: https://github.com/UCB-Biopharma/tflmetaR
+    source: https://github.com/UCB-Biopharma/tflmetaR/blob/main/
+    issue: https://github.com/UCB-Biopharma/tflmetaR/issues
