@@ -45,8 +45,8 @@ library(dplyr)
 The first step in using `tflmetaR` is loading the metadata file that
 contains your table annotations. The package supports both Excel
 (`.xlsx`, `.xls`) and CSV (`.csv`) formats through the
-[`read_tfile()`](../reference/read_tfile.md) function, with an optional
-sheet name for Excel files.
+[`read_tfile()`](https://ucb-biopharma.github.io/tflmetaR/reference/read_tfile.md)
+function, with an optional sheet name for Excel files.
 
 The metadata file should contain standardized columns including
 `PGMNAME` (program name), `TTL1` (primary title), `FOOT1` (first
@@ -81,14 +81,14 @@ Tables can be identified by their TFL number (`tnumber`) or program name
 
 ### Core Accessor Functions
 
-| Function                                         | Description                                                         | Returns                                          |
-|--------------------------------------------------|---------------------------------------------------------------------|--------------------------------------------------|
-| [`get_title()`](../reference/get_title.md)       | Retrieves title-related fields (TTL1, TTL2, etc.) from the metadata | A data frame of non-missing title related fields |
-| [`get_footnote()`](../reference/get_footnote.md) | Retrieves footnote fields (FOOT1, FOOT2, etc.) from the metadata    | A data frame of non-missing footnote fields      |
-| [`get_source()`](../reference/get_source.md)     | Retrieves source fields (e.g., SOURCE1) from the metadata           | A data frame of non-missing source fields        |
-| [`get_pop()`](../reference/get_pop.md)           | Retrieves population field from the metadata                        | A data frame of the population field             |
-| [`get_byline()`](../reference/get_byline.md)     | Retrieves byline fields (BYLINE1, BYLINE2, etc.) from the metadata  | A data frame of non-missing byline fields        |
-| [`get_pgmname()`](../reference/get_pgmname.md)   | Retrieves program name field (PGMNAME) from the metadata            | A data frame of the program name field           |
+| Function                                                                               | Description                                                         | Returns                                          |
+|----------------------------------------------------------------------------------------|---------------------------------------------------------------------|--------------------------------------------------|
+| [`get_title()`](https://ucb-biopharma.github.io/tflmetaR/reference/get_title.md)       | Retrieves title-related fields (TTL1, TTL2, etc.) from the metadata | A data frame of non-missing title related fields |
+| [`get_footnote()`](https://ucb-biopharma.github.io/tflmetaR/reference/get_footnote.md) | Retrieves footnote fields (FOOT1, FOOT2, etc.) from the metadata    | A data frame of non-missing footnote fields      |
+| [`get_source()`](https://ucb-biopharma.github.io/tflmetaR/reference/get_source.md)     | Retrieves source fields (e.g., SOURCE1) from the metadata           | A data frame of non-missing source fields        |
+| [`get_pop()`](https://ucb-biopharma.github.io/tflmetaR/reference/get_pop.md)           | Retrieves population field from the metadata                        | A data frame of the population field             |
+| [`get_byline()`](https://ucb-biopharma.github.io/tflmetaR/reference/get_byline.md)     | Retrieves byline fields (BYLINE1, BYLINE2, etc.) from the metadata  | A data frame of non-missing byline fields        |
+| [`get_pgmname()`](https://ucb-biopharma.github.io/tflmetaR/reference/get_pgmname.md)   | Retrieves program name field (PGMNAME) from the metadata            | A data frame of the program name field           |
 
 ``` r
 # Extract metadata components for a specific table
@@ -227,14 +227,14 @@ demanding requirements of pharmaceutical and clinical research.
 
 ### tflmetaR Core Functions
 
-| Function                                         | Purpose                         |
-|--------------------------------------------------|---------------------------------|
-| [`read_tfile()`](../reference/read_tfile.md)     | Read metadata from Excel or CSV |
-| [`get_title()`](../reference/get_title.md)       | Retrieve titles and subtitles   |
-| [`get_footnote()`](../reference/get_footnote.md) | Retrieve footnotes              |
-| [`get_source()`](../reference/get_source.md)     | Retrieve data source            |
-| [`get_pop()`](../reference/get_pop.md)           | Retrieve population             |
-| [`get_byline()`](../reference/get_byline.md)     | Retrieve bylines                |
-| [`get_pgmname()`](../reference/get_pgmname.md)   | Retrieve program name           |
+| Function                                                                               | Purpose                         |
+|----------------------------------------------------------------------------------------|---------------------------------|
+| [`read_tfile()`](https://ucb-biopharma.github.io/tflmetaR/reference/read_tfile.md)     | Read metadata from Excel or CSV |
+| [`get_title()`](https://ucb-biopharma.github.io/tflmetaR/reference/get_title.md)       | Retrieve titles and subtitles   |
+| [`get_footnote()`](https://ucb-biopharma.github.io/tflmetaR/reference/get_footnote.md) | Retrieve footnotes              |
+| [`get_source()`](https://ucb-biopharma.github.io/tflmetaR/reference/get_source.md)     | Retrieve data source            |
+| [`get_pop()`](https://ucb-biopharma.github.io/tflmetaR/reference/get_pop.md)           | Retrieve population             |
+| [`get_byline()`](https://ucb-biopharma.github.io/tflmetaR/reference/get_byline.md)     | Retrieve bylines                |
+| [`get_pgmname()`](https://ucb-biopharma.github.io/tflmetaR/reference/get_pgmname.md)   | Retrieve program name           |
 
 ------------------------------------------------------------------------

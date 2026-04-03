@@ -56,7 +56,8 @@ name, output names are made unique via
 
 ## See also
 
-[`read_tfile()`](read_tfile.md) to read the standardized metadata file.
+[`read_tfile()`](https://ucb-biopharma.github.io/tflmetaR/reference/read_tfile.md)
+to read the standardized metadata file.
 
 ## Examples
 

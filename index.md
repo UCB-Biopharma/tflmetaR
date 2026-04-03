@@ -38,8 +38,9 @@ The metadata file can be an Excel file (`.xlsx`, `.xls`) or a CSV file
 `TTL3`, …), further footnotes (`FOOT2`, `FOOT3`, …), population
 definitions, book mark and bylines are also supported. If your file uses
 different column names, use
-[`change_colname()`](reference/change_colname.md) to remap them to the
-expected names before passing the file to any `tflmetaR` function.
+[`change_colname()`](https://ucb-biopharma.github.io/tflmetaR/reference/change_colname.md)
+to remap them to the expected names before passing the file to any
+`tflmetaR` function.
 
 ## Workflow
 
@@ -52,8 +53,9 @@ tools such as `grob` or `gtable`. Metadata can be retrieved in two ways.
 
 **Option 1: Single-function interface**
 
-Use [`tflmetaR()`](reference/tflmetaR.md) to retrieve the required
-metadata in a single call:
+Use
+[`tflmetaR()`](https://ucb-biopharma.github.io/tflmetaR/reference/tflmetaR.md)
+to retrieve the required metadata in a single call:
 
 ``` r
 path    <- system.file("extdata", "sample_titles.xlsx", package = "tflmetaR")
@@ -77,9 +79,9 @@ footnotes  <- tflmetaR(
 **Option 2: Helper-function workflow (recommended)**
 
 Read the metadata file once with
-[`read_tfile()`](reference/read_tfile.md), then retrieve the required
-metadata with the `get_*()` helper functions. This avoids repeated I/O
-operations when annotating multiple fields:
+[`read_tfile()`](https://ucb-biopharma.github.io/tflmetaR/reference/read_tfile.md),
+then retrieve the required metadata with the `get_*()` helper functions.
+This avoids repeated I/O operations when annotating multiple fields:
 
 ``` r
 meta       <- read_tfile(filename = path)
@@ -125,24 +127,30 @@ Note: Get the image using `gt::gtsave(tbl, "tbl.png")`
 
 ## Functions
 
-- [`tflmetaR()`](reference/tflmetaR.md) — Single-call interface for
-  retrieving annotation metadata
-- [`read_tfile()`](reference/read_tfile.md) — Read metadata from Excel
-  or CSV
-- [`get_title()`](reference/get_title.md) — Retrieve titles and
-  subtitles
-- [`get_footnote()`](reference/get_footnote.md) — Retrieve footnotes
-- [`get_source()`](reference/get_source.md) — Retrieve data source
-- [`get_pop()`](reference/get_pop.md) — Retrieve population
-- [`get_byline()`](reference/get_byline.md) — Retrieve bylines
-- [`get_pgmname()`](reference/get_pgmname.md) — Retrieve program name
-- [`get_bookm()`](reference/get_bookm.md) — Retrieve bookmark
-- [`get_ulheader()`](reference/get_ulheader.md) — Retrieve upper-left
-  header content
-- [`get_urheader()`](reference/get_urheader.md) — Retrieve upper-right
-  header content
-- [`change_colname()`](reference/change_colname.md) — Standardize column
-  names in the metadata file
+- [`tflmetaR()`](https://ucb-biopharma.github.io/tflmetaR/reference/tflmetaR.md)
+  — Single-call interface for retrieving annotation metadata
+- [`read_tfile()`](https://ucb-biopharma.github.io/tflmetaR/reference/read_tfile.md)
+  — Read metadata from Excel or CSV
+- [`get_title()`](https://ucb-biopharma.github.io/tflmetaR/reference/get_title.md)
+  — Retrieve titles and subtitles
+- [`get_footnote()`](https://ucb-biopharma.github.io/tflmetaR/reference/get_footnote.md)
+  — Retrieve footnotes
+- [`get_source()`](https://ucb-biopharma.github.io/tflmetaR/reference/get_source.md)
+  — Retrieve data source
+- [`get_pop()`](https://ucb-biopharma.github.io/tflmetaR/reference/get_pop.md)
+  — Retrieve population
+- [`get_byline()`](https://ucb-biopharma.github.io/tflmetaR/reference/get_byline.md)
+  — Retrieve bylines
+- [`get_pgmname()`](https://ucb-biopharma.github.io/tflmetaR/reference/get_pgmname.md)
+  — Retrieve program name
+- [`get_bookm()`](https://ucb-biopharma.github.io/tflmetaR/reference/get_bookm.md)
+  — Retrieve bookmark
+- [`get_ulheader()`](https://ucb-biopharma.github.io/tflmetaR/reference/get_ulheader.md)
+  — Retrieve upper-left header content
+- [`get_urheader()`](https://ucb-biopharma.github.io/tflmetaR/reference/get_urheader.md)
+  — Retrieve upper-right header content
+- [`change_colname()`](https://ucb-biopharma.github.io/tflmetaR/reference/change_colname.md)
+  — Standardize column names in the metadata file
 
 ## Related Packages
 
@@ -158,10 +166,10 @@ Note: Get the image using `gt::gtsave(tbl, "tbl.png")`
 For more information please visit the following vignettes:
 
 - **Table Example**
-  [`vignette("table-example", package = "tflmetaR")`](articles/table-example.md) -
+  [`vignette("table-example", package = "tflmetaR")`](https://ucb-biopharma.github.io/tflmetaR/articles/table-example.md) -
   Using `tflmetaR` with `gt` for Professional Tables.
 - **Figure Example**
-  [`vignette("f_km", package = "tflmetaR")`](articles/f_km.md) -
+  [`vignette("f_km", package = "tflmetaR")`](https://ucb-biopharma.github.io/tflmetaR/articles/f_km.md) -
   Creating Kaplan-Meier Survival Plots with `tflmetaR` and `gridify`.
 
 ## Acknowledgments

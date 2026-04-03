@@ -3,8 +3,10 @@
 Returns bookmark text from metadata for a specified output. The function
 first identifies the matching row in `df` using `pname` or `tnumber`. If
 a non-missing `BOOKM` value is available, that value is returned.
-Otherwise, the function falls back to [`get_title()`](get_title.md) and
-combines the returned title components into a single bookmark string.
+Otherwise, the function falls back to
+[`get_title()`](https://ucb-biopharma.github.io/tflmetaR/reference/get_title.md)
+and combines the returned title components into a single bookmark
+string.
 
 ## Usage
 
@@ -65,17 +67,22 @@ word boundary up to `max_length` characters.
 
 ## See also
 
-[`read_tfile()`](read_tfile.md) to read metadata from Excel or CSV;
+[`read_tfile()`](https://ucb-biopharma.github.io/tflmetaR/reference/read_tfile.md)
+to read metadata from Excel or CSV;
 
-[`get_title()`](get_title.md), [`get_footnote()`](get_footnote.md),
-[`get_source()`](get_source.md), [`get_pop()`](get_pop.md),
-[`get_byline()`](get_byline.md), [`get_pgmname()`](get_pgmname.md),
-[`get_ulheader()`](get_ulheader.md), and
-[`get_urheader()`](get_urheader.md) for retrieving individual annotation
-fields;
+[`get_title()`](https://ucb-biopharma.github.io/tflmetaR/reference/get_title.md),
+[`get_footnote()`](https://ucb-biopharma.github.io/tflmetaR/reference/get_footnote.md),
+[`get_source()`](https://ucb-biopharma.github.io/tflmetaR/reference/get_source.md),
+[`get_pop()`](https://ucb-biopharma.github.io/tflmetaR/reference/get_pop.md),
+[`get_byline()`](https://ucb-biopharma.github.io/tflmetaR/reference/get_byline.md),
+[`get_pgmname()`](https://ucb-biopharma.github.io/tflmetaR/reference/get_pgmname.md),
+[`get_ulheader()`](https://ucb-biopharma.github.io/tflmetaR/reference/get_ulheader.md),
+and
+[`get_urheader()`](https://ucb-biopharma.github.io/tflmetaR/reference/get_urheader.md)
+for retrieving individual annotation fields;
 
-[`change_colname()`](change_colname.md) to standardize column names in
-the metadata file.
+[`change_colname()`](https://ucb-biopharma.github.io/tflmetaR/reference/change_colname.md)
+to standardize column names in the metadata file.
 
 ## Examples
 

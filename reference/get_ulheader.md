@@ -21,16 +21,22 @@ A data frame of the non-missing Upper-Left header metadata fields.
 
 ## See also
 
-[`read_tfile()`](read_tfile.md) to read metadata from Excel or CSV;
+[`read_tfile()`](https://ucb-biopharma.github.io/tflmetaR/reference/read_tfile.md)
+to read metadata from Excel or CSV;
 
-[`get_title()`](get_title.md), [`get_footnote()`](get_footnote.md),
-[`get_source()`](get_source.md), [`get_pop()`](get_pop.md),
-[`get_byline()`](get_byline.md), [`get_pgmname()`](get_pgmname.md),
-[`get_urheader()`](get_urheader.md), and [`get_bookm()`](get_bookm.md)
+[`get_title()`](https://ucb-biopharma.github.io/tflmetaR/reference/get_title.md),
+[`get_footnote()`](https://ucb-biopharma.github.io/tflmetaR/reference/get_footnote.md),
+[`get_source()`](https://ucb-biopharma.github.io/tflmetaR/reference/get_source.md),
+[`get_pop()`](https://ucb-biopharma.github.io/tflmetaR/reference/get_pop.md),
+[`get_byline()`](https://ucb-biopharma.github.io/tflmetaR/reference/get_byline.md),
+[`get_pgmname()`](https://ucb-biopharma.github.io/tflmetaR/reference/get_pgmname.md),
+[`get_urheader()`](https://ucb-biopharma.github.io/tflmetaR/reference/get_urheader.md),
+and
+[`get_bookm()`](https://ucb-biopharma.github.io/tflmetaR/reference/get_bookm.md)
 for retrieving individual annotation fields;
 
-[`change_colname()`](change_colname.md) to standardize column names in
-the metadata file.
+[`change_colname()`](https://ucb-biopharma.github.io/tflmetaR/reference/change_colname.md)
+to standardize column names in the metadata file.
 
 ## Examples
 

@@ -14,6 +14,9 @@
 
 ## Citation
 
+Source:
+[`DESCRIPTION`](https://github.com/UCB-Biopharma/tflmetaR/blob/main/DESCRIPTION)
+
 Wu A, Cao G, Cheng L, Lu Y (2026). *tflmetaR: Manage Annotation Metadata
 in Statistical Outputs*. R package version 0.1.5.
 

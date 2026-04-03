@@ -337,12 +337,12 @@ presentation metadata.
 
 ### tflmetaR Core Functions
 
-| Function                                         | Description                         |
-|--------------------------------------------------|-------------------------------------|
-| [`read_tfile()`](../reference/read_tfile.md)     | Read metadata from Excel or CSV     |
-| [`get_title()`](../reference/get_title.md)       | Retrieve titles and subtitles       |
-| [`get_footnote()`](../reference/get_footnote.md) | Retrieve footnotes                  |
-| [`get_ulheader()`](../reference/get_ulheader.md) | Retrieve upper-left header content  |
-| [`get_urheader()`](../reference/get_urheader.md) | Retrieve upper-right header content |
+| Function                                                                               | Description                         |
+|----------------------------------------------------------------------------------------|-------------------------------------|
+| [`read_tfile()`](https://ucb-biopharma.github.io/tflmetaR/reference/read_tfile.md)     | Read metadata from Excel or CSV     |
+| [`get_title()`](https://ucb-biopharma.github.io/tflmetaR/reference/get_title.md)       | Retrieve titles and subtitles       |
+| [`get_footnote()`](https://ucb-biopharma.github.io/tflmetaR/reference/get_footnote.md) | Retrieve footnotes                  |
+| [`get_ulheader()`](https://ucb-biopharma.github.io/tflmetaR/reference/get_ulheader.md) | Retrieve upper-left header content  |
+| [`get_urheader()`](https://ucb-biopharma.github.io/tflmetaR/reference/get_urheader.md) | Retrieve upper-right header content |
 
 ------------------------------------------------------------------------
