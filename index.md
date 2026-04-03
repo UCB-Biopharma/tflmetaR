@@ -93,7 +93,7 @@ footnotes  <- get_footnote(meta, pname = pgmname, add_footr_tstamp = FALSE)
 
 The following example creates a table using [gt](https://gt.rstudio.com)
 and annotates it with titles and footnotes retrieved from a metadata
-file using `{tflmetaR}`.
+file using [tflmetaR](https://ucb-biopharma.github.io/tflmetaR/).
 
 ``` r
 library(tflmetaR)
