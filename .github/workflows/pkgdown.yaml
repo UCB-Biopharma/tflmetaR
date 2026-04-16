@@ -36,12 +36,21 @@ jobs:
           extra-packages: any::pkgdown, local::.
           needs: website
 
-      - name: Copy Google Search Console verification file
-        run: cp inst/site/google9bce5a840a6f6b6e.html docs/
-
       - name: Build site
         run: pkgdown::build_site_github_pages(new_process = FALSE, install = FALSE)
         shell: Rscript {0}
+
+      - name: Debug - show output folders
+        run: |
+          pwd
+          ls -la
+          find . -maxdepth 2 -type d | sort
+          if [ -e docs ]; then
+            ls -ld docs
+          else
+            echo "docs does not exist"
+          fi
+
 
       - name: Deploy to GitHub pages 🚀
         if: github.event_name != 'pull_request'
