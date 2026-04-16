@@ -41,23 +41,7 @@ jobs:
         shell: Rscript {0}
 
       - name: Copy Google verification file
-        run: |
-          ls -ld docs
-          ls -l inst/site/google9bce5a840a6f6b6e.html
-          cp -f inst/site/google9bce5a840a6f6b6e.html docs/
-          ls -l docs/google9bce5a840a6f6b6e.html
-
-      - name: Debug - show output folders
-        run: |
-          pwd
-          ls -la
-          find . -maxdepth 2 -type d | sort
-          if [ -e docs ]; then
-            ls -ld docs
-          else
-            echo "docs does not exist"
-          fi
-
+        run: cp inst/site/google9bce5a840a6f6b6e.html docs/
 
       - name: Deploy to GitHub pages 🚀
         if: github.event_name != 'pull_request'
